@@ -1,9 +1,11 @@
 const CACHE_NAME = 'pomodoro-v1';
 const ASSETS = [
-  '/pomodoro/',
-  '/pomodoro/index.html',
-  '/pomodoro/script.js',
-  '/pomodoro/pomodoro.png'
+  './',
+  './index.html',
+  './script.js',
+  './pomodoro-192.png',   // ✅ Icône PWA 192x192
+  './pomodoro-512.png',   // ✅ Icône PWA 512x512
+  './manifest.json'
 ];
 
 self.addEventListener('install', (event) => {
