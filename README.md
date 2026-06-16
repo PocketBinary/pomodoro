@@ -87,6 +87,8 @@ pomodoro/
 ├── 📜 script.js           # Logique timer (vanilla JS, single file)
 ├── 📜 sw.js               # Service worker
 ├── 🎨 pomodoro.png        # Logo, favicon & image Open Graph
+├── 🎨 pomodoro-192.png    # 192x192
+├── 🎨 pomodoro-512.png    # 512x512
 ├── 📋 manifest.json       # Configuration PWA
 ├── 🤖 robots.txt          # Directives crawl pour les moteurs
 ├── 🗺️ sitemap.xml         # Indexation SEO
