@@ -106,6 +106,15 @@
   <!-- 13. PWA / MANIFEST                                           -->
   <!-- ============================================================ -->
   <link rel="manifest" href="manifest.json">
+  
+  <!-- ============================================================ -->
+  <!-- 13.2 SERVICE WORKER REGISTRATION                              -->
+  <!-- ============================================================ -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/pomodoro/sw.js');
+    }
+  </script>
 
   <!-- ============================================================ -->
   <!-- 14. PRECONNECT / DNS-PREFETCH — Performance                  -->
