@@ -1,4 +1,3 @@
-
 <div align="center">
   <br />
   <table>
@@ -43,24 +42,24 @@
   <br /><br />
 
   <!-- Quick Links -->
-  <a href="#-fonctionnalites">Fonctionnalités</a>
+  <a href="#features">Fonctionnalités</a>
   &nbsp;·&nbsp;
-  <a href="#-demo">Démo</a>
+  <a href="#demo">Démo</a>
   &nbsp;·&nbsp;
-  <a href="#-structure-du-projet">Structure</a>
+  <a href="#project-structure">Structure</a>
   &nbsp;·&nbsp;
-  <a href="#-installation">Installation</a>
+  <a href="#installation">Installation</a>
   &nbsp;·&nbsp;
-  <a href="#-accessibilite">Accessibilité</a>
+  <a href="#accessibility">Accessibilité</a>
   &nbsp;·&nbsp;
-  <a href="#-securite">Sécurité</a>
+  <a href="#security">Sécurité</a>
 </div>
 
 <br />
 
 ---
 
-## ✨ Fonctionnalités
+## ✨ Fonctionnalités {#features}
 
 <div align="center">
 
@@ -84,16 +83,15 @@
 
 ---
 
-## 🚀 Démo
+## 🚀 Démo {#demo}
 
-👉 **[Voir la démo en direct](https://pocketbinary.github.io/pomodoro)**
-
+👉 **[Voir la démo en direct](https://pocketbinary.github.io/pomodoro/)**
 
 <br />
 
 ---
 
-## 📁 Structure du projet
+## 📁 Structure du projet {#project-structure}
 
 ```text
 pomodoro/
@@ -103,8 +101,8 @@ pomodoro/
 ├── 📋 manifest.json       # Configuration PWA
 ├── 🤖 robots.txt          # Directives crawl pour les moteurs
 ├── 🗺️ sitemap.xml         # Indexation SEO
-├── 📄 LICENSE       
-└── 📄 README.md
+├── 📄 LICENSE             # Licence MIT
+└── 📄 README.md           # Documentation projet
 ```
 
 ### Détails techniques
@@ -123,7 +121,7 @@ pomodoro/
 
 ---
 
-## 🛠️ Installation
+## 🛠️ Installation {#installation}
 
 ### Option 1 : Local (développement)
 
@@ -132,14 +130,29 @@ pomodoro/
 git clone https://github.com/PocketBinary/pomodoro.git
 cd pomodoro
 
-# Ouvre dans le navigateur 
+# Ouvre dans le navigateur
 open index.html
+```
+
+### Option 2 : GitHub Pages (production)
+
+```bash
+# Crée un repo sur GitHub
+git init
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git remote add origin https://github.com/PocketBinary/pomodoro.git
+git push -u origin main
+```
+
+Puis sur GitHub : **Settings → Pages → Source : Deploy from a branch → main → / (root)**
 
 <br />
 
 ---
 
-## ♿ Accessibilité
+## ♿ Accessibilité {#accessibility}
 
 Ce projet respecte les standards **WCAG 2.1 niveau AA** :
 
@@ -156,7 +169,7 @@ Ce projet respecte les standards **WCAG 2.1 niveau AA** :
 
 ---
 
-## 🔒 Sécurité
+## 🔒 Sécurité {#security}
 
 | Mesure | Description |
 |--------|-------------|
@@ -172,7 +185,7 @@ Ce projet respecte les standards **WCAG 2.1 niveau AA** :
 
 ---
 
-## 🔍 SEO
+## 🔍 SEO {#seo}
 
 | Élément | Implémentation |
 |---------|---------------|
@@ -189,7 +202,7 @@ Ce projet respecte les standards **WCAG 2.1 niveau AA** :
 
 ---
 
-## 📝 Personnalisation
+## 📝 Personnalisation {#customization}
 
 ### Changer les durées par défaut
 
@@ -222,8 +235,7 @@ Dans `script.js`, modifie les fréquences du bip :
 
 ---
 
-
-## 📄 Licence
+## 📄 Licence {#license}
 
 Ce projet est sous licence **MIT**.
 
