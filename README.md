@@ -85,6 +85,7 @@
 pomodoro/
 ├── 📄 index.html          # Page principale (HTML5 sémantique + SEO)
 ├── 📜 script.js           # Logique timer (vanilla JS, single file)
+├── 📜 sw.js               # Service worker
 ├── 🎨 pomodoro.png        # Logo, favicon & image Open Graph
 ├── 📋 manifest.json       # Configuration PWA
 ├── 🤖 robots.txt          # Directives crawl pour les moteurs
