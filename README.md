@@ -1,9 +1,12 @@
 
 <div align="center">
   <br />
-  <img src="pomodoro.png" alt="Pomodoro Timer Logo" width="80" height="80" />
-  <br /><br />
-  <h1>Pomodoro</h1>
+  <table>
+    <tr>
+      <td><img src="pomodoro.png" alt="Pomodoro Timer Logo" width="48" height="48" /></td>
+      <td><h1>Pomodoro</h1></td>
+    </tr>
+  </table>
   <p><strong>Simple Focus Timer</strong> — Stay focused, track progress, get things done.</p>
   <br />
 
@@ -83,9 +86,8 @@
 
 ## 🚀 Démo
 
-👉 **[Voir la démo en direct](https://tonusername.github.io/pomodoro/)**
+👉 **[Voir la démo en direct](https://pocketbinary.github.io/pomodoro)**
 
-> ⚠️ **Remplace `tonusername` par ton vrai nom d'utilisateur GitHub dans tous les fichiers avant publication.**
 
 <br />
 
@@ -100,7 +102,9 @@ pomodoro/
 ├── 🎨 pomodoro.png        # Logo, favicon & image Open Graph
 ├── 📋 manifest.json       # Configuration PWA
 ├── 🤖 robots.txt          # Directives crawl pour les moteurs
-└── 🗺️ sitemap.xml         # Indexation SEO
+├── 🗺️ sitemap.xml         # Indexation SEO
+├── 📄 LICENSE       
+└── 📄 README.md
 ```
 
 ### Détails techniques
@@ -125,40 +129,11 @@ pomodoro/
 
 ```bash
 # Clone le dépôt
-git clone https://github.com/tonusername/pomodoro.git
+git clone https://github.com/PocketBinary/pomodoro.git
 cd pomodoro
 
-# Ouvre dans le navigateur (macOS)
+# Ouvre dans le navigateur 
 open index.html
-
-# Ou sur Linux
-xdg-open index.html
-
-# Ou sers via un serveur local
-python3 -m http.server 8000
-# Puis ouvre http://localhost:8000
-```
-
-### Option 2 : GitHub Pages (production)
-
-```bash
-# 1. Crée un repo sur GitHub
-git init
-git add .
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/tonusername/pomodoro.git
-git push -u origin main
-
-# 2. Active GitHub Pages dans Settings → Pages
-#    Source : Deploy from a branch → main → / (root)
-
-# 3. Remplace "tonusername" par ton vrai username dans :
-#    - index.html (canonical, OG, Twitter, JSON-LD)
-#    - robots.txt (URL sitemap)
-#    - sitemap.xml (<loc>)
-#    - manifest.json (start_url, scope)
-```
 
 <br />
 
@@ -243,32 +218,10 @@ Dans `script.js`, modifie les fréquences du bip :
 });
 ```
 
-### Ajouter un domaine personnalisé (GitHub Pages)
-
-1. Crée un fichier `CNAME` à la racine :
-   ```
-   pomodoro.tondomaine.com
-   ```
-2. Configure les DNS chez ton registrar (CNAME vers `tonusername.github.io`)
-3. Active HTTPS dans les paramètres GitHub Pages
-
 <br />
 
 ---
 
-## 🧪 Tests recommandés avant publication
-
-- [ ] **Lighthouse** (Chrome DevTools) — objectif : 90+ sur tous les critères
-- [ ] **WAVE** (extension navigateur) — 0 erreur d'accessibilité
-- [ ] ** axe DevTools** — validation WCAG 2.1 AA
-- [ ] **Test mobile** — iOS Safari + Android Chrome
-- [ ] **Test PWA** — Chrome DevTools → Lighthouse → PWA category
-- [ ] **Test offline** — couper le réseau, vérifier le fonctionnement
-- [ ] **Test screen reader** — NVDA (Windows) ou VoiceOver (macOS)
-
-<br />
-
----
 
 ## 📄 Licence
 
@@ -277,7 +230,7 @@ Ce projet est sous licence **MIT**.
 ```
 MIT License
 
-Copyright (c) 2026 Ton Nom
+Copyright (c) 2026 PocketBinary
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
