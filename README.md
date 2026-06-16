@@ -1,13 +1,9 @@
+
 <div align="center">
   <br />
-  <div align="center">
-  <br />
-  <table>
-    <tr>
-      <td><img src="pomodoro.png" alt="Pomodoro Timer Logo" width="48" height="48" /></td>
-      <td><h1>Pomodoro</h1></td>
-    </tr>
-  </table>
+  <img src="pomodoro.png" alt="Pomodoro Timer Logo" width="80" height="80" />
+  <br /><br />
+  <h1>Pomodoro</h1>
   <p><strong>Simple Focus Timer</strong> — Stay focused, track progress, get things done.</p>
   <br />
 
@@ -32,31 +28,29 @@
     <img src="https://img.shields.io/badge/Tailwind_CSS-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
   </a>
 
-<br /><br />
+  <br /><br />
 
   <!-- PWA Badge -->
   <img src="https://img.shields.io/badge/PWA-Ready-5A0FC8?style=for-the-badge&logo=pwa&logoColor=white" alt="PWA Ready" />
   &nbsp;
-  <img src="https://img.shields.io/badge/A11y-WCAG%202.1%20AA-blue?style=for-the-badge&logo=accessibility&logoColor=white" alt="WCAG 2.1 AA Accessibility" />
+  <img src="https://img.shields.io/badge/Accessibility-WCAG%202.1-AA-blue?style=for-the-badge" alt="WCAG 2.1 AA" />
   &nbsp;
   <img src="https://img.shields.io/badge/SEO-Optimized-orange?style=for-the-badge&logo=google&logoColor=white" alt="SEO Optimized" />
 
-<br /><br />
+  <br /><br />
 
   <!-- Quick Links -->
-
-<a href="#-fonctionnalites">Fonctionnalités</a>
-&nbsp;·&nbsp;
-<a href="#-demo">Démo</a>
-&nbsp;·&nbsp;
-<a href="#-structure-du-projet">Structure</a>
-&nbsp;·&nbsp;
-<a href="#-installation">Installation</a>
-&nbsp;·&nbsp;
-<a href="#-accessibilite">Accessibilité</a>
-&nbsp;·&nbsp;
-<a href="#-securite">Sécurité</a>
-
+  <a href="#-fonctionnalites">Fonctionnalités</a>
+  &nbsp;·&nbsp;
+  <a href="#-demo">Démo</a>
+  &nbsp;·&nbsp;
+  <a href="#-structure-du-projet">Structure</a>
+  &nbsp;·&nbsp;
+  <a href="#-installation">Installation</a>
+  &nbsp;·&nbsp;
+  <a href="#-accessibilite">Accessibilité</a>
+  &nbsp;·&nbsp;
+  <a href="#-securite">Sécurité</a>
 </div>
 
 <br />
@@ -67,8 +61,8 @@
 
 <div align="center">
 
-|         🎯 Focus          |     ⏸️ Pauses     |        📊 Stats        |       🔊 Audio       |  🔔 Notifications   |
-| :-----------------------: | :---------------: | :--------------------: | :------------------: | :-----------------: |
+| 🎯 Focus | ⏸️ Pauses | 📊 Stats | 🔊 Audio | 🔔 Notifications |
+|:---:|:---:|:---:|:---:|:---:|
 | Sessions personnalisables | Courtes & longues | Compteur + temps total | Bip sonore optionnel | Navigateur (opt-in) |
 
 </div>
@@ -89,7 +83,9 @@
 
 ## 🚀 Démo
 
-👉 **[Voir la démo en direct](https://pocketbinary.github.io/pomodoro/)**
+👉 **[Voir la démo en direct](https://tonusername.github.io/pomodoro/)**
+
+> ⚠️ **Remplace `tonusername` par ton vrai nom d'utilisateur GitHub dans tous les fichiers avant publication.**
 
 <br />
 
@@ -97,27 +93,27 @@
 
 ## 📁 Structure du projet
 
+```text
 pomodoro/
 ├── 📄 index.html          # Page principale (HTML5 sémantique + SEO)
 ├── 📜 script.js           # Logique timer (vanilla JS, single file)
-├── 🎨 pomodoro.png        # Logo, favicon, icône PWA, image Open Graph
+├── 🎨 pomodoro.png        # Logo, favicon & image Open Graph
 ├── 📋 manifest.json       # Configuration PWA
 ├── 🤖 robots.txt          # Directives crawl pour les moteurs
-├── 🗺️ sitemap.xml         # Indexation SEO
-├── 📄 LICENSE             # License MIT
-└── 📄 README.md           # Documentation projet
+└── 🗺️ sitemap.xml         # Indexation SEO
+```
 
 ### Détails techniques
 
-| Aspect            | Implémentation                          |
-| ----------------- | --------------------------------------- |
-| **Framework**     | Aucun — vanilla HTML5, CSS3, JavaScript |
-| **Styling**       | Tailwind CSS via CDN                    |
-| **State**         | localStorage avec validation de schéma  |
-| **Audio**         | Web Audio API (oscillateurs natifs)     |
-| **Notifications** | Web Notifications API                   |
-| **Progression**   | SVG `stroke-dashoffset` animé           |
-| **PWA**           | Web App Manifest + icônes               |
+| Aspect | Implémentation |
+|--------|---------------|
+| **Framework** | Aucun — vanilla HTML5, CSS3, JavaScript |
+| **Styling** | Tailwind CSS via CDN |
+| **State** | localStorage avec validation de schéma |
+| **Audio** | Web Audio API (oscillateurs natifs) |
+| **Notifications** | Web Notifications API |
+| **Progression** | SVG `stroke-dashoffset` animé |
+| **PWA** | Web App Manifest + icônes |
 
 <br />
 
@@ -129,14 +125,44 @@ pomodoro/
 
 ```bash
 # Clone le dépôt
-git clone https://github.com/PocketBinary/pomodoro.git
+git clone https://github.com/tonusername/pomodoro.git
 cd pomodoro
 
-# Ouvre dans le navigateur
+# Ouvre dans le navigateur (macOS)
 open index.html
 
+# Ou sur Linux
+xdg-open index.html
 
+# Ou sers via un serveur local
+python3 -m http.server 8000
+# Puis ouvre http://localhost:8000
 ```
+
+### Option 2 : GitHub Pages (production)
+
+```bash
+# 1. Crée un repo sur GitHub
+git init
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git remote add origin https://github.com/tonusername/pomodoro.git
+git push -u origin main
+
+# 2. Active GitHub Pages dans Settings → Pages
+#    Source : Deploy from a branch → main → / (root)
+
+# 3. Remplace "tonusername" par ton vrai username dans :
+#    - index.html (canonical, OG, Twitter, JSON-LD)
+#    - robots.txt (URL sitemap)
+#    - sitemap.xml (<loc>)
+#    - manifest.json (start_url, scope)
+```
+
+<br />
+
+---
 
 ## ♿ Accessibilité
 
@@ -157,15 +183,15 @@ Ce projet respecte les standards **WCAG 2.1 niveau AA** :
 
 ## 🔒 Sécurité
 
-| Mesure                            | Description                                                                   |
-| --------------------------------- | ----------------------------------------------------------------------------- |
-| **CSP (Content Security Policy)** | `default-src 'self'` avec exceptions contrôlées pour le CDN Tailwind          |
-| **X-Frame-Options**               | `DENY` — empêche le clickjacking                                              |
-| **X-Content-Type-Options**        | `nosniff` — empêche le MIME sniffing                                          |
-| **Referrer Policy**               | `strict-origin-when-cross-origin` — minimise les fuites de données            |
-| **Validation localStorage**       | Schéma versionné avec typage strict — évite les crashs sur données corrompues |
-| **Pas de `eval()`**               | Aucune exécution dynamique de code                                            |
-| **Pas de `innerHTML`**            | Tout contenu inséré via `textContent`                                         |
+| Mesure | Description |
+|--------|-------------|
+| **CSP (Content Security Policy)** | `default-src 'self'` avec exceptions contrôlées pour le CDN Tailwind |
+| **X-Frame-Options** | `DENY` — empêche le clickjacking |
+| **X-Content-Type-Options** | `nosniff` — empêche le MIME sniffing |
+| **Referrer Policy** | `strict-origin-when-cross-origin` — minimise les fuites de données |
+| **Validation localStorage** | Schéma versionné avec typage strict — évite les crashs sur données corrompues |
+| **Pas de `eval()`** | Aucune exécution dynamique de code |
+| **Pas de `innerHTML`** | Tout contenu inséré via `textContent` |
 
 <br />
 
@@ -173,16 +199,16 @@ Ce projet respecte les standards **WCAG 2.1 niveau AA** :
 
 ## 🔍 SEO
 
-| Élément              | Implémentation                                             |
-| -------------------- | ---------------------------------------------------------- |
-| **Meta description** | Présente et optimisée (160 caractères)                     |
-| **Canonical URL**    | Évite le contenu dupliqué                                  |
-| **Open Graph**       | `og:title`, `og:description`, `og:image`, `og:url`         |
-| **Twitter Cards**    | `twitter:card`, `twitter:title`, `twitter:image`           |
-| **JSON-LD**          | Structured data `WebApplication` pour Google Rich Snippets |
-| **robots.txt**       | `index, follow` avec directives Rich Snippets              |
-| **sitemap.xml**      | Indexation automatique des moteurs de recherche            |
-| **Theme color**      | Adaptatif light/dark mode                                  |
+| Élément | Implémentation |
+|---------|---------------|
+| **Meta description** | Présente et optimisée (160 caractères) |
+| **Canonical URL** | Évite le contenu dupliqué |
+| **Open Graph** | `og:title`, `og:description`, `og:image`, `og:url` |
+| **Twitter Cards** | `twitter:card`, `twitter:title`, `twitter:image` |
+| **JSON-LD** | Structured data `WebApplication` pour Google Rich Snippets |
+| **robots.txt** | `index, follow` avec directives Rich Snippets |
+| **sitemap.xml** | Indexation automatique des moteurs de recherche |
+| **Theme color** | Adaptatif light/dark mode |
 
 <br />
 
@@ -197,10 +223,10 @@ Modifie les valeurs dans `script.js` :
 ```javascript
 const getDefaultState = () => ({
   settings: {
-    focus: 25, // minutes de focus
-    shortBreak: 5, // minutes de pause courte
-    longBreak: 15, // minutes de pause longue
-    sessions: 4, // sessions avant pause longue
+    focus: 25,      // minutes de focus
+    shortBreak: 5,  // minutes de pause courte
+    longBreak: 15,  // minutes de pause longue
+    sessions: 4,    // sessions avant pause longue
   },
   // ...
 });
@@ -217,6 +243,33 @@ Dans `script.js`, modifie les fréquences du bip :
 });
 ```
 
+### Ajouter un domaine personnalisé (GitHub Pages)
+
+1. Crée un fichier `CNAME` à la racine :
+   ```
+   pomodoro.tondomaine.com
+   ```
+2. Configure les DNS chez ton registrar (CNAME vers `tonusername.github.io`)
+3. Active HTTPS dans les paramètres GitHub Pages
+
+<br />
+
+---
+
+## 🧪 Tests recommandés avant publication
+
+- [ ] **Lighthouse** (Chrome DevTools) — objectif : 90+ sur tous les critères
+- [ ] **WAVE** (extension navigateur) — 0 erreur d'accessibilité
+- [ ] ** axe DevTools** — validation WCAG 2.1 AA
+- [ ] **Test mobile** — iOS Safari + Android Chrome
+- [ ] **Test PWA** — Chrome DevTools → Lighthouse → PWA category
+- [ ] **Test offline** — couper le réseau, vérifier le fonctionnement
+- [ ] **Test screen reader** — NVDA (Windows) ou VoiceOver (macOS)
+
+<br />
+
+---
+
 ## 📄 Licence
 
 Ce projet est sous licence **MIT**.
@@ -224,7 +277,7 @@ Ce projet est sous licence **MIT**.
 ```
 MIT License
 
-Copyright (c) 2026 PocketBinary
+Copyright (c) 2026 Ton Nom
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -251,4 +304,3 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
   <p><sub>N'oublie pas de faire une pause — c'est le principe même du Pomodoro 🍅</sub></p>
   <br />
 </div>
-
