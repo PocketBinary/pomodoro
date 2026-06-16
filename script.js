@@ -593,6 +593,16 @@ const initPomodoro = () => {
   restoreState();
 };
 
+
+// ============================================================
+// SERVICE WORKER REGISTRATION (PWA)
+// ============================================================
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js')
+    .then((reg) => console.log('SW registered:', reg.scope))
+    .catch((err) => console.error('SW registration failed:', err));
+}
+
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initPomodoro);
 } else {
