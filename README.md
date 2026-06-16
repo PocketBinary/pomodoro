@@ -40,26 +40,14 @@
   <img src="https://img.shields.io/badge/SEO-Optimized-orange?style=for-the-badge&logo=google&logoColor=white" alt="SEO Optimized" />
 
   <br /><br />
-
-  <!-- Quick Links -->
-  <a href="#features">Fonctionnalités</a>
-  &nbsp;·&nbsp;
-  <a href="#demo">Démo</a>
-  &nbsp;·&nbsp;
-  <a href="#project-structure">Structure</a>
-  &nbsp;·&nbsp;
-  <a href="#installation">Installation</a>
-  &nbsp;·&nbsp;
-  <a href="#accessibility">Accessibilité</a>
-  &nbsp;·&nbsp;
-  <a href="#security">Sécurité</a>
+ 
 </div>
 
 <br />
 
 ---
 
-## ✨ Fonctionnalités {#features}
+## ✨ Fonctionnalités 
 
 <div align="center">
 
@@ -83,7 +71,7 @@
 
 ---
 
-## 🚀 Démo {#demo}
+## 🚀 Démo 
 
 👉 **[Voir la démo en direct](https://pocketbinary.github.io/pomodoro/)**
 
@@ -91,7 +79,7 @@
 
 ---
 
-## 📁 Structure du projet {#project-structure}
+## 📁 Structure du projet 
 
 ```text
 pomodoro/
@@ -121,7 +109,7 @@ pomodoro/
 
 ---
 
-## 🛠️ Installation {#installation}
+## 🛠️ Installation 
 
 ### Option 1 : Local (développement)
 
@@ -152,7 +140,7 @@ Puis sur GitHub : **Settings → Pages → Source : Deploy from a branch → mai
 
 ---
 
-## ♿ Accessibilité {#accessibility}
+## ♿ Accessibilité 
 
 Ce projet respecte les standards **WCAG 2.1 niveau AA** :
 
@@ -169,7 +157,7 @@ Ce projet respecte les standards **WCAG 2.1 niveau AA** :
 
 ---
 
-## 🔒 Sécurité {#security}
+## 🔒 Sécurité 
 
 | Mesure | Description |
 |--------|-------------|
@@ -185,7 +173,7 @@ Ce projet respecte les standards **WCAG 2.1 niveau AA** :
 
 ---
 
-## 🔍 SEO {#seo}
+## 🔍 SEO 
 
 | Élément | Implémentation |
 |---------|---------------|
@@ -202,7 +190,7 @@ Ce projet respecte les standards **WCAG 2.1 niveau AA** :
 
 ---
 
-## 📝 Personnalisation {#customization}
+## 📝 Personnalisation 
 
 ### Changer les durées par défaut
 
@@ -235,7 +223,7 @@ Dans `script.js`, modifie les fréquences du bip :
 
 ---
 
-## 📄 Licence {#license}
+## 📄 Licence 
 
 Ce projet est sous licence **MIT**.
 
