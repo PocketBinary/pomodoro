@@ -97,17 +97,15 @@
 
 ## 📁 Structure du projet
 
-```text
 pomodoro/
 ├── 📄 index.html          # Page principale (HTML5 sémantique + SEO)
 ├── 📜 script.js           # Logique timer (vanilla JS, single file)
-├── 🎨 pomodoro.png        # Logo, favicon & image Open Graph
+├── 🎨 pomodoro.png        # Logo, favicon, icône PWA, image Open Graph
 ├── 📋 manifest.json       # Configuration PWA
 ├── 🤖 robots.txt          # Directives crawl pour les moteurs
-└── 🗺️ sitemap.xml         # Indexation SEO
-├── 📄 LICENSE
-└── 📄 README.md
-```
+├── 🗺️ sitemap.xml         # Indexation SEO
+├── 📄 LICENSE             # License MIT
+└── 📄 README.md           # Documentation projet
 
 ### Détails techniques
 
