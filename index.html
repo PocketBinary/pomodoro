@@ -109,6 +109,15 @@
   <link rel="manifest" href="manifest.json">
 
   <!-- ============================================================ -->
+  <!-- 14. SERVICE WORKER REGISTRATION                              -->
+  <!-- ============================================================ -->
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/pomodoro/sw.js');
+  }
+  </script>
+
+  <!-- ============================================================ -->
   <!-- 14. PRECONNECT / DNS-PREFETCH — Performance                  -->
   <!-- ============================================================ -->
   <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
