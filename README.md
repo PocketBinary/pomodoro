@@ -1,8 +1,13 @@
 <div align="center">
   <br />
-  <img src="pomodoro.png" alt="Pomodoro Timer Logo" width="40" height="40" />
+  <div align="center">
   <br />
-  <h1>Pomodoro</h1>
+  <table>
+    <tr>
+      <td><img src="pomodoro.png" alt="Pomodoro Timer Logo" width="48" height="48" /></td>
+      <td><h1>Pomodoro</h1></td>
+    </tr>
+  </table>
   <p><strong>Simple Focus Timer</strong> — Stay focused, track progress, get things done.</p>
   <br />
 
