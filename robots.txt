@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://pocketbinary.github.io/pomodoro/sitemap.xml

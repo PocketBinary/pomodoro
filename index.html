@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <!-- ============================================================ -->
+  <!-- 1. CHARSET — Must be within first 1024 bytes of document     -->
+  <!-- ============================================================ -->
+  <meta charset="UTF-8">
+
+  <!-- ============================================================ -->
+  <!-- 2. VIEWPORT — Critical for responsive rendering              -->
+  <!-- ============================================================ -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ============================================================ -->
+  <!-- 3. TITLE — Early for SEO and browser tab                     -->
+  <!-- ============================================================ -->
+  <title>Pomodoro — Simple Focus Timer</title>
+
+  <!-- ============================================================ -->
+  <!-- 4. META DESCRIPTION — SEO snippet                             -->
+  <!-- ============================================================ -->
+  <meta name="description" content="Free Pomodoro timer with focus sessions, short breaks, long breaks and saved settings. No signup required. Works offline.">
+
+  <!-- ============================================================ -->
+  <!-- 5. ROBOTS — Crawl directives                                 -->
+  <!-- ============================================================ -->
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+
+  <!-- ============================================================ -->
+  <!-- 6. SECURITY HEADERS (meta equivalents)                       -->
+  <!-- ============================================================ -->
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+
+  <!-- ============================================================ -->
+  <!-- 7. CONTENT SECURITY POLICY                                   -->
+  <!--    ⚠️  ADAPTER l'URL canonique quand tu auras ton vrai nom   -->
+  <!-- ============================================================ -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; upgrade-insecure-requests;">
+
+  <!-- ============================================================ -->
+  <!-- 8. THEME & COLOR                                             -->
+  <!-- ============================================================ -->
+  <meta name="theme-color" content="#F5F6F8" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0F172A" media="(prefers-color-scheme: dark)">
+  <meta name="color-scheme" content="light dark">
+
+  <!-- ============================================================ -->
+  <!-- 9. CANONICAL URL                                             -->
+  <!--    ⚠️  REMPLACER par ton vrai domaine GitHub Pages           -->
+  <!-- ============================================================ -->
+  <link rel="canonical" href="https://tonusername.github.io/pomodoro/">
+
+  <!-- ============================================================ -->
+  <!-- 10. OPEN GRAPH — Social sharing (Facebook, LinkedIn, etc.)     -->
+  <!-- ============================================================ -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Pomodoro Timer">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:title" content="Pomodoro — Simple Focus Timer">
+  <meta property="og:description" content="Free Pomodoro timer with focus sessions, breaks and progress tracking. No signup required.">
+  <meta property="og:url" content="https://tonusername.github.io/pomodoro/">
+  <meta property="og:image" content="https://tonusername.github.io/pomodoro/pomodoro.png">
+  <meta property="og:image:width" content="512">
+  <meta property="og:image:height" content="512">
+  <meta property="og:image:alt" content="Pomodoro Timer Logo">
+
+  <!-- ============================================================ -->
+  <!-- 11. TWITTER CARDS                                            -->
+  <!-- ============================================================ -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pomodoro — Simple Focus Timer">
+  <meta name="twitter:description" content="Free Pomodoro timer with focus sessions, breaks and progress tracking. No signup required.">
+  <meta name="twitter:image" content="https://tonusername.github.io/pomodoro/pomodoro.png">
+  <meta name="twitter:image:alt" content="Pomodoro Timer Logo">
+  <!-- <meta name="twitter:site" content="@toncompte"> -->
+  <!-- <meta name="twitter:creator" content="@toncompte"> -->
+
+  <!-- ============================================================ -->
+  <!-- 12. STRUCTURED DATA (JSON-LD) — Rich Snippets Google         -->
+  <!-- ============================================================ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Pomodoro Timer",
+    "description": "Simple Pomodoro timer with focus sessions, short breaks and progress tracking.",
+    "applicationCategory": "ProductivityApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "Ton Nom"
+    },
+    "url": "https://tonusername.github.io/pomodoro/",
+    "image": "https://tonusername.github.io/pomodoro/pomodoro.png"
+  }
+  </script>
+
+  <!-- ============================================================ -->
+  <!-- 13. PWA / MANIFEST                                           -->
+  <!-- ============================================================ -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- ============================================================ -->
+  <!-- 14. PRECONNECT / DNS-PREFETCH — Performance                  -->
+  <!-- ============================================================ -->
+  <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+
+  <!-- ============================================================ -->
+  <!-- 15. FAVICON & TOUCH ICONS                                    -->
+  <!-- ============================================================ -->
+  <link rel="icon" type="image/png" href="pomodoro.png" sizes="32x32">
+  <link rel="apple-touch-icon" href="pomodoro.png" sizes="180x180">
+  <link rel="mask-icon" href="pomodoro.png" color="#0F172A">
+
+  <!-- ============================================================ -->
+  <!-- 16. STYLESHEETS                                              -->
+  <!-- ============================================================ -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ============================================================ -->
+  <!-- 17. CRITICAL CSS INLINE — Focus visible + Skip link          -->
+  <!-- ============================================================ -->
+  <style>
+    /* Skip link for keyboard navigation */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      z-index: 9999;
+      background: #0F172A;
+      color: #fff;
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: top 0.2s ease;
+    }
+    .skip-link:focus {
+      top: 1rem;
+    }
+
+    /* Focus visible enhancement for all interactive elements */
+    button:focus-visible,
+    input:focus-visible,
+    a:focus-visible {
+      outline: 3px solid #0F172A;
+      outline-offset: 2px;
+      border-radius: 0.375rem;
+    }
+
+    /* Reduced motion respect */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="min-h-screen bg-[#F5F6F8] text-slate-900">
+  <!-- Skip link for accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <main id="main-content" class="mx-auto max-w-5xl px-6 py-10">
+    <header class="mb-8">
+      <div class="inline-flex items-center gap-3">
+        <img src="pomodoro.png" alt="Pomodoro Timer Logo" width="32" height="32" class="block h-8 w-8 object-contain">
+        <h1 class="m-0 text-4xl font-semibold tracking-tight text-slate-900">Pomodoro</h1>
+      </div>
+    </header>
+
+    <section class="grid gap-6 lg:grid-cols-[2fr_1fr]">
+      <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div class="space-y-2">
+            <div id="modeSwitcher" class="inline-flex overflow-hidden rounded-full border border-slate-200 bg-slate-50 p-1" role="tablist" aria-label="Timer modes">
+              <button id="modeFocusBtn" type="button" data-mode="focus" class="rounded-full px-4 py-1 text-sm font-semibold" role="tab" aria-selected="true" aria-controls="timer-display">Focus</button>
+              <button id="modeShortBtn" type="button" data-mode="short" class="rounded-full px-4 py-1 text-sm font-semibold" role="tab" aria-selected="false" aria-controls="timer-display">Short Break</button>
+              <button id="modeLongBtn" type="button" data-mode="long" class="rounded-full px-4 py-1 text-sm font-semibold" role="tab" aria-selected="false" aria-controls="timer-display">Long Break</button>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span id="sessionCount" class="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">Session 1</span>
+            <span id="statusBadge" class="rounded-full bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700" aria-live="polite">Ready</span>
+          </div>
+        </div>
+
+        <div class="mt-8 flex flex-col items-center gap-6">
+          <div class="relative flex h-64 w-64 items-center justify-center" id="timer-display" role="region" aria-label="Timer display">
+            <svg class="absolute inset-0 h-full w-full -rotate-90 overflow-visible" viewBox="0 0 260 260" aria-hidden="true">
+              <circle cx="130" cy="130" r="104" fill="none" stroke="#E2E8F0" stroke-width="10"></circle>
+              <circle id="progressRing"
+                cx="130" cy="130" r="104" fill="none" stroke="#0F172A" stroke-width="10" stroke-linecap="round"
+                stroke-dasharray="653.45" stroke-dashoffset="653.45"
+                role="progressbar"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+                aria-label="Session progress"></circle>
+            </svg>
+            <div class="relative flex h-52 w-52 items-center justify-center rounded-full bg-slate-50 ring-1 ring-slate-200">
+              <div class="absolute inset-3 rounded-full bg-white shadow-inner"></div>
+              <div class="relative text-center p-6">
+                <p id="timeDisplay" class="text-4xl font-semibold tabular-nums" aria-live="off">25:00</p>
+                <p id="modeText" class="mt-2 text-sm text-slate-500">Stay focused</p>
+                <p id="srAnnouncement" class="sr-only" aria-live="polite" aria-atomic="true"></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-center gap-3">
+            <button id="startPauseBtn" type="button" class="rounded-full bg-slate-900 px-6 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none" aria-label="Start timer">Start</button>
+            <button id="resetBtn" type="button" class="rounded-full border border-slate-200 px-6 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-900 focus:outline-none" aria-label="Reset timer">Reset</button>
+          </div>
+
+          <div class="mt-8 grid gap-4 sm:grid-cols-3">
+            <div class="rounded-xl border border-slate-100 bg-slate-50 p-4">
+              <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Focus Length</p>
+              <p id="focusLabel" class="mt-2 text-lg font-semibold">25 min</p>
+            </div>
+            <div class="rounded-xl border border-slate-100 bg-slate-50 p-4">
+              <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Short Break</p>
+              <p id="shortLabel" class="mt-2 text-lg font-semibold">5 min</p>
+            </div>
+            <div class="rounded-xl border border-slate-100 bg-slate-50 p-4">
+              <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Long Break</p>
+              <p id="longLabel" class="mt-2 text-lg font-semibold">15 min</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+        <h2 class="text-lg font-semibold">Settings</h2>
+        <p class="mt-1 text-sm text-slate-500">Adjust your rhythm without losing progress.</p>
+
+        <div class="mt-6 space-y-5">
+          <div class="flex items-center justify-between gap-4">
+            <label for="focusInput" class="text-sm font-medium text-slate-700">Focus minutes</label>
+            <input id="focusInput" type="number" min="1" max="120" step="1" value="25"
+              class="w-24 rounded-xl border border-slate-200 px-3 py-2 text-right text-sm font-semibold text-slate-900 focus:border-slate-400 focus:outline-none"
+              aria-describedby="focusLabel">
+          </div>
+          <div class="flex items-center justify-between gap-4">
+            <label for="shortInput" class="text-sm font-medium text-slate-700">Short break minutes</label>
+            <input id="shortInput" type="number" min="1" max="60" step="1" value="5"
+              class="w-24 rounded-xl border border-slate-200 px-3 py-2 text-right text-sm font-semibold text-slate-900 focus:border-slate-400 focus:outline-none"
+              aria-describedby="shortLabel">
+          </div>
+          <div class="flex items-center justify-between gap-4">
+            <label for="longInput" class="text-sm font-medium text-slate-700">Long break minutes</label>
+            <input id="longInput" type="number" min="1" max="60" step="1" value="15"
+              class="w-24 rounded-xl border border-slate-200 px-3 py-2 text-right text-sm font-semibold text-slate-900 focus:border-slate-400 focus:outline-none"
+              aria-describedby="longLabel">
+          </div>
+          <div class="flex items-center justify-between gap-4">
+            <label for="sessionsInput" class="text-sm font-medium text-slate-700">Sessions before long break</label>
+            <input id="sessionsInput" type="number" min="1" max="20" step="1" value="4"
+              class="w-24 rounded-xl border border-slate-200 px-3 py-2 text-right text-sm font-semibold text-slate-900 focus:border-slate-400 focus:outline-none">
+          </div>
+          <label class="flex items-center justify-between gap-4 rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700 cursor-pointer">
+            <span>Sound notifications</span>
+            <input id="soundEnabledInput" type="checkbox" class="h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-400" checked>
+          </label>
+        </div>
+
+        <div class="mt-6 rounded-xl border border-slate-100 bg-slate-50 p-4">
+          <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Today</p>
+          <div class="mt-3 grid gap-3">
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-slate-500">Completed focus sessions</span>
+              <span id="completedCount" class="font-semibold text-slate-900">0</span>
+            </div>
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-slate-500">Total focus time</span>
+              <span id="totalFocus" class="font-semibold text-slate-900">0 min</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </main>
+  <script src="./script.js" defer></script>
+</body>
+</html>

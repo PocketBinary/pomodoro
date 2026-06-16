@@ -1,0 +1,21 @@
+{
+  "name": "Pomodoro Timer",
+  "short_name": "Pomodoro",
+  "description": "Simple Pomodoro timer with focus sessions and breaks",
+  "start_url": "/pomodoro/",
+  "display": "standalone",
+  "background_color": "#F5F6F8",
+  "theme_color": "#F5F6F8",
+  "orientation": "portrait",
+  "scope": "/pomodoro/",
+  "icons": [
+    {
+      "src": "pomodoro.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities"],
+  "lang": "fr"
+}
