@@ -36,7 +36,7 @@
   <!-- PWA Badge -->
   <img src="https://img.shields.io/badge/PWA-Ready-5A0FC8?style=for-the-badge&logo=pwa&logoColor=white" alt="PWA Ready" />
   &nbsp;
-  <img src="https://img.shields.io/badge/Accessibility-WCAG%202.1-AA-blue?style=for-the-badge" alt="WCAG 2.1 AA" />
+  <img src="https://img.shields.io/badge/A11y-WCAG%202.1%20AA-blue?style=for-the-badge&logo=accessibility&logoColor=white" alt="WCAG 2.1 AA Accessibility" />
   &nbsp;
   <img src="https://img.shields.io/badge/SEO-Optimized-orange?style=for-the-badge&logo=google&logoColor=white" alt="SEO Optimized" />
 
