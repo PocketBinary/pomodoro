@@ -39,7 +39,7 @@
   &nbsp;
   <img src="https://img.shields.io/badge/SEO-Optimized-orange?style=for-the-badge&logo=google&logoColor=white" alt="SEO Optimized" />
 
-  <br /><br />
+  <br />
  
 </div>
 
