@@ -118,7 +118,7 @@ pomodoro/
 
 ```bash
 # Clone le dépôt
-git clone https://github.com/pocketBinary/pomodoro.git
+git clone https://github.com/PocketBinary/pomodoro.git
 cd pomodoro
 
 # Ouvre dans le navigateur
@@ -133,7 +133,7 @@ git init
 git add .
 git commit -m "Initial commit"
 git branch -M main
-git remote add origin https://github.com/pocketBinary/pomodoro.git
+git remote add origin https://github.com/PocketBinary/pomodoro.git
 git push -u origin main
 ```
 
