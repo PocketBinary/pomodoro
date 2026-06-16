@@ -84,7 +84,7 @@
 
 ## 🚀 Démo
 
-👉 **[Voir la démo en direct](https://github.com/PocketBinary/pomodoro)**
+👉 **[Voir la démo en direct](https://pocketbinary.github.io/pomodoro/)**
 
 <br />
 
