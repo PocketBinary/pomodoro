@@ -1,23 +1,17 @@
 <div align="center">
-  <br />
-  <table>
-    <tr>
-      <td><img src="pomodoro.png" alt="Pomodoro Timer Logo" width="48" height="48" /></td>
-      <td><h1>Pomodoro</h1></td>
-    </tr>
-  </table>
+  <div>
+    <table style="display: flex; justify-content: center; align-items: center;" >
+      <tr>
+        <td><img src="pomodoro.png" alt="Pomodoro Timer Logo" width="64" height="64" /></td>
+        <td><h1>Pomodoro</h1></td>
+      </tr>
+    </table>
+  </div>
   <p><strong>Simple Focus Timer</strong> — Stay focused, track progress, get things done.</p>
   <br />
-
+  
   <!-- Badges Row -->
-  <a href="https://pages.github.com/" target="_blank">
-    <img src="https://img.shields.io/badge/GitHub%20Pages-Live-222?style=for-the-badge&logo=github" alt="GitHub Pages" />
-  </a>
-  &nbsp;
-  <a href="LICENSE" target="_blank">
-    <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT License" />
-  </a>
-  &nbsp;
+
   <a href="https://developer.mozilla.org/docs/Web/HTML" target="_blank">
     <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5" />
   </a>
@@ -29,7 +23,14 @@
   <a href="https://tailwindcss.com/" target="_blank">
     <img src="https://img.shields.io/badge/Tailwind_CSS-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
   </a>
-
+  <br /><br />
+  <a href="https://pages.github.com/" target="_blank">
+    <img src="https://img.shields.io/badge/GitHub%20Pages-Live-222?style=for-the-badge&logo=github" alt="GitHub Pages" />
+  </a>
+  &nbsp;
+  <a href="LICENSE" target="_blank">
+    <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT License" />
+  </a>
   <br /><br />
 
   <!-- PWA Badge -->
@@ -47,12 +48,12 @@
 
 ---
 
-## ✨ Fonctionnalités 
+## ✨ Fonctionnalités
 
 <div align="center">
 
-| 🎯 Focus | ⏸️ Pauses | 📊 Stats | 🔊 Audio | 🔔 Notifications |
-|:---:|:---:|:---:|:---:|:---:|
+|         🎯 Focus          |     ⏸️ Pauses     |        📊 Stats        |       🔊 Audio       |  🔔 Notifications   |
+| :-----------------------: | :---------------: | :--------------------: | :------------------: | :-----------------: |
 | Sessions personnalisables | Courtes & longues | Compteur + temps total | Bip sonore optionnel | Navigateur (opt-in) |
 
 </div>
@@ -71,7 +72,7 @@
 
 ---
 
-## 🚀 Démo 
+## 🚀 Démo
 
 👉 **[Voir la démo en direct](https://pocketbinary.github.io/pomodoro/)**
 
@@ -79,7 +80,7 @@
 
 ---
 
-## 📁 Structure du projet 
+## 📁 Structure du projet
 
 ```text
 pomodoro/
@@ -98,21 +99,21 @@ pomodoro/
 
 ### Détails techniques
 
-| Aspect | Implémentation |
-|--------|---------------|
-| **Framework** | Aucun — vanilla HTML5, CSS3, JavaScript |
-| **Styling** | Tailwind CSS via CDN |
-| **State** | localStorage avec validation de schéma |
-| **Audio** | Web Audio API (oscillateurs natifs) |
-| **Notifications** | Web Notifications API |
-| **Progression** | SVG `stroke-dashoffset` animé |
-| **PWA** | Web App Manifest + icônes |
+| Aspect            | Implémentation                          |
+| ----------------- | --------------------------------------- |
+| **Framework**     | Aucun — vanilla HTML5, CSS3, JavaScript |
+| **Styling**       | Tailwind CSS via CDN                    |
+| **State**         | localStorage avec validation de schéma  |
+| **Audio**         | Web Audio API (oscillateurs natifs)     |
+| **Notifications** | Web Notifications API                   |
+| **Progression**   | SVG `stroke-dashoffset` animé           |
+| **PWA**           | Web App Manifest + icônes               |
 
 <br />
 
 ---
 
-## 🛠️ Installation 
+## 🛠️ Installation
 
 ### Option 1 : Local (développement)
 
@@ -143,7 +144,7 @@ Puis sur GitHub : **Settings → Pages → Source : Deploy from a branch → mai
 
 ---
 
-## ♿ Accessibilité 
+## ♿ Accessibilité
 
 Ce projet respecte les standards **WCAG 2.1 niveau AA** :
 
@@ -160,40 +161,40 @@ Ce projet respecte les standards **WCAG 2.1 niveau AA** :
 
 ---
 
-## 🔒 Sécurité 
+## 🔒 Sécurité
 
-| Mesure | Description |
-|--------|-------------|
-| **CSP (Content Security Policy)** | `default-src 'self'` avec exceptions contrôlées pour le CDN Tailwind |
-| **X-Frame-Options** | `DENY` — empêche le clickjacking |
-| **X-Content-Type-Options** | `nosniff` — empêche le MIME sniffing |
-| **Referrer Policy** | `strict-origin-when-cross-origin` — minimise les fuites de données |
-| **Validation localStorage** | Schéma versionné avec typage strict — évite les crashs sur données corrompues |
-| **Pas de `eval()`** | Aucune exécution dynamique de code |
-| **Pas de `innerHTML`** | Tout contenu inséré via `textContent` |
-
-<br />
-
----
-
-## 🔍 SEO 
-
-| Élément | Implémentation |
-|---------|---------------|
-| **Meta description** | Présente et optimisée (160 caractères) |
-| **Canonical URL** | Évite le contenu dupliqué |
-| **Open Graph** | `og:title`, `og:description`, `og:image`, `og:url` |
-| **Twitter Cards** | `twitter:card`, `twitter:title`, `twitter:image` |
-| **JSON-LD** | Structured data `WebApplication` pour Google Rich Snippets |
-| **robots.txt** | `index, follow` avec directives Rich Snippets |
-| **sitemap.xml** | Indexation automatique des moteurs de recherche |
-| **Theme color** | Adaptatif light/dark mode |
+| Mesure                            | Description                                                                   |
+| --------------------------------- | ----------------------------------------------------------------------------- |
+| **CSP (Content Security Policy)** | `default-src 'self'` avec exceptions contrôlées pour le CDN Tailwind          |
+| **X-Frame-Options**               | `DENY` — empêche le clickjacking                                              |
+| **X-Content-Type-Options**        | `nosniff` — empêche le MIME sniffing                                          |
+| **Referrer Policy**               | `strict-origin-when-cross-origin` — minimise les fuites de données            |
+| **Validation localStorage**       | Schéma versionné avec typage strict — évite les crashs sur données corrompues |
+| **Pas de `eval()`**               | Aucune exécution dynamique de code                                            |
+| **Pas de `innerHTML`**            | Tout contenu inséré via `textContent`                                         |
 
 <br />
 
 ---
 
-## 📝 Personnalisation 
+## 🔍 SEO
+
+| Élément              | Implémentation                                             |
+| -------------------- | ---------------------------------------------------------- |
+| **Meta description** | Présente et optimisée (160 caractères)                     |
+| **Canonical URL**    | Évite le contenu dupliqué                                  |
+| **Open Graph**       | `og:title`, `og:description`, `og:image`, `og:url`         |
+| **Twitter Cards**    | `twitter:card`, `twitter:title`, `twitter:image`           |
+| **JSON-LD**          | Structured data `WebApplication` pour Google Rich Snippets |
+| **robots.txt**       | `index, follow` avec directives Rich Snippets              |
+| **sitemap.xml**      | Indexation automatique des moteurs de recherche            |
+| **Theme color**      | Adaptatif light/dark mode                                  |
+
+<br />
+
+---
+
+## 📝 Personnalisation
 
 ### Changer les durées par défaut
 
@@ -202,10 +203,10 @@ Modifie les valeurs dans `script.js` :
 ```javascript
 const getDefaultState = () => ({
   settings: {
-    focus: 25,      // minutes de focus
-    shortBreak: 5,  // minutes de pause courte
-    longBreak: 15,  // minutes de pause longue
-    sessions: 4,    // sessions avant pause longue
+    focus: 25, // minutes de focus
+    shortBreak: 5, // minutes de pause courte
+    longBreak: 15, // minutes de pause longue
+    sessions: 4, // sessions avant pause longue
   },
   // ...
 });
@@ -226,7 +227,7 @@ Dans `script.js`, modifie les fréquences du bip :
 
 ---
 
-## 📄 Licence 
+## 📄 Licence
 
 Ce projet est sous licence **MIT**.
 
