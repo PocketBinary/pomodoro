@@ -1,28 +1,27 @@
-const CACHE_NAME = 'pomodoro-v1';
-const ASSETS = [
-  './',
-  './index.html',
-  './script.js',
-  './pomodoro-192.png',   // ✅ Icône PWA 192x192
-  './pomodoro-512.png',   // ✅ Icône PWA 512x512
-  './manifest.json'
-];
-
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
-  );
-  self.skipWaiting();
-});
-
-self.addEventListener('activate', (event) => {
-  event.waitUntil(self.clients.claim());
-});
-
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
-    })
-  );
-});
+{
+  "name": "Pomodoro Timer",
+  "short_name": "Pomodoro",
+  "description": "Simple Pomodoro timer with focus sessions and breaks",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#F5F6F8",
+  "theme_color": "#F5F6F8",
+  "orientation": "portrait",
+  "scope": ".",
+  "icons": [
+    {
+      "src": "pomodoro-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "pomodoro-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities"],
+  "lang": "en"
+}
