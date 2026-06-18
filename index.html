@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <!-- ============================================================ -->
   <!-- 1. CHARSET — Must be within first 1024 bytes of document     -->
@@ -19,7 +20,8 @@
   <!-- ============================================================ -->
   <!-- 4. META DESCRIPTION — SEO snippet                             -->
   <!-- ============================================================ -->
-  <meta name="description" content="Free Pomodoro timer with focus sessions, short breaks, long breaks and saved settings. No signup required. Works offline.">
+  <meta name="description"
+    content="Free Pomodoro timer with focus sessions, short breaks, long breaks and saved settings. No signup required. Works offline.">
 
   <!-- ============================================================ -->
   <!-- 5. ROBOTS — Crawl directives                                 -->
@@ -37,7 +39,8 @@
   <!-- 7. CONTENT SECURITY POLICY                                   -->
   <!--    ⚠️  ADAPTER l'URL canonique quand tu auras ton vrai nom   -->
   <!-- ============================================================ -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; upgrade-insecure-requests;">
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; upgrade-insecure-requests;">
 
   <!-- ============================================================ -->
   <!-- 8. THEME & COLOR                                             -->
@@ -59,7 +62,8 @@
   <meta property="og:site_name" content="Pomodoro Timer">
   <meta property="og:locale" content="en_US">
   <meta property="og:title" content="Pomodoro — Simple Focus Timer">
-  <meta property="og:description" content="Free Pomodoro timer with focus sessions, breaks and progress tracking. No signup required.">
+  <meta property="og:description"
+    content="Free Pomodoro timer with focus sessions, breaks and progress tracking. No signup required.">
   <meta property="og:url" content="https://pocketbinary.github.io/pomodoro/">
   <meta property="og:image" content="https://pocketbinary.github.io/pomodoro/pomodoro.png">
   <meta property="og:image:width" content="512">
@@ -71,7 +75,8 @@
   <!-- ============================================================ -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Pomodoro — Simple Focus Timer">
-  <meta name="twitter:description" content="Free Pomodoro timer with focus sessions, breaks and progress tracking. No signup required.">
+  <meta name="twitter:description"
+    content="Free Pomodoro timer with focus sessions, breaks and progress tracking. No signup required.">
   <meta name="twitter:image" content="https://pocketbinary.github.io/pomodoro/pomodoro.png">
   <meta name="twitter:image:alt" content="Pomodoro Timer Logo">
   <!-- <meta name="twitter:site" content="@toncompte"> -->
@@ -106,7 +111,7 @@
   <!-- 13. PWA / MANIFEST                                           -->
   <!-- ============================================================ -->
   <link rel="manifest" href="manifest.json">
-  
+
   <!-- ============================================================ -->
   <!-- 13.2 SERVICE WORKER REGISTRATION                              -->
   <!-- ============================================================ -->
@@ -152,6 +157,7 @@
       text-decoration: none;
       transition: top 0.2s ease;
     }
+
     .skip-link:focus {
       top: 1rem;
     }
@@ -167,6 +173,7 @@
 
     /* Reduced motion respect */
     @media (prefers-reduced-motion: reduce) {
+
       *,
       *::before,
       *::after {
@@ -176,7 +183,7 @@
       }
     }
   </style>
-<base target="_blank">
+  <base target="_blank">
 </head>
 
 <body class="min-h-screen bg-[#F5F6F8] text-slate-900">
@@ -186,7 +193,7 @@
   <main id="main-content" class="mx-auto max-w-5xl px-6 py-10">
     <header class="mb-8">
       <div class="inline-flex items-center gap-3">
-        <img src="pomodoro.png" alt="Pomodoro Timer Logo" width="32" height="32" class="block h-8 w-8 object-contain">
+        <img src="pomodoro.png" alt="Pomodoro Timer Logo" width="64" height="64" />
         <h1 class="m-0 text-4xl font-semibold tracking-tight text-slate-900">Pomodoro</h1>
       </div>
     </header>
@@ -195,32 +202,40 @@
       <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div class="space-y-2">
-            <div id="modeSwitcher" class="inline-flex overflow-hidden rounded-full border border-slate-200 bg-slate-50 p-1" role="tablist" aria-label="Timer modes">
-              <button id="modeFocusBtn" type="button" data-mode="focus" class="rounded-full px-4 py-1 text-sm font-semibold" role="tab" aria-selected="true" aria-controls="timer-display">Focus</button>
-              <button id="modeShortBtn" type="button" data-mode="short" class="rounded-full px-4 py-1 text-sm font-semibold" role="tab" aria-selected="false" aria-controls="timer-display">Short Break</button>
-              <button id="modeLongBtn" type="button" data-mode="long" class="rounded-full px-4 py-1 text-sm font-semibold" role="tab" aria-selected="false" aria-controls="timer-display">Long Break</button>
+            <div id="modeSwitcher"
+              class="inline-flex overflow-hidden rounded-full border border-slate-200 bg-slate-50 p-1" role="tablist"
+              aria-label="Timer modes">
+              <button id="modeFocusBtn" type="button" data-mode="focus"
+                class="rounded-full px-4 py-1 text-sm font-semibold" role="tab" aria-selected="true"
+                aria-controls="timer-display">Focus</button>
+              <button id="modeShortBtn" type="button" data-mode="short"
+                class="rounded-full px-4 py-1 text-sm font-semibold" role="tab" aria-selected="false"
+                aria-controls="timer-display">Short Break</button>
+              <button id="modeLongBtn" type="button" data-mode="long"
+                class="rounded-full px-4 py-1 text-sm font-semibold" role="tab" aria-selected="false"
+                aria-controls="timer-display">Long Break</button>
             </div>
           </div>
           <div class="flex items-center gap-2">
-            <span id="sessionCount" class="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">Session 1</span>
-            <span id="statusBadge" class="rounded-full bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700" aria-live="polite">Ready</span>
+            <span id="sessionCount"
+              class="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">Session 1</span>
+            <span id="statusBadge" class="rounded-full bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700"
+              aria-live="polite">Ready</span>
           </div>
         </div>
 
         <div class="mt-8 flex flex-col items-center gap-6">
-          <div class="relative flex h-64 w-64 items-center justify-center" id="timer-display" role="region" aria-label="Timer display">
-            <svg class="absolute inset-0 h-full w-full -rotate-90 overflow-visible" viewBox="0 0 260 260" aria-hidden="true">
+          <div class="relative flex h-64 w-64 items-center justify-center" id="timer-display" role="region"
+            aria-label="Timer display">
+            <svg class="absolute inset-0 h-full w-full -rotate-90 overflow-visible" viewBox="0 0 260 260"
+              aria-hidden="true">
               <circle cx="130" cy="130" r="104" fill="none" stroke="#E2E8F0" stroke-width="10"></circle>
-              <circle id="progressRing"
-                cx="130" cy="130" r="104" fill="none" stroke="#0F172A" stroke-width="10" stroke-linecap="round"
-                stroke-dasharray="653.45" stroke-dashoffset="653.45"
-                role="progressbar"
-                aria-valuemin="0"
-                aria-valuemax="100"
-                aria-valuenow="0"
-                aria-label="Session progress"></circle>
+              <circle id="progressRing" cx="130" cy="130" r="104" fill="none" stroke="#0F172A" stroke-width="10"
+                stroke-linecap="round" stroke-dasharray="653.45" stroke-dashoffset="653.45" role="progressbar"
+                aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Session progress"></circle>
             </svg>
-            <div class="relative flex h-52 w-52 items-center justify-center rounded-full bg-slate-50 ring-1 ring-slate-200">
+            <div
+              class="relative flex h-52 w-52 items-center justify-center rounded-full bg-slate-50 ring-1 ring-slate-200">
               <div class="absolute inset-3 rounded-full bg-white shadow-inner"></div>
               <div class="relative text-center p-6">
                 <p id="timeDisplay" class="text-4xl font-semibold tabular-nums" aria-live="off">25:00</p>
@@ -231,8 +246,12 @@
           </div>
 
           <div class="flex flex-wrap items-center justify-center gap-3">
-            <button id="startPauseBtn" type="button" class="rounded-full bg-slate-900 px-6 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none" aria-label="Start timer">Start</button>
-            <button id="resetBtn" type="button" class="rounded-full border border-slate-200 px-6 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-900 focus:outline-none" aria-label="Reset timer">Reset</button>
+            <button id="startPauseBtn" type="button"
+              class="rounded-full bg-slate-900 px-6 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none"
+              aria-label="Start timer">Start</button>
+            <button id="resetBtn" type="button"
+              class="rounded-full border border-slate-200 px-6 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-900 focus:outline-none"
+              aria-label="Reset timer">Reset</button>
           </div>
 
           <div class="mt-8 grid gap-4 sm:grid-cols-3">
@@ -280,9 +299,11 @@
             <input id="sessionsInput" type="number" min="1" max="20" step="1" value="4"
               class="w-24 rounded-xl border border-slate-200 px-3 py-2 text-right text-sm font-semibold text-slate-900 focus:border-slate-400 focus:outline-none">
           </div>
-          <label class="flex items-center justify-between gap-4 rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700 cursor-pointer">
+          <label
+            class="flex items-center justify-between gap-4 rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700 cursor-pointer">
             <span>Sound notifications</span>
-            <input id="soundEnabledInput" type="checkbox" class="h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-400" checked>
+            <input id="soundEnabledInput" type="checkbox"
+              class="h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-400" checked>
           </label>
         </div>
 
@@ -304,4 +325,5 @@
   </main>
   <script src="./script.js" defer></script>
 </body>
+
 </html>
