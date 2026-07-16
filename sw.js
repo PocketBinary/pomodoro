@@ -1,7 +1,7 @@
 {
   "name": "Pomodoro Timer",
   "short_name": "Pomodoro",
-  "description": "Simple Pomodoro timer with focus sessions and breaks",
+  "description": "Simple Pomodoro timer, with focus sessions and breaks",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#F5F6F8",
