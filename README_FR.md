@@ -25,8 +25,8 @@
     <img src="https://img.shields.io/badge/Tailwind_CSS-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
   </a>
   <br /><br />
-  <a href="https://pages.github.com/" target="_blank">
-    <img src="https://img.shields.io/badge/GitHub%20Pages-Live-222?style=for-the-badge&logo=github" alt="GitHub Pages" />
+  <a href="https://pocketbinary.github.io/pomodoro/" target="_blank">
+    <img src="https://img.shields.io/badge/GitHub_Pages-Live-222?style=for-the-badge&logo=githubpages&logoColor=white" alt="GitHub Pages" />
   </a>
   &nbsp;
   <a href="LICENSE" target="_blank">
@@ -37,9 +37,13 @@
   <!-- PWA Badge -->
   <img src="https://img.shields.io/badge/PWA-Ready-5A0FC8?style=for-the-badge&logo=pwa&logoColor=white" alt="PWA Ready" />
   &nbsp;
-  <img src="https://img.shields.io/badge/A11y-WCAG%202.1%20AA-blue?style=for-the-badge&logo=accessibility&logoColor=white" alt="Accessibilité WCAG 2.1 AA" />
+  <a href="https://www.w3.org/WAI/standards-guidelines/wcag/" target="_blank">
+    <img src="https://img.shields.io/badge/WCAG-2.1_AA-005A9C?style=for-the-badge&logo=w3c&logoColor=white" alt="Accessibilité WCAG 2.1 AA" />
+  </a>
   &nbsp;
-  <img src="https://img.shields.io/badge/SEO-Optimized-orange?style=for-the-badge&logo=google&logoColor=white" alt="SEO optimisé" />
+  <a href="https://developers.google.com/search/docs" target="_blank">
+    <img src="https://img.shields.io/badge/SEO-Optimized-0A66C2?style=for-the-badge&logo=googlechrome&logoColor=white" alt="SEO optimisé" />
+  </a>
 
   <br />
 </div>
