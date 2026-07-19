@@ -11,43 +11,23 @@
   <p><a href="README_FR.md">Lire en français</a></p>
   <br />
 
+
   <!-- Badges Row -->
 
-  <a href="https://developer.mozilla.org/docs/Web/HTML" target="_blank">
-    <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5" />
-  </a>
-  &nbsp;
-  <a href="https://developer.mozilla.org/docs/Web/JavaScript" target="_blank">
-    <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript" />
-  </a>
-  &nbsp;
-  <a href="https://tailwindcss.com/" target="_blank">
-    <img src="https://img.shields.io/badge/Tailwind_CSS-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
-  </a>
-  <br /><br />
-  <a href="https://pocketbinary.github.io/pomodoro/" target="_blank">
-    <img src="https://img.shields.io/badge/GitHub_Pages-Live-222?style=for-the-badge&logo=githubpages&logoColor=white" alt="GitHub Pages" />
-  </a>
-  &nbsp;
-  <a href="LICENSE" target="_blank">
-    <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT License" />
-  </a>
-  <br /><br />
+[![HTML](https://img.shields.io/badge/HTML-%23E34F26.svg?logo=html5&logoColor=white)](#)   [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=000)](#)  [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-%2338B2AC.svg?logo=tailwind-css&logoColor=white)](#)  [![Visual Studio Code](https://custom-icon-badges.demolab.com/badge/Visual%20Studio%20Code-0078d7.svg?logo=visualstudiocode&logoColor=white)](#) ![Offline Ready](https://img.shields.io/badge/PWA-offline%20ready-blueviolet) <br /><br />
 
-  <!-- PWA Badge -->
-  <img src="https://img.shields.io/badge/PWA-Ready-5A0FC8?style=for-the-badge&logo=pwa&logoColor=white" alt="PWA Ready" />
-  &nbsp;
-  <a href="https://www.w3.org/WAI/standards-guidelines/wcag/" target="_blank">
-    <img src="https://img.shields.io/badge/WCAG-2.1_AA-005A9C?style=for-the-badge&logo=w3c&logoColor=white" alt="WCAG 2.1 AA Accessibility" />
-  </a>
-  &nbsp;
-  <a href="https://developers.google.com/search/docs" target="_blank">
-    <img src="https://img.shields.io/badge/SEO-Optimized-0A66C2?style=for-the-badge&logo=googlechrome&logoColor=white" alt="SEO Optimized" />
-  </a>
-
-  <br />
+[![ReadMe](https://img.shields.io/badge/ReadMe-018EF5?logo=readme&logoColor=fff)](#)
+[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
+[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-121013?logo=github&logoColor=white)](#)
+![Open Source? Yes!](https://badgen.net/badge/Open%20Source%20%3F/Yes%21/blue?icon=github)
+<br />
+<br />
+<a href="https://pocketbinary.github.io/pomodoro/" rel="nofollow">
+    <img src="https://www.w3.org/WAI/wcag21/wcag2.1AA-blue-v.svg" alt="WCAG 2.1 AA Accessibility" width="1000px" height="30px">
+</a>
 </div>
 
+<br />
 <br />
 
 ---
