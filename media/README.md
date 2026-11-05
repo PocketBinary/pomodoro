@@ -25,11 +25,13 @@ Nom de fichier : lettres, chiffres, espaces, point, tiret, underscore. Pas de do
 - Pause longue : `media/animations/long/`
 - Liste : `media/animations/animations.json`
 
-SVG uniquement. Ils sont affichés comme images, donc un script embarqué dans le SVG ne s'exécute pas.
+SVG uniquement. Ils sont affichés après nettoyage, donc un script embarqué ne s'exécute pas.
+
+La séquence dure le temps de la pause, y compris si tu changes les minutes dans les réglages. Chaque SVG boucle pendant sa part. S'il n'y en a qu'un, il boucle pendant toute la pause. Si le minuteur est en pause, l'animation se fige.
 
 ```json
 {
   "short": ["respiration.svg"],
-  "long": ["vagues.svg"]
+  "long": ["vagues.svg", "nuages.svg"]
 }
 ```

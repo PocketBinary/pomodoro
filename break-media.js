@@ -1,5 +1,7 @@
 (() => {
   const STORAGE_KEY = "pomodoro-break-media-v1";
+  const AUDIO_NAME = /^[A-Za-z0-9][A-Za-z0-9 _.-]{0,80}\.(mp3|ogg|wav|m4a)$/i;
+  const SVG_NAME = /^[A-Za-z0-9][A-Za-z0-9 _.-]{0,80}\.svg$/i;
   const slogans = {
     en: {
       focus: "This block only.",
@@ -43,10 +45,22 @@
   const fallback = document.querySelector(".break-fallback");
   const player = document.getElementById("breakPlayer");
   const switcher = document.getElementById("modeSwitcher");
+  const stage = document.getElementById("breakStage");
+  const timeDisplay = document.getElementById("timeDisplay");
+  const statusBadge = document.getElementById("statusBadge");
+  const progressRing = document.getElementById("progressRing");
+  const shortInput = document.getElementById("shortInput");
+  const longInput = document.getElementById("longInput");
 
-  if (!sloganEl || !atmosphere || !playBtn || !select || !pickLabel || !volume || !volumeLabel || !audio || !animation || !fallback || !player || !switcher) {
+  if (!sloganEl || !atmosphere || !playBtn || !select || !pickLabel || !volume || !volumeLabel || !audio || !animation || !fallback || !player || !switcher || !stage) {
     return;
   }
+
+  const svgHost = document.createElement("div");
+  svgHost.className = "break-svg";
+  svgHost.style.cssText = "position:relative;z-index:1;width:100%;height:100%";
+  stage.append(svgHost);
+  animation.hidden = true;
 
   let playlists = { short: [], long: [] };
   let animations = { short: [], long: [] };
@@ -54,7 +68,10 @@
   let wantsPlay = false;
   let missing = false;
   let shownMode = null;
-  let animTimer = 0;
+  let shownFile = "";
+  let svgToken = 0;
+  const svgCache = new Map();
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const lang = () => (document.documentElement.lang === "fr" ? "fr" : "en");
   const copy = () => ui[lang()];
@@ -65,10 +82,9 @@
     return value === "short" || value === "long" ? value : "focus";
   };
 
-  const safeName = (value, extensions) => {
+  const safeName = (value, pattern) => {
     if (typeof value !== "string") return null;
     const name = value.trim();
-    const pattern = new RegExp(`^[A-Za-z0-9][A-Za-z0-9 _.-]{0,80}\\.(${extensions})$`, "i");
     if (!pattern.test(name) || name.includes("..")) return null;
     return name;
   };
@@ -76,11 +92,13 @@
   const fileUrl = (folder, mode, name) =>
     new URL(`media/${folder}/${mode}/${encodeURIComponent(name)}`, document.baseURI).href;
 
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
   const readVolume = () => {
     try {
       const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
       const value = parsed && Number(parsed.volume);
-      if (Number.isFinite(value)) return Math.min(1, Math.max(0, value));
+      if (Number.isFinite(value)) return clamp(value, 0, 1);
     } catch {
       return 0.4;
     }
@@ -96,10 +114,43 @@
   };
 
   const tracksFor = (mode) =>
-    (playlists[mode] || []).map((name) => safeName(name, "mp3|ogg|wav|m4a")).filter(Boolean);
+    (playlists[mode] || []).map((name) => safeName(name, AUDIO_NAME)).filter(Boolean);
 
   const svgsFor = (mode) =>
-    (animations[mode] || []).map((name) => safeName(name, "svg")).filter(Boolean);
+    (animations[mode] || []).map((name) => safeName(name, SVG_NAME)).filter(Boolean);
+
+  const timerState = () => {
+    const cls = statusBadge ? statusBadge.className : "";
+    if (cls.includes("emerald")) return "running";
+    if (cls.includes("amber")) return "paused";
+    return "ready";
+  };
+
+  const remainingSeconds = () => {
+    const match = (timeDisplay && timeDisplay.textContent || "").trim().match(/^(\d{1,3}):(\d{2})$/);
+    if (!match) return null;
+    return Number(match[1]) * 60 + Number(match[2]);
+  };
+
+  const configuredSeconds = (mode) => {
+    const input = mode === "long" ? longInput : shortInput;
+    const fallbackMinutes = mode === "long" ? 15 : 5;
+    return clamp(Number(input && input.value) || fallbackMinutes, 1, 60) * 60;
+  };
+
+  const timeline = (mode) => {
+    const configured = configuredSeconds(mode);
+    const remaining = remainingSeconds();
+    const percent = Number(progressRing && progressRing.getAttribute("aria-valuenow")) || 0;
+    let duration = configured;
+    if (remaining !== null && percent > 0 && percent < 100) {
+      duration = Math.max(1, Math.round(remaining / (1 - percent / 100)));
+    } else if (remaining !== null) {
+      duration = Math.max(configured, remaining);
+    }
+    const elapsed = remaining === null ? 0 : clamp(duration - remaining, 0, duration);
+    return { duration, elapsed };
+  };
 
   const applySlogan = () => {
     const key = currentMode() === "focus" ? "focus" : "pause";
@@ -141,30 +192,113 @@
     select.value = String(indexes[mode]);
   };
 
-  const showAnimation = (mode) => {
-    window.clearInterval(animTimer);
-    animTimer = 0;
-    const files = svgsFor(mode);
-    if (!files.length) {
-      animation.hidden = true;
-      animation.removeAttribute("src");
+  const unsafeUrl = (value) => /^(javascript:|data:|https?:|\/\/)/i.test(value.trim());
+
+  const sanitizeSvg = (doc) => {
+    doc.querySelectorAll("script,foreignObject,iframe,object,embed,audio,video,link,meta").forEach((node) => node.remove());
+    doc.querySelectorAll("*").forEach((node) => {
+      [...node.attributes].forEach((attr) => {
+        const name = attr.name.toLowerCase();
+        const value = attr.value || "";
+        if (name.startsWith("on")) {
+          node.removeAttribute(attr.name);
+          return;
+        }
+        if (name === "href" || name.endsWith(":href") || name === "src") {
+          if (!value.startsWith("#") || value.includes("\\")) node.removeAttribute(attr.name);
+          else if (unsafeUrl(value)) node.removeAttribute(attr.name);
+          return;
+        }
+        if (name === "style" && /javascript:|expression\s*\(|@import|url\s*\(\s*['\"]?\s*(https?:|\/\/)/i.test(value)) {
+          node.removeAttribute(attr.name);
+        }
+      });
+    });
+    const svg = doc.documentElement;
+    if (!svg || svg.tagName.toLowerCase() !== "svg") return null;
+    svg.querySelectorAll("animate,animateTransform,animateMotion,set").forEach((node) => {
+      node.setAttribute("repeatCount", "indefinite");
+    });
+    const style = doc.createElementNS("http://www.w3.org/2000/svg", "style");
+    style.textContent = "*{animation-iteration-count:infinite !important;animation-play-state:var(--svg-play,running) !important}";
+    svg.prepend(style);
+    svg.style.width = "100%";
+    svg.style.height = "100%";
+    svg.style.display = "block";
+    return svg;
+  };
+
+  const loadSvg = (mode, name) => {
+    const url = fileUrl("animations", mode, name);
+    if (!svgCache.has(url)) {
+      svgCache.set(url, fetch(url, { cache: "no-store" }).then(async (response) => {
+        if (!response.ok) return null;
+        const raw = await response.text();
+        if (raw.length > 400000 || !/<svg[\s>]/i.test(raw)) return null;
+        const parsed = new DOMParser().parseFromString(raw, "image/svg+xml");
+        if (parsed.querySelector("parsererror")) return null;
+        return sanitizeSvg(parsed);
+      }).catch(() => null));
+    }
+    return svgCache.get(url);
+  };
+
+  const setMotion = (paused) => {
+    fallback.style.animationPlayState = paused || reduceMotion ? "paused" : "running";
+    const svg = svgHost.querySelector("svg");
+    if (!svg) return;
+    svg.style.setProperty("--svg-play", paused || reduceMotion ? "paused" : "running");
+    if (paused || reduceMotion) {
+      if (svg.pauseAnimations) svg.pauseAnimations();
+    } else if (svg.unpauseAnimations) {
+      svg.unpauseAnimations();
+    }
+  };
+
+  const clearSvg = () => {
+    shownFile = "";
+    svgToken += 1;
+    const svg = svgHost.querySelector("svg");
+    if (svg && svg.pauseAnimations) svg.pauseAnimations();
+    svgHost.replaceChildren();
+  };
+
+  const syncAnimations = async () => {
+    const mode = currentMode();
+    if (mode === "focus") {
+      clearSvg();
       fallback.hidden = false;
       return;
     }
-    let index = 0;
-    const paint = () => {
-      animation.hidden = false;
-      fallback.hidden = true;
-      animation.src = fileUrl("animations", mode, files[index]);
-    };
-    paint();
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (files.length > 1 && !reduce) {
-      animTimer = window.setInterval(() => {
-        index = (index + 1) % files.length;
-        paint();
-      }, 12000);
+    const files = svgsFor(mode);
+    const { duration, elapsed } = timeline(mode);
+    const paused = timerState() === "paused";
+    if (!files.length) {
+      clearSvg();
+      animation.hidden = true;
+      fallback.hidden = false;
+      setMotion(paused);
+      return;
     }
+    const slot = duration / files.length;
+    const index = Math.min(files.length - 1, Math.floor(elapsed / Math.max(slot, 0.001)));
+    const key = `${mode}/${files[index]}/${files.length}`;
+    if (shownFile !== key) {
+      shownFile = key;
+      const token = ++svgToken;
+      const svg = await loadSvg(mode, files[index]);
+      if (token !== svgToken || shownFile !== key || currentMode() !== mode) return;
+      svgHost.replaceChildren();
+      if (!svg) {
+        fallback.hidden = false;
+        animation.hidden = true;
+        return;
+      }
+      svgHost.append(svg.cloneNode(true));
+      animation.hidden = true;
+      fallback.hidden = true;
+    }
+    setMotion(paused);
   };
 
   const loadTrack = async (mode, shouldPlay) => {
@@ -200,7 +334,7 @@
     if (mode === "focus") {
       atmosphere.hidden = true;
       audio.pause();
-      window.clearInterval(animTimer);
+      clearSvg();
       shownMode = "focus";
       applyLabels();
       return;
@@ -209,10 +343,8 @@
     const entered = shownMode !== mode;
     shownMode = mode;
     fillSelect(mode);
-    if (entered) {
-      showAnimation(mode);
-      loadTrack(mode, wantsPlay);
-    }
+    syncAnimations();
+    if (entered) loadTrack(mode, wantsPlay);
     applyLabels();
   };
 
@@ -245,7 +377,7 @@
   });
 
   volume.addEventListener("input", () => {
-    const value = Math.min(1, Math.max(0, Number(volume.value) || 0));
+    const value = clamp(Number(volume.value) || 0, 0, 1);
     audio.volume = value;
     saveVolume(value);
   });
@@ -268,12 +400,6 @@
     applyLabels();
   });
 
-  animation.addEventListener("error", () => {
-    animation.hidden = true;
-    animation.removeAttribute("src");
-    fallback.hidden = false;
-  });
-
   volume.value = String(readVolume());
   audio.volume = Number(volume.value);
 
@@ -286,6 +412,22 @@
     attributes: true,
     attributeFilter: ["lang"],
   });
+  if (timeDisplay) {
+    new MutationObserver(() => {
+      if (currentMode() !== "focus") syncAnimations();
+    }).observe(timeDisplay, { childList: true, characterData: true, subtree: true });
+  }
+  if (statusBadge) {
+    new MutationObserver(() => {
+      if (currentMode() !== "focus") syncAnimations();
+    }).observe(statusBadge, { attributes: true, attributeFilter: ["class"] });
+  }
+  [shortInput, longInput].forEach((input) => {
+    if (!input) return;
+    input.addEventListener("input", () => {
+      if (currentMode() !== "focus") syncAnimations();
+    });
+  });
 
   const credits = document.getElementById("footerCredits");
   if (credits) {
@@ -297,23 +439,26 @@
     });
   }
 
-  const readList = (url, target) => {
+  const readList = (url, target, onLoad) => {
     fetch(url, { cache: "no-store" })
       .then((response) => (response.ok ? response.json() : null))
       .then((data) => {
         if (!data || typeof data !== "object" || Array.isArray(data)) return;
         target.short = Array.isArray(data.short) ? data.short : [];
         target.long = Array.isArray(data.long) ? data.long : [];
-        const mode = currentMode();
-        if (mode === "focus") return;
-        fillSelect(mode);
-        showAnimation(mode);
-        if (wantsPlay) loadTrack(mode, true);
+        onLoad();
       })
       .catch(() => {});
   };
 
-  readList(new URL("media/music/playlist.json", document.baseURI).href, playlists);
-  readList(new URL("media/animations/animations.json", document.baseURI).href, animations);
+  readList(new URL("media/music/playlist.json", document.baseURI).href, playlists, () => {
+    const mode = currentMode();
+    if (mode === "focus") return;
+    fillSelect(mode);
+    if (wantsPlay) loadTrack(mode, true);
+  });
+  readList(new URL("media/animations/animations.json", document.baseURI).href, animations, () => {
+    if (currentMode() !== "focus") syncAnimations();
+  });
   sync();
 })();
