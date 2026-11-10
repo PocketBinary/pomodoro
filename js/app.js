@@ -791,6 +791,7 @@ const initPomodoro = () => {
       if (!input) return;
       const step = Number(button.dataset.step) || 1;
       const value = Number(input.value);
+      input.setAttribute("aria-valuenow", String(value));
       button.disabled = step > 0 ? value >= Number(input.max) : value <= Number(input.min);
     });
   };
@@ -844,6 +845,7 @@ const initPomodoro = () => {
     applyModeSelection();
     updateLabels();
     dom.soundEnabledInput.checked = Boolean(options.soundEnabled);
+    dom.soundEnabledInput.setAttribute("aria-checked", options.soundEnabled ? "true" : "false");
     dom.startPauseBtn.textContent = isRunning ? getText().controls.pause : getText().controls.start;
     dom.startPauseBtn.setAttribute(
       "aria-label",
@@ -1189,6 +1191,7 @@ const initPomodoro = () => {
 
   const handleOptionsChange = () => {
     options = { ...options, soundEnabled: dom.soundEnabledInput.checked };
+    dom.soundEnabledInput.setAttribute("aria-checked", dom.soundEnabledInput.checked ? "true" : "false");
     saveState(snapshot());
   };
 

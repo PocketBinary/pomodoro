@@ -3,34 +3,44 @@
 
 <head>
   <!-- ======================================================================
-       MÉTADONNÉES TECHNIQUES ET ENCODAGE
+       MÉTADONNÉES TECHNIQUES, ENCODAGE & RÉFÉRENCEMENT SEO
        ====================================================================== -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pomodoro — Simple Focus Timer</title>
   <meta name="description"
-    content="Free Pomodoro timer with focus sessions, short breaks, long breaks and saved settings. No signup required. Works offline.">
+    content="Free, elegant Pomodoro timer with custom focus sessions, ambient Zen break music, SVG animations and daily statistics. 100% private, works offline.">
+  <meta name="keywords"
+    content="pomodoro, pomodoro timer, focus timer, productivity app, time management, zen break music, study timer, work timer, offline pwa">
+  <meta name="author" content="PocketBinary">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta name="referrer" content="strict-origin-when-cross-origin">
+
+  <!-- ======================================================================
+       SÉCURITÉ STRICTE (ZÉRO DÉPENDANCE EXTERNE, CSP VERROUILLÉE)
+       ====================================================================== -->
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
-
-  <!-- Politique de sécurité du contenu (CSP) stricte -->
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; img-src 'self' data:; media-src 'self'; connect-src 'self'; font-src 'self'; worker-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests;">
+    content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; connect-src 'self'; font-src 'self'; worker-src 'self'; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests;">
 
-  <!-- Thème de couleur pour la barre de statut système mobile -->
+  <!-- Intégration mobile & Thèmes système -->
   <meta name="theme-color" content="#F5F6F8" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0F172A" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#0B1120" media="(prefers-color-scheme: dark)">
   <meta name="color-scheme" content="light dark">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Pomodoro">
+  <meta name="application-name" content="Pomodoro">
   <link rel="canonical" href="https://pocketbinary.github.io/pomodoro/">
 
-  <!-- Métadonnées Open Graph (Partage réseaux sociaux Facebook, LinkedIn, Discord) -->
+  <!-- Métadonnées Open Graph (Facebook, LinkedIn, Discord, Slack) -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Pomodoro Timer">
   <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="fr_FR">
   <meta property="og:title" content="Pomodoro — Simple Focus Timer">
   <meta property="og:description"
-    content="Free Pomodoro timer with focus sessions, breaks and progress tracking. No signup required.">
+    content="Free, elegant Pomodoro timer with custom focus sessions, ambient Zen break music, SVG animations and daily statistics. Works offline.">
   <meta property="og:url" content="https://pocketbinary.github.io/pomodoro/">
   <meta property="og:image" content="https://pocketbinary.github.io/pomodoro/icons/pomodoro.png">
   <meta property="og:image:width" content="512">
@@ -41,7 +51,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Pomodoro — Simple Focus Timer">
   <meta name="twitter:description"
-    content="Free Pomodoro timer with focus sessions, breaks and progress tracking. No signup required.">
+    content="Free, elegant Pomodoro timer with custom focus sessions, ambient Zen break music and daily progress tracking. Works offline.">
   <meta name="twitter:image" content="https://pocketbinary.github.io/pomodoro/icons/pomodoro.png">
   <meta name="twitter:image:alt" content="Pomodoro Timer Logo">
 
@@ -51,9 +61,13 @@
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "Pomodoro Timer",
-    "description": "Simple Pomodoro timer with focus sessions, short breaks and progress tracking.",
+    "description": "Simple Pomodoro timer with focus sessions, short breaks, long breaks, ambient Zen music and daily statistics.",
     "applicationCategory": "ProductivityApplication",
+    "applicationSubCategory": "TimeManagement",
     "operatingSystem": "Any",
+    "browserRequirements": "Requires JavaScript. Requires HTML5.",
+    "softwareVersion": "1.2.0",
+    "inLanguage": ["en", "fr"],
     "offers": {
       "@type": "Offer",
       "price": "0",
@@ -63,15 +77,23 @@
       "@type": "Person",
       "name": "PocketBinary"
     },
+    "featureList": [
+      "Customizable focus and break timers",
+      "Ambient Zen break music and meditative SVG animations",
+      "Daily productivity statistics tracking",
+      "WCAG 2.1 AA accessible interface",
+      "Offline Progressive Web App (PWA) support",
+      "Keyboard shortcuts navigation",
+      "Harmonized light and dark themes"
+    ],
     "url": "https://pocketbinary.github.io/pomodoro/",
-    "image": "https://pocketbinary.github.io/pomodoro/icons/pomodoro.png"
+    "image": "https://pocketbinary.github.io/pomodoro/icons/pomodoro.png",
+    "screenshot": "https://pocketbinary.github.io/pomodoro/icons/pomodoro-512.png"
   }
   </script>
 
   <!-- Configuration Progressive Web App (PWA) & Liens d'icônes -->
   <link rel="manifest" href="manifest.json">
-  <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
-  <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
   <link rel="icon" type="image/png" href="icons/pomodoro.png" sizes="32x32">
   <link rel="apple-touch-icon" href="icons/pomodoro.png" sizes="180x180">
   <link rel="mask-icon" href="icons/pomodoro.png" color="#0F172A">
@@ -80,26 +102,28 @@
   <link rel="preload" href="fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/chivo-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
 
-  <!-- Framework utilitaire Tailwind CSS (CDN officiel) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Feuille de styles personnalisée modulaire (Thèmes, Composants, Responsive) -->
+  <!-- ======================================================================
+       FEUILLES DE STYLES STATIQUES COMPILÉES (AUCUN CDN EXTERNE, 100% LOCAL)
+       ====================================================================== -->
+  <!-- 1. Utilitaires Tailwind CSS compilés et minifiés localement (~12 Ko) -->
+  <link rel="stylesheet" href="css/tailwind.min.css">
+  <!-- 2. Styles personnalisés (Thèmes, Tokens, Composants, Accessibilité, Tablette) -->
   <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body class="min-h-screen bg-[#F5F6F8] text-slate-900" data-theme="light">
-  <!-- Lien d'évitement pour la navigation au clavier (Accessibilité WCAG) -->
+  <!-- Lien d'évitement pour la navigation au clavier (Accessibilité WCAG 2.1 AA) -->
   <a id="skipLink" href="#main-content" class="skip-link">Skip to main content</a>
 
   <!-- ======================================================================
        CONTENEUR PRINCIPAL DE L'APPLICATION
        ====================================================================== -->
-  <main id="main-content" class="mx-auto max-w-5xl px-6 py-10">
+  <main id="main-content" class="mx-auto max-w-5xl px-6 py-10" role="main">
 
     <!-- Bandeau informatif d'orientation pour tablette (affiché si tenue en mode portrait) -->
-    <div id="tabletHint" class="tablet-orientation-hint" role="status">
+    <div id="tabletHint" class="tablet-orientation-hint" role="status" aria-live="polite">
       <svg class="h-5 w-5 shrink-0 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
         <rect width="18" height="14" x="3" y="5" rx="2" />
         <path d="M7 2h10" />
         <path d="M7 22h10" />
@@ -110,7 +134,7 @@
     <!-- ====================================================================
          EN-TÊTE APPLICATIF : Logo, Titres, Sélecteur de langue et Thème
          ==================================================================== -->
-    <header class="app-header">
+    <header class="app-header" role="banner">
       <div class="app-header__identity">
         <img src="icons/pomodoro.png" alt="Pomodoro Timer Logo" width="64" height="64" class="brand-logo" />
         <div class="app-header__titles">
@@ -131,7 +155,7 @@
           aria-label="Switch to dark theme">
           <span class="theme-toggle__thumb" aria-hidden="true">
             <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="12" cy="12" r="4"></circle>
               <path d="M12 2v2"></path>
               <path d="M12 20v2"></path>
@@ -143,7 +167,7 @@
               <path d="m19.07 4.93-1.41 1.41"></path>
             </svg>
             <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M20.99 12.6A8.5 8.5 0 1 1 11.4 3.01 6.5 6.5 0 0 0 20.99 12.6Z"></path>
             </svg>
           </span>
@@ -154,7 +178,8 @@
     <!-- ====================================================================
          GRILLE PRINCIPALE (Minuteur à gauche, Réglages et Statistiques à droite)
          ==================================================================== -->
-    <section class="app-main-grid grid gap-6 md:landscape:grid-cols-[2fr_1fr] lg:grid-cols-[2fr_1fr]">
+    <section class="app-main-grid grid gap-6 md:landscape:grid-cols-[2fr_1fr] lg:grid-cols-[2fr_1fr]"
+      aria-label="Minuteur et Réglages Pomodoro">
 
       <!-- COLONNE GAUCHE : MINUTEUR, CONTRÔLES ET AMBIANCE DE PAUSE -->
       <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
@@ -185,12 +210,12 @@
           </div>
         </div>
 
-        <!-- ZONE DU COMPTE À REBOURS AVEC ANNEAU CIRCULAIRE SVG -->
+        <!-- ZONE DU COMPTE À REBOURS AVEC ANNEAU CIRCULAIRE SVG (Rôle timer & progressbar) -->
         <div class="mt-8 flex flex-col items-center gap-6">
-          <div class="relative flex h-64 w-64 items-center justify-center" id="timer-display" role="region"
-            aria-label="Timer display">
+          <div class="relative flex h-64 w-64 items-center justify-center" id="timer-display" role="tabpanel"
+            aria-labelledby="modeSwitcher">
             <svg class="absolute inset-0 h-full w-full -rotate-90 overflow-visible" viewBox="0 0 260 260"
-              aria-hidden="true">
+              aria-hidden="true" focusable="false">
               <circle cx="130" cy="130" r="104" fill="none" stroke="#8792A1" stroke-width="10"></circle>
               <circle id="progressRing" cx="130" cy="130" r="104" fill="none" stroke="#0F172A" stroke-width="10"
                 stroke-linecap="round" stroke-dasharray="653.45" stroke-dashoffset="653.45" role="progressbar"
@@ -200,7 +225,7 @@
               class="relative flex h-52 w-52 items-center justify-center rounded-full bg-slate-50 ring-1 ring-slate-200">
               <div class="absolute inset-3 rounded-full bg-white shadow-inner"></div>
               <div class="relative text-center p-6">
-                <p id="timeDisplay" class="text-4xl font-semibold tabular-nums" aria-live="off">25:00</p>
+                <p id="timeDisplay" class="text-4xl font-semibold tabular-nums" role="timer" aria-live="off" aria-atomic="true">25:00</p>
                 <p id="modeText" class="mt-2 text-sm text-slate-500">Stay focused</p>
                 <!-- Annonces vocales pour les technologies d'assistance (lecteurs d'écran) -->
                 <p id="srAnnouncement" class="sr-only" aria-live="polite" aria-atomic="true"></p>
@@ -209,7 +234,7 @@
           </div>
 
           <!-- BOUTONS D'ACTION PRINCIPAUX (Démarrer / Mettre en pause, Réinitialiser) -->
-          <div class="flex flex-col items-center gap-2.5">
+          <div class="flex flex-col items-center gap-6">
             <div class="flex flex-wrap items-center justify-center gap-3">
               <button id="startPauseBtn" type="button"
                 class="min-h-11 rounded-full bg-slate-900 px-6 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 active:scale-[0.98] focus:outline-none"
@@ -218,7 +243,7 @@
                 class="min-h-11 rounded-full border border-slate-200 px-6 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-900 focus:outline-none"
                 aria-label="Reset timer">Reset</button>
             </div>
-            <p class="shortcut-hint">
+            <p class="shortcut-hint" aria-hidden="true">
               <kbd class="kbd" id="shortcutKey">Space</kbd>
               <span id="shortcutLabel">start / pause</span>
             </p>
@@ -230,28 +255,52 @@
               <div class="break-fallback"></div>
               <img id="breakAnimation" alt="" hidden>
             </div>
-            <div id="breakPlayer" class="break-player" role="group" aria-label="Break music">
-              <div id="breakPlayBtn" class="break-player__icon" aria-hidden="true" title="Musique de pause">
-                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                  stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M9 18V5l12-2v13"></path>
-                  <circle cx="6" cy="18" r="3"></circle>
-                  <circle cx="18" cy="16" r="3"></circle>
-                </svg>
-              </div>
-              <label class="break-player__pick">
-                <span id="breakPickLabel" class="sr-only">Choose a track</span>
-                <select id="breakTrackSelect">
-                  <option value="0">zen calming</option>
-                  <option value="1">zen garden</option>
-                  <option value="2">zen music 01</option>
-                  <option value="3">zen music 02</option>
-                  <option value="4">zen piano</option>
-                </select>
-              </label>
+            <div id="breakPlayer" class="break-player" role="group" aria-label="Break media">
+              <span class="break-player__group">
+                <div id="breakPlayBtn" class="break-player__icon" aria-hidden="true" title="Musique de pause">
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                    <path d="M9 18V5l12-2v13"></path>
+                    <circle cx="6" cy="18" r="3"></circle>
+                    <circle cx="18" cy="16" r="3"></circle>
+                  </svg>
+                </div>
+                <label class="break-player__pick">
+                  <span id="breakPickLabel" class="sr-only">Choose a track</span>
+                  <select id="breakTrackSelect" aria-label="Choisir une piste musicale de pause">
+                    <option value="0">zen calming</option>
+                    <option value="1">zen garden</option>
+                    <option value="2">zen music 01</option>
+                    <option value="3">zen music 02</option>
+                    <option value="4">zen piano</option>
+                  </select>
+                </label>
+              </span>
+              <span class="break-player__divider" aria-hidden="true"></span>
+              <span class="break-player__group">
+                <div id="breakAnimIcon" class="break-player__icon" aria-hidden="true" title="Animation de pause">
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                    <circle cx="12" cy="12" r="3.5"></circle>
+                    <path d="M12 2.5v2.5"></path>
+                    <path d="M12 19v2.5"></path>
+                    <path d="M2.5 12H5"></path>
+                    <path d="M19 12h2.5"></path>
+                    <path d="m5.4 5.4 1.8 1.8"></path>
+                    <path d="m16.8 16.8 1.8 1.8"></path>
+                    <path d="m18.6 5.4-1.8 1.8"></path>
+                    <path d="m7.2 16.8-1.8 1.8"></path>
+                  </svg>
+                </div>
+                <label class="break-player__pick">
+                  <span id="breakAnimLabel" class="sr-only">Choose an animation</span>
+                  <select id="breakAnimSelect" aria-label="Choisir une animation de pause"></select>
+                </label>
+              </span>
               <label class="break-player__volume">
                 <span id="breakVolumeLabel" class="sr-only">Volume</span>
-                <input id="breakVolume" type="range" min="0" max="1" step="0.05" value="0.4">
+                <input id="breakVolume" type="range" min="0" max="1" step="0.05" value="0.4"
+                  role="slider" aria-label="Volume de la musique" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40">
               </label>
               <audio id="breakAudio" preload="none"></audio>
             </div>
@@ -279,7 +328,7 @@
       </div>
 
       <!-- COLONNE DROITE : PANNEAU DES PARAMÈTRES ET STATISTIQUES DU JOUR -->
-      <aside class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+      <aside class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5" aria-label="Panneau des réglages et statistiques">
         <h2 id="settingsTitle" class="text-lg font-semibold">Settings</h2>
         <p id="settingsSubtitle" class="mt-1 text-sm text-slate-500">Adjust your rhythm without losing progress.</p>
 
@@ -292,7 +341,7 @@
                 aria-label="Decrease focus minutes" aria-controls="focusInput"><span aria-hidden="true">−</span></button>
               <span class="stepper__value">
                 <input id="focusInput" type="number" min="1" max="120" step="1" value="25" inputmode="numeric"
-                  class="stepper__input" aria-describedby="focusLabel">
+                  class="stepper__input" aria-describedby="focusLabel" aria-valuemin="1" aria-valuemax="120" aria-valuenow="25">
                 <span class="stepper__unit" aria-hidden="true">min</span>
               </span>
               <button type="button" class="stepper__button" data-stepper="focusInput" data-step="1"
@@ -307,7 +356,7 @@
                 aria-label="Decrease short break minutes" aria-controls="shortInput"><span aria-hidden="true">−</span></button>
               <span class="stepper__value">
                 <input id="shortInput" type="number" min="1" max="60" step="1" value="5" inputmode="numeric"
-                  class="stepper__input" aria-describedby="shortLabel">
+                  class="stepper__input" aria-describedby="shortLabel" aria-valuemin="1" aria-valuemax="60" aria-valuenow="5">
                 <span class="stepper__unit" aria-hidden="true">min</span>
               </span>
               <button type="button" class="stepper__button" data-stepper="shortInput" data-step="1"
@@ -322,7 +371,7 @@
                 aria-label="Decrease long break minutes" aria-controls="longInput"><span aria-hidden="true">−</span></button>
               <span class="stepper__value">
                 <input id="longInput" type="number" min="1" max="60" step="1" value="15" inputmode="numeric"
-                  class="stepper__input" aria-describedby="longLabel">
+                  class="stepper__input" aria-describedby="longLabel" aria-valuemin="1" aria-valuemax="60" aria-valuenow="15">
                 <span class="stepper__unit" aria-hidden="true">min</span>
               </span>
               <button type="button" class="stepper__button" data-stepper="longInput" data-step="1"
@@ -337,7 +386,7 @@
                 aria-label="Decrease sessions before long break" aria-controls="sessionsInput"><span aria-hidden="true">−</span></button>
               <span class="stepper__value">
                 <input id="sessionsInput" type="number" min="1" max="20" step="1" value="4" inputmode="numeric"
-                  class="stepper__input">
+                  class="stepper__input" aria-valuemin="1" aria-valuemax="20" aria-valuenow="4">
               </span>
               <button type="button" class="stepper__button" data-stepper="sessionsInput" data-step="1"
                 aria-label="Increase sessions before long break" aria-controls="sessionsInput"><span aria-hidden="true">+</span></button>
@@ -348,7 +397,8 @@
           <label class="settings-row settings-row--switch" for="soundEnabledInput">
             <span id="soundNotificationsLabel" class="settings-row__label">Sound notifications</span>
             <span class="switch">
-              <input id="soundEnabledInput" type="checkbox" class="switch__input" checked>
+              <input id="soundEnabledInput" type="checkbox" class="switch__input" checked
+                role="switch" aria-checked="true" aria-labelledby="soundNotificationsLabel">
               <span class="switch__track" aria-hidden="true"><span class="switch__thumb"></span></span>
             </span>
           </label>
@@ -360,7 +410,7 @@
             class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-slate-400 hover:bg-slate-50 hover:text-slate-900 focus:outline-none"
             aria-label="Reset settings to default">
             <svg class="h-3.5 w-3.5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
               <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
               <path d="M3 3v5h5" />
             </svg>
@@ -387,7 +437,7 @@
               class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-slate-400 hover:bg-slate-100 hover:text-slate-900 focus:outline-none"
               aria-label="Reset today's statistics">
               <svg class="h-3.5 w-3.5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                 <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
                 <path d="M3 3v5h5" />
               </svg>
@@ -403,13 +453,14 @@
        PIED DE PAGE (CRÉDITS, CITATION INSPIRANTE & LIEN GITHUB)
        ====================================================================== -->
   <footer
-    class="mx-auto flex max-w-5xl flex-col items-center gap-3 px-6 pb-8 text-center text-sm text-slate-500 md:grid md:grid-cols-3 md:text-left">
+    class="mx-auto flex max-w-5xl flex-col items-center gap-3 px-6 pb-8 text-center text-sm text-slate-500 md:grid md:grid-cols-3 md:text-left"
+    role="contentinfo">
     <p id="footerCredits">© 2026 Pomodoro · Created by PocketBinary</p>
     <p id="footerQuote" class="italic text-slate-400 md:text-center">One tomato at a time, return to calm focus.</p>
     <a id="githubLink" href="https://github.com/PocketBinary/pomodoro" target="_blank" rel="noopener noreferrer"
       class="inline-flex items-center gap-2 font-medium text-slate-600 transition hover:text-slate-900 md:justify-self-end"
       aria-label="View the Pomodoro repository on GitHub">
-      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
         <path
           d="M12 2C6.48 2 2 6.58 2 12.26c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.38-3.37-1.38-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.89 1.57 2.34 1.12 2.91.86.09-.66.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 6.99c.85 0 1.71.12 2.51.34 1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.8-4.57 5.05.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.59.69.49A10.13 10.13 0 0 0 22 12.26C22 6.58 17.52 2 12 2Z" />
       </svg>
@@ -418,9 +469,10 @@
   </footer>
 
   <!-- ======================================================================
-       BOÎTE DE DIALOGUE MODALE ACCESSIBLE (<dialog>)
+       BOÎTE DE DIALOGUE MODALE ACCESSIBLE (<dialog>, role alertdialog)
        ====================================================================== -->
-  <dialog id="appDialog" class="app-dialog" aria-labelledby="appDialogTitle" aria-describedby="appDialogText">
+  <dialog id="appDialog" class="app-dialog" role="alertdialog" aria-modal="true"
+    aria-labelledby="appDialogTitle" aria-describedby="appDialogText">
     <div class="app-dialog__inner">
       <h2 id="appDialogTitle" class="app-dialog__title">Session in progress</h2>
       <p id="appDialogText" class="app-dialog__text"></p>

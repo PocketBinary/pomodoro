@@ -36,22 +36,20 @@
   // Dictionnaire de textes d'accessibilité et d'interface pour le lecteur
   const ui = {
     en: {
-      player: "Break music",
-      play: "Play break music",
-      pause: "Pause break music",
+      player: "Break media",
       volume: "Volume",
       choose: "Choose a track",
+      chooseAnim: "Choose an animation",
       empty: "No track yet",
-      missing: "Track not found",
+      emptyAnim: "No animation",
     },
     fr: {
-      player: "Musique de pause",
-      play: "Lire la musique de pause",
-      pause: "Mettre la musique en pause",
+      player: "Médias de pause",
       volume: "Volume",
       choose: "Choisir une piste",
+      chooseAnim: "Choisir une animation",
       empty: "Aucune piste",
-      missing: "Piste introuvable",
+      emptyAnim: "Aucune animation",
     },
   };
 
@@ -61,6 +59,8 @@
   const playBtn = document.getElementById("breakPlayBtn");
   const select = document.getElementById("breakTrackSelect");
   const pickLabel = document.getElementById("breakPickLabel");
+  const animSelect = document.getElementById("breakAnimSelect");
+  const animLabel = document.getElementById("breakAnimLabel");
   const volume = document.getElementById("breakVolume");
   const volumeLabel = document.getElementById("breakVolumeLabel");
   const audio = document.getElementById("breakAudio");
@@ -76,7 +76,7 @@
   const longInput = document.getElementById("longInput");
 
   // Si des éléments essentiels manquent dans la page, on interrompt silencieusement
-  if (!sloganEl || !atmosphere || !playBtn || !select || !pickLabel || !volume || !volumeLabel || !audio || !animation || !fallback || !player || !switcher || !stage) {
+  if (!sloganEl || !atmosphere || !playBtn || !select || !pickLabel || !animSelect || !animLabel || !volume || !volumeLabel || !audio || !animation || !fallback || !player || !switcher || !stage) {
     return;
   }
 
@@ -108,6 +108,8 @@
   let playlist = [...DEFAULT_PLAYLIST];
   let animations = [...DEFAULT_ANIMATIONS];
   let currentTrackIndex = 0;
+  // Animation choisie par l'utilisateur (nom de fichier), null = première de la liste
+  let chosenAnimation = null;
   let wantsPlay = false;
   let missing = false;
   let shownMode = null;
@@ -160,28 +162,41 @@
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
   /**
+   * Lit toutes les préférences de pause sauvegardées (volume + animation choisie).
+   */
+  const readPrefs = () => {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+      return parsed && typeof parsed === "object" ? parsed : {};
+    } catch {
+      return {};
+    }
+  };
+
+  /**
+   * Fusionne et enregistre une préférence sans écraser les autres clés.
+   */
+  const savePrefs = (patch) => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...readPrefs(), ...patch }));
+    } catch {
+      return;
+    }
+  };
+
+  /**
    * Lit le niveau de volume sauvegardé dans le localStorage (par défaut : 40%).
    */
   const readVolume = () => {
-    try {
-      const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
-      const value = parsed && Number(parsed.volume);
-      if (Number.isFinite(value)) return clamp(value, 0, 1);
-    } catch {
-      return 0.4;
-    }
-    return 0.4;
+    const value = Number(readPrefs().volume);
+    return Number.isFinite(value) ? clamp(value, 0, 1) : 0.4;
   };
 
   /**
    * Enregistre le niveau de volume actuel dans le localStorage.
    */
   const saveVolume = (value) => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ volume: value }));
-    } catch {
-      return;
-    }
+    savePrefs({ volume: value });
   };
 
   /**
@@ -205,41 +220,6 @@
     if (cls.includes("emerald")) return "running";
     if (cls.includes("amber")) return "paused";
     return "ready";
-  };
-
-  /**
-   * Récupère le temps restant en secondes depuis l'affichage visible (ex: '05:00').
-   */
-  const remainingSeconds = () => {
-    const match = (timeDisplay && timeDisplay.textContent || "").trim().match(/^(\d{1,3}):(\d{2})$/);
-    if (!match) return null;
-    return Number(match[1]) * 60 + Number(match[2]);
-  };
-
-  /**
-   * Récupère la durée configurée pour un mode de pause donné.
-   */
-  const configuredSeconds = (mode) => {
-    const input = mode === "long" ? longInput : shortInput;
-    const fallbackMinutes = mode === "long" ? 15 : 5;
-    return clamp(Number(input && input.value) || fallbackMinutes, 1, 60) * 60;
-  };
-
-  /**
-   * Calcule la durée totale et le temps écoulé de la pause pour caler l'animation.
-   */
-  const timeline = (mode) => {
-    const configured = configuredSeconds(mode);
-    const remaining = remainingSeconds();
-    const percent = Number(progressRing && progressRing.getAttribute("aria-valuenow")) || 0;
-    let duration = configured;
-    if (remaining !== null && percent > 0 && percent < 100) {
-      duration = Math.max(1, Math.round(remaining / (1 - percent / 100)));
-    } else if (remaining !== null) {
-      duration = Math.max(configured, remaining);
-    }
-    const elapsed = remaining === null ? 0 : clamp(duration - remaining, 0, duration);
-    return { duration, elapsed };
   };
 
   /**
@@ -295,7 +275,7 @@
    * Assainit le DOM SVG pour supprimer tout script, iframe ou attribut dangereux (anti-XSS).
    */
   const sanitizeSvg = (doc) => {
-    doc.querySelectorAll("script,foreignObject,iframe,object,embed,audio,video,link,meta").forEach((node) => node.remove());
+    doc.querySelectorAll("script,foreignObject,iframe,object,embed,audio,video,link,meta,use,set,handler,listener").forEach((node) => node.remove());
     doc.querySelectorAll("*").forEach((node) => {
       [...node.attributes].forEach((attr) => {
         const name = attr.name.toLowerCase();
@@ -304,7 +284,7 @@
           node.removeAttribute(attr.name);
           return;
         }
-        if (name === "href" || name.endsWith(":href") || name === "src") {
+        if (name === "href" || name.endsWith(":href") || name === "src" || name === "xlink:href") {
           if (!value.startsWith("#") || value.includes("\\")) node.removeAttribute(attr.name);
           else if (unsafeUrl(value)) node.removeAttribute(attr.name);
           return;
@@ -376,7 +356,7 @@
   };
 
   /**
-   * Synchronise l'affichage de l'animation SVG avec l'avancement temporel de la pause.
+   * Affiche l'animation choisie par l'utilisateur, qui boucle pendant toute la pause.
    */
   const syncAnimations = async () => {
     const mode = currentMode();
@@ -386,7 +366,6 @@
       return;
     }
     const files = svgsFor();
-    const { duration, elapsed } = timeline(mode);
     const paused = timerState() === "paused";
     if (!files.length) {
       clearSvg();
@@ -395,9 +374,9 @@
       setMotion(paused);
       return;
     }
-    const slot = duration / files.length;
-    const index = Math.min(files.length - 1, Math.floor(elapsed / Math.max(slot, 0.001)));
-    const key = `${files[index]}/${files.length}`;
+    // Le choix de l'utilisateur prime ; à défaut, la première animation de la liste
+    const index = Math.max(0, files.indexOf(chosenAnimation));
+    const key = files[index];
     if (shownFile !== key) {
       shownFile = key;
       const token = ++svgToken;
@@ -509,6 +488,7 @@
   volume.addEventListener("input", () => {
     const value = clamp(Number(volume.value) || 0, 0, 1);
     audio.volume = value;
+    volume.setAttribute("aria-valuenow", String(Math.round(value * 100)));
     saveVolume(value);
   });
 
@@ -532,8 +512,10 @@
   });
 
   // Initialisation du volume initial
-  volume.value = String(readVolume());
-  audio.volume = Number(volume.value);
+  const initialVolume = readVolume();
+  volume.value = String(initialVolume);
+  volume.setAttribute("aria-valuenow", String(Math.round(initialVolume * 100)));
+  audio.volume = initialVolume;
 
   // Synchronisation avec les clics sur Démarrer / Pause et Réinitialiser
   const startPauseBtn = document.getElementById("startPauseBtn");

@@ -88,6 +88,7 @@ pomodoro/
 ├── .gitignore              # Excludes local tooling, macOS and Windows artefacts
 │
 ├── css/                    # Stylesheet architecture
+│   ├── tailwind.min.css    # Standalone minified Tailwind CSS bundle (zero external CDN)
 │   └── style.css           # Design tokens, light/dark themes, components, tablet rules
 │
 ├── js/                     # Application scripts with comprehensive FR comments
@@ -124,7 +125,7 @@ pomodoro/
 | Area | Implementation |
 | ---- | -------------- |
 | **Framework** | None — Vanilla HTML5, CSS3, and JavaScript ES6+ |
-| **Styling** | Tailwind CSS CDN + custom design tokens in `css/style.css` |
+| **Styling** | Standalone Tailwind CSS (`css/tailwind.min.css`, zero CDN) + custom design tokens in `css/style.css` |
 | **State** | `localStorage` with JSON schema validation & self-healing fallback |
 | **Audio** | Native Web Audio API sine oscillator synthesis + HTML5 Audio for ambient tracks |
 | **Offline & PWA** | Service Worker (`Cache-First` for static assets, `Network-First` for HTML) |

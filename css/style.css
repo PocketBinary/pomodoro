@@ -384,6 +384,10 @@
     .break-atmosphere {
       display: grid;
       width: min(100%, 28rem);
+      /* Keeps the animation stage off the keyboard hint sitting above it */
+      margin-top: 0.625rem;
+      /* The player is only as wide as its content, so it centres under the stage */
+      justify-items: center;
       gap: 0.75rem;
     }
 
@@ -432,14 +436,32 @@
     }
 
     .break-player {
-      display: flex;
+      display: inline-flex;
       align-items: center;
+      /* Sized by its controls: a full-width pill left the track name floating in a void */
+      width: fit-content;
+      max-width: 100%;
       gap: 0.5rem;
       min-height: 2.75rem;
-      padding: 0.25rem 0.45rem 0.25rem 0.25rem;
+      padding: 0.25rem 0.5rem 0.25rem 0.25rem;
       border: 1px solid var(--app-border);
       border-radius: 999px;
       background: var(--app-panel-soft);
+    }
+
+    /* Each picker is an icon chip plus its select, so the pair reads as one control */
+    .break-player__group {
+      display: inline-flex;
+      min-width: 0;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .break-player__divider {
+      width: 1px;
+      height: 1.25rem;
+      flex: 0 0 auto;
+      background: var(--app-border);
     }
 
     .break-player__icon,
@@ -460,11 +482,13 @@
 
     .break-player__pick {
       min-width: 0;
-      flex: 1;
+      /* Hugs the selected name instead of claiming every free pixel */
+      flex: 0 1 auto;
     }
 
     .break-player select {
-      width: 100%;
+      width: auto;
+      max-width: 10rem;
       min-height: 2.25rem;
       border: 0;
       background: transparent !important;
@@ -1038,8 +1062,16 @@
         white-space: nowrap;
       }
 
+      /* Narrow screens cannot fit the pickers on one line: full width, wrapped */
       .break-player {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: center;
         border-radius: 1rem;
+      }
+
+      .break-player select {
+        max-width: 8.5rem;
       }
 
       .app-dialog__actions {
