@@ -112,8 +112,8 @@
     body[data-theme="light"] {
       --app-bg: #F5F6F8;
       --app-text: #0F172A;
-      --app-muted: #64748B;
-      --app-muted-soft: #94A3B8;
+      /* 5.49:1 on the page background — AA for normal text (was 4.40:1) */
+      --app-muted: #5C6476;
       --app-panel: #FFFFFF;
       --app-panel-soft: #F8FAFC;
       --app-border: #E2E8F0;
@@ -121,7 +121,8 @@
       --app-primary: #0F172A;
       --app-primary-hover: #1E293B;
       --app-primary-text: #FFFFFF;
-      --app-progress-track: #E2E8F0;
+      /* 3.02:1 on the inner disc, 3.15:1 on the card — AA non-text (was 1.18:1) */
+      --app-progress-track: #8792A1;
       --app-progress-ring: #0F172A;
       --app-focus: #0F172A;
       --app-checkbox: #475569;
@@ -133,8 +134,8 @@
     body[data-theme="dark"] {
       --app-bg: #0B1120;
       --app-text: #E5E7EB;
+      /* 9.85:1 on the lightest dark surface — far above AA */
       --app-muted: #CBD5E1;
-      --app-muted-soft: #94A3B8;
       --app-panel: #111827;
       --app-panel-soft: #1E293B;
       --app-border: #334155;
@@ -142,7 +143,8 @@
       --app-primary: #F8FAFC;
       --app-primary-hover: #CBD5E1;
       --app-primary-text: #0F172A;
-      --app-progress-track: #334155;
+      /* 3.07:1 on the inner disc, 3.73:1 on the card — AA non-text (was 1.41:1) */
+      --app-progress-track: #64748B;
       --app-progress-ring: #F8FAFC;
       --app-focus: #F8FAFC;
       --app-checkbox: #CBD5E1;
