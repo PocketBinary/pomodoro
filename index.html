@@ -831,7 +831,8 @@
       color: var(--app-text);
     }
 
-    @media (hover: none), (pointer: coarse) {
+    @media (hover: none),
+    (pointer: coarse) {
       .shortcut-hint {
         display: none;
       }
@@ -1167,7 +1168,8 @@
 
   <main id="main-content" class="mx-auto max-w-5xl px-6 py-10">
     <div id="tabletHint" class="tablet-orientation-hint" role="status">
-      <svg class="h-5 w-5 shrink-0 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <svg class="h-5 w-5 shrink-0 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <rect width="18" height="14" x="3" y="5" rx="2" />
         <path d="M7 2h10" />
         <path d="M7 22h10" />
@@ -1282,7 +1284,8 @@
             </div>
             <div id="breakPlayer" class="break-player" role="group" aria-label="Break music">
               <div id="breakPlayBtn" class="break-player__icon" aria-hidden="true" title="Musique de pause">
-                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
                   <path d="M9 18V5l12-2v13"></path>
                   <circle cx="6" cy="18" r="3"></circle>
                   <circle cx="18" cy="16" r="3"></circle>
@@ -1336,14 +1339,16 @@
             <label id="focusInputLabel" for="focusInput" class="settings-row__label">Focus minutes</label>
             <div class="stepper" role="group" aria-labelledby="focusInputLabel">
               <button type="button" class="stepper__button" data-stepper="focusInput" data-step="-1"
-                aria-label="Decrease focus minutes" aria-controls="focusInput"><span aria-hidden="true">−</span></button>
+                aria-label="Decrease focus minutes" aria-controls="focusInput"><span
+                  aria-hidden="true">−</span></button>
               <span class="stepper__value">
                 <input id="focusInput" type="number" min="1" max="120" step="1" value="25" inputmode="numeric"
                   class="stepper__input" aria-describedby="focusLabel">
                 <span class="stepper__unit" aria-hidden="true">min</span>
               </span>
               <button type="button" class="stepper__button" data-stepper="focusInput" data-step="1"
-                aria-label="Increase focus minutes" aria-controls="focusInput"><span aria-hidden="true">+</span></button>
+                aria-label="Increase focus minutes" aria-controls="focusInput"><span
+                  aria-hidden="true">+</span></button>
             </div>
           </div>
 
@@ -1368,7 +1373,8 @@
             <label id="longInputLabel" for="longInput" class="settings-row__label">Long break minutes</label>
             <div class="stepper" role="group" aria-labelledby="longInputLabel">
               <button type="button" class="stepper__button" data-stepper="longInput" data-step="-1"
-                aria-label="Decrease long break minutes" aria-controls="longInput"><span aria-hidden="true">−</span></button>
+                aria-label="Decrease long break minutes" aria-controls="longInput"><span
+                  aria-hidden="true">−</span></button>
               <span class="stepper__value">
                 <input id="longInput" type="number" min="1" max="60" step="1" value="15" inputmode="numeric"
                   class="stepper__input" aria-describedby="longLabel">
