@@ -1423,3 +1423,4 @@ if (document.readyState === "loading") {
 } else {
   initPomodoro();
 }
+

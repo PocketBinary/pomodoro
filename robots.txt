@@ -1,3 +1,56 @@
+# ============================================================================
+# robots.txt — Pomodoro Timer
+# https://pocketbinary.github.io/pomodoro/
+# ============================================================================
+#
+# À LIRE : un robots.txt n'est pris en compte que s'il est servi à la RACINE
+# de l'origine. Sur un site projet GitHub Pages, ce fichier est exposé à
+# /pomodoro/robots.txt : Google et Bing ne le lisent pas, ils interrogent
+# uniquement https://pocketbinary.github.io/robots.txt (racine du domaine, hors
+# de ce dépôt). En attendant, le sitemap doit être soumis à la main dans Search
+# Console et Bing Webmaster Tools.
+#
+# Les règles ci-dessous sont écrites pour être valides telles quelles : elles
+# s'activeront sans modification dès que l'application sera servie depuis son
+# propre domaine (CNAME sur l'apex ou un sous-domaine, ou dépôt
+# <utilisateur>.github.io qui place le site à la racine).
+
+# ----------------------------------------------------------------------------
+# Robots classiques : application publique, rien à masquer.
+# Les assets (css/, js/, fonts/, icons/, media/) restent accessibles : les
+# bloquer empêcherait Google d'afficher correctement la page.
+# ----------------------------------------------------------------------------
 User-agent: *
 Allow: /
+
+# ----------------------------------------------------------------------------
+# Assistants et moteurs de réponse IA : autorisation explicite.
+# Objectif : le site peut être lu, cité et lié dans ChatGPT, Claude, Perplexity,
+# Copilot, Gemini et les AI Overviews.
+#
+# Pour refuser ce bloc, remplacer le "Allow: /" par "Disallow: /".
+# Pour autoriser la citation mais refuser l'entraînement, passer en
+# "Disallow: /" uniquement GPTBot, ClaudeBot, Google-Extended,
+# Applebot-Extended, Amazonbot et CCBot.
+# Les groupes nommés ont priorité sur le groupe "*".
+# ----------------------------------------------------------------------------
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-User
+User-agent: Claude-SearchBot
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: Amazonbot
+User-agent: CCBot
+User-agent: meta-externalagent
+User-agent: cohere-ai
+Allow: /
+
+# ----------------------------------------------------------------------------
+# Découverte du plan du site (URL absolue obligatoire, une relative est ignorée).
+# ----------------------------------------------------------------------------
 Sitemap: https://pocketbinary.github.io/pomodoro/sitemap.xml
