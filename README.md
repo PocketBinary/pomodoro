@@ -2,29 +2,31 @@
   <div>
     <table style="display: flex; justify-content: center; align-items: center;">
       <tr>
-        <td><img src="pomodoro.png" alt="Pomodoro Timer Logo" width="64" height="64" /></td>
+        <td><img src="icons/pomodoro.png" alt="Pomodoro Timer Logo" width="64" height="64" /></td>
         <td><h1>Pomodoro</h1></td>
       </tr>
     </table>
   </div>
   <p><strong>Simple Focus Timer</strong> — Stay focused, track progress, get things done.</p>
-  <p><a href="README_FR.md">Lire en français</a></p>
+  <p><a href="README_FR.md">Lire la documentation en français</a></p>
   <br />
 
-
   <!-- Badges Row -->
+  [![HTML](https://img.shields.io/badge/HTML5-%23E34F26.svg?logo=html5&logoColor=white)](#)
+  [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=000)](#)
+  [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-%2338B2AC.svg?logo=tailwind-css&logoColor=white)](#)
+  [![Visual Studio Code](https://custom-icon-badges.demolab.com/badge/Visual%20Studio%20Code-0078d7.svg?logo=visualstudiocode&logoColor=white)](#)
+  ![Offline Ready](https://img.shields.io/badge/PWA-offline%20ready-blueviolet)
+  <br /><br />
 
-[![HTML](https://img.shields.io/badge/HTML-%23E34F26.svg?logo=html5&logoColor=white)](#)   [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=000)](#)  [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-%2338B2AC.svg?logo=tailwind-css&logoColor=white)](#)  [![Visual Studio Code](https://custom-icon-badges.demolab.com/badge/Visual%20Studio%20Code-0078d7.svg?logo=visualstudiocode&logoColor=white)](#) ![Offline Ready](https://img.shields.io/badge/PWA-offline%20ready-blueviolet) <br /><br />
-
-[![ReadMe](https://img.shields.io/badge/ReadMe-018EF5?logo=readme&logoColor=fff)](#)
-[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
-[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-121013?logo=github&logoColor=white)](#)
-![Open Source? Yes!](https://badgen.net/badge/Open%20Source%20%3F/Yes%21/blue?icon=github)
-<br />
-<br />
-<a href="https://pocketbinary.github.io/pomodoro/" rel="nofollow">
+  [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+  [![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-121013?logo=github&logoColor=white)](#)
+  ![Open Source? Yes!](https://badgen.net/badge/Open%20Source%20%3F/Yes%21/blue?icon=github)
+  <br />
+  <br />
+  <a href="https://pocketbinary.github.io/pomodoro/" rel="nofollow">
     <img src="https://www.w3.org/WAI/wcag21/wcag2.1AA-blue-v.svg" alt="WCAG 2.1 AA Accessibility" width="1000px" height="30px">
-</a>
+  </a>
 </div>
 
 <br />
@@ -36,183 +38,122 @@
 
 <div align="center">
 
-| Focus | Breaks | Stats | Audio | Notifications |
-| :---: | :----: | :---: | :---: | :-----------: |
-| Custom sessions | Short & long | Counter + total time | Optional beep | Browser opt-in |
+| Focus | Breaks & Music | Daily Stats | Audio Beep | Notifications |
+| :---: | :------------: | :---------: | :--------: | :-----------: |
+| Custom sessions | 5 Zen tracks + 4 SVG animations | Counters + total focus time | Synthesized Web Audio chime | Native browser opt-in |
 
 </div>
 
-- **Pomodoro timer** with three modes: Focus, Short Break, Long Break
-- **Automatic saving** of app state in the browser with `localStorage`
-- **Smart resume** after page reloads
-- **Adjustable settings**: session lengths, breaks and cycle count
-- **Visual progress indicator** with an animated SVG ring
-- **Responsive interface** for desktop, tablet and mobile
-- **Light/Dark themes** with persisted preference
-- **English/French UI switch** with persisted preference
-- **PWA support** — installable like a native app
-- **SEO optimized** — JSON-LD, Open Graph, Twitter Cards and sitemap
-- **Accessible** — keyboard navigation, screen readers and reduced motion
+- **3 Pomodoro Timer Modes**: Focus, Short Break, and Long Break with configurable cycles.
+- **Ambient Break Player**: 5 calming Zen music tracks (`.mp3`) and 4 meditative SVG animations, automatically synchronized with break timer playback.
+- **Dedicated Reset Actions**:
+  - **Timer Reset**: Resets only the active countdown without erasing daily progress or changing mode.
+  - **Settings Reset**: Restores duration inputs to defaults (`25 / 5 / 15 / 4`) and sound enabled, protected by a modal confirmation dialog.
+  - **Daily Stats Reset**: Clears today's completed sessions and total focus time, protected by confirmation and equipped with an instant **Undo toast**.
+- **Tablet Landscape Optimization**: Dedicated 2-column landscape layout without vertical overflow, rotation unlocked in PWA manifest, and discreet portrait orientation banner.
+- **Automatic State Persistence**: Safe `localStorage` schema with strict type validation; resumes smoothly after tab reload or sleep.
+- **Responsive & Themed**: Harmonized Light / Dark themes across all UI components (including dropdown menus) and full mobile / tablet / desktop support.
+- **Bilingual Interface**: Instant English / French switching without page reload.
+- **Progressive Web App (PWA)**: Installable like a native app, driven by a resilient Service Worker (`pomodoro-cache-v8`) for complete offline usage.
+- **Accessible (WCAG 2.1 AA)**: Full keyboard navigation (WAI-ARIA tablist pattern, <kbd>Space</kbd> toggle), screen reader live announcements, and `prefers-reduced-motion` compliance.
+- **SEO Ready**: JSON-LD semantic metadata, Open Graph cards, Twitter Cards, robots.txt, and sitemap.
 
 <br />
 
 ---
 
-## Demo
+## Live Demo
 
-**[View the live demo](https://pocketbinary.github.io/pomodoro/)**
+**[Explore the live application on GitHub Pages](https://pocketbinary.github.io/pomodoro/)**
 
 <br />
 
 ---
 
-## Project Structure
+## Modern Project Structure
+
+Organized following modern static PWA standards with separation of concerns:
 
 ```text
 pomodoro/
-├── index.html          # Main page with semantic HTML and SEO metadata
-├── script.js           # Timer logic, UI state and preferences
-├── break-media.js      # Break media manager (music and animations)
-├── sw.js               # Service worker for PWA/offline support
-├── media/              # Break media assets (.mp3 audio and .svg animations)
-│   ├── media.json      # Media configuration
-│   └── README.md       # Media documentation
-├── pomodoro.png        # Logo, favicon and Open Graph image
-├── pomodoro-192.png    # 192x192 PWA icon
-├── pomodoro-512.png    # 512x512 PWA icon
-├── manifest.json       # PWA manifest
-├── robots.txt          # Search engine crawl directives
-├── sitemap.xml         # SEO sitemap
-├── LICENSE             # MIT license
-├── README.md           # English documentation
-└── README_FR.md        # French documentation
+├── index.html              # Main semantic HTML5 page with accessible structure
+├── manifest.json           # Web App Manifest for native installation
+├── sw.js                   # Service Worker (Cache-First assets & Network-First HTML)
+├── robots.txt              # Search engine crawl directives
+├── sitemap.xml             # XML sitemap for SEO discovery
+├── LICENSE                 # MIT open-source license
+├── README.md               # English project documentation
+├── README_FR.md            # French project documentation
+│
+├── css/                    # Stylesheet architecture
+│   └── style.css           # Design tokens, light/dark themes, components, tablet rules
+│
+├── js/                     # Application scripts with comprehensive FR comments
+│   ├── app.js              # Timer engine, state management, Web Audio API, a11y
+│   └── break-media.js      # Break ambiance player (audio tracks and SVG animations)
+│
+├── fonts/                  # Self-hosted web fonts for privacy, offline & CSP compliance
+│   ├── archivo-latin.woff2
+│   ├── archivo-latin-ext.woff2
+│   ├── chivo-mono-latin.woff2
+│   └── chivo-mono-latin-ext.woff2
+│
+├── icons/                  # Application and PWA icons
+│   ├── pomodoro.png        # Favicon and standard brand logo
+│   ├── pomodoro-192.png    # 192x192 PWA homescreen icon
+│   └── pomodoro-512.png    # 512x512 PWA splashscreen icon
+│
+└── media/                  # Relaxing break media assets
+    ├── media.json          # Tracklist and animation catalog configuration
+    ├── README.md           # Break media documentation
+    ├── zen calming.mp3
+    ├── zen garden.mp3
+    ├── zen music 01.mp3
+    ├── zen music 02.mp3
+    ├── zen piano.mp3
+    ├── Zen Ying-Yang.svg
+    ├── ZenMan.svg
+    ├── ZenNenuphar.svg
+    └── ZENWoman.svg
 ```
 
-### Technical Details
+### Technical Architecture
 
 | Area | Implementation |
 | ---- | -------------- |
-| **Framework** | None — vanilla HTML5, CSS3 and JavaScript |
-| **Styling** | Tailwind CSS via CDN plus custom CSS tokens |
-| **State** | `localStorage` with schema validation |
-| **Audio** | Web Audio API with native oscillators |
-| **Notifications** | Web Notifications API |
-| **Progress** | Animated SVG `stroke-dashoffset` |
-| **PWA** | Web App Manifest, service worker and icons |
+| **Framework** | None — Vanilla HTML5, CSS3, and JavaScript ES6+ |
+| **Styling** | Tailwind CSS CDN + custom design tokens in `css/style.css` |
+| **State** | `localStorage` with JSON schema validation & self-healing fallback |
+| **Audio** | Native Web Audio API sine oscillator synthesis + HTML5 Audio for ambient tracks |
+| **Offline & PWA** | Service Worker (`Cache-First` for static assets, `Network-First` for HTML) |
+| **Accessibility** | WAI-ARIA tablist pattern, `<dialog>` modal, live regions, WCAG 2.1 AA |
 
 <br />
 
 ---
 
-## Installation
+## Getting Started
 
-### Option 1: Local Development
+### Local Development
+
+No build step or bundler is required. Simply serve the project folder using any static HTTP server:
 
 ```bash
-# Clone the repository
-git clone https://github.com/PocketBinary/pomodoro.git
-cd pomodoro
+# Using npx serve
+npx serve . -l 3000
 
-# Serve the folder locally for PWA testing
-npx serve .
+# Or with Python 3
+python -m http.server 3000
 ```
 
-Then open the local URL shown by the command.
+Open your browser at `http://localhost:3000`.
 
-### Option 2: GitHub Pages
+### Keyboard Shortcuts
 
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/PocketBinary/pomodoro.git
-git push -u origin main
-```
-
-Then enable GitHub Pages: **Settings → Pages → Source: Deploy from a branch → main → / (root)**.
-
-<br />
-
----
-
-## Accessibility
-
-This project aims to follow **WCAG 2.1 AA** practices:
-
-- Full keyboard navigation with Tab, Shift+Tab, Enter, Space and arrow keys
-- ARIA tablist pattern on the mode selector
-- ARIA progressbar on the progress ring
-- Live regions for timer announcements
-- Skip link to jump to the main content
-- Strong visible focus on interactive elements
-- `prefers-reduced-motion` support
-- Checked color contrast for readable text
-
-<br />
-
----
-
-## Security
-
-| Measure | Description |
-| ------- | ----------- |
-| **CSP (Content Security Policy)** | `default-src 'self'` with controlled exceptions for Tailwind CDN |
-| **X-Content-Type-Options** | `nosniff` to reduce MIME sniffing risk |
-| **Referrer Policy** | `strict-origin-when-cross-origin` to reduce data leakage |
-| **localStorage validation** | Versioned schema with strict type checks |
-| **No `eval()`** | No dynamic code execution |
-| **No `innerHTML`** | UI content is updated with `textContent` |
-
-<br />
-
----
-
-## SEO
-
-| Element | Implementation |
-| ------- | -------------- |
-| **Meta description** | Present and optimized |
-| **Canonical URL** | Avoids duplicate content |
-| **Open Graph** | `og:title`, `og:description`, `og:image`, `og:url` |
-| **Twitter Cards** | `twitter:card`, `twitter:title`, `twitter:image` |
-| **JSON-LD** | `WebApplication` structured data |
-| **robots.txt** | Indexing directives |
-| **sitemap.xml** | Search engine discovery |
-| **Theme color** | Adapts to light and dark themes |
-
-<br />
-
----
-
-## Customization
-
-### Change Default Durations
-
-Edit the default settings in `script.js`:
-
-```javascript
-const getDefaultState = () => ({
-  settings: {
-    focus: 25, // focus minutes
-    shortBreak: 5, // short break minutes
-    longBreak: 15, // long break minutes
-    sessions: 4, // sessions before a long break
-  },
-  // ...
-});
-```
-
-### Change the Notification Sound
-
-Edit the beep frequencies in `script.js`:
-
-```javascript
-[880, 660, 880].forEach((freq, index) => {
-  // 880 Hz = A5, 660 Hz = E5
-  // Replace with other frequencies if needed.
-});
-```
+- <kbd>Space</kbd> : Toggle Start / Pause (from anywhere in the application).
+- <kbd>←</kbd> / <kbd>→</kbd> or <kbd>↑</kbd> / <kbd>↓</kbd> : Navigate timer modes (Focus, Short Break, Long Break).
+- <kbd>Home</kbd> / <kbd>End</kbd> : Jump to the first or last timer mode.
+- <kbd>Tab</kbd> / <kbd>Shift + Tab</kbd> : Navigate through steppers, buttons, and switches.
 
 <br />
 
@@ -220,35 +161,4 @@ Edit the beep frequencies in `script.js`:
 
 ## License
 
-This project is licensed under the **MIT License**.
-
-```text
-MIT License
-
-Copyright (c) 2026 PocketBinary
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-```
-
-<br />
-
----
-
-<div align="center">
-  <br />
-  <p>Made with care and plenty of coffee.</p>
-  <p><sub>Remember to take a break — that is the whole point of Pomodoro.</sub></p>
-  <br />
-</div>
+This project is open-source and released under the [MIT License](LICENSE).

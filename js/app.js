@@ -1,20 +1,83 @@
-// ============================================================
-// CONSTANTS
-// ============================================================
+/**
+ * ============================================================================
+ * MODULE PRINCIPAL : MINUTEUR POMODORO (js/app.js)
+ * ============================================================================
+ * 
+ * Application PWA moderne de concentration Pomodoro écrite en JavaScript Vanilla pur.
+ * 
+ * Architecture et responsabilités :
+ * 1. MOTEUR DU MINUTEUR :
+ *    - Gestion des 3 modes : Focus (Travail), Pause courte, Pause longue.
+ *    - Calcul temporel à la seconde avec gestion des sauts et de la reprise après veille.
+ *    - Cycles configurables (nombre de sessions focus avant une pause longue).
+ * 
+ * 2. PERSISTANCE ET RÉSILIENCE :
+ *    - Sauvegarde automatique dans le localStorage avec schéma versionné (v10).
+ *    - Validation et assainissement strict des types à la désérialisation.
+ *    - Récupération transparente en cas de crash ou de rechargement de page.
+ * 
+ * 3. RETOURS SENSORIELS (AUDIO & NOTIFICATIONS) :
+ *    - Synthèse sonore native via l'API Web Audio (aucun fichier son externe requis).
+ *    - Notifications de bureau via l'API Notifications du navigateur.
+ * 
+ * 4. ACCESSIBILITÉ WCAG 2.1 AA :
+ *    - Navigation complète au clavier (pattern tablist ARIA, raccourci Espace).
+ *    - Annonces vocales pour les technologies d'assistance (zone aria-live).
+ *    - Indicateur visuel circulaire SVG (balise progressbar avec aria-valuenow).
+ *    - Dialogues modaux accessibles avec capture de focus (<dialog>).
+ *    - Toasts informatifs avec action d'annulation réversible.
+ * 
+ * 5. PERSONNALISATION :
+ *    - Thèmes clair et sombre persistés.
+ *    - Bilinguisme natif Français / Anglais sans rechargement de page.
+ *    - Adaptation ergonomique paysage pour tablettes.
+ * ============================================================================
+ */
+
+// ============================================================================
+// 1. CONSTANTES GLOBALES DE CONFIGURATION
+// ============================================================================
+
+/** Clé de stockage principal dans le localStorage (versionnée pour éviter les conflits) */
 const STORAGE_KEY = "pomodoro-app-state-v10";
+
+/** Clé de suivi pour ne demander l'autorisation de notification qu'une seule fois */
 const NOTIFICATION_PROMPT_KEY = "pomodoro-notification-prompted-v1";
+
+/** Titre de base de l'application affiché dans l'onglet du navigateur */
 const TITLE_BASE = "Pomodoro";
+
+/** Rayon du cercle SVG de progression (en pixels) */
 const RING_RADIUS = 104;
+
+/** Circonférence totale du cercle SVG pour le calcul de l'attribut stroke-dashoffset */
 const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
+
+/** Numéro de version du schéma de données sauvegardé */
 const CURRENT_SCHEMA_VERSION = 1;
+
+/** Liste des thèmes visuels pris en charge */
 const THEME_VALUES = ["light", "dark"];
+
+/** Liste des codes de langues supportées */
 const LANGUAGE_VALUES = ["en", "fr"];
-// How long an undoable action stays reversible. Mirrors the toast drain in CSS.
+
+/** Durée d'affichage du toast d'annulation (en millisecondes) */
 const TOAST_DURATION = 6000;
 
-const defaultOptions = { soundEnabled: true, theme: "light", language: "en" };
+/** Options par défaut appliquées lors de la toute première visite */
+const defaultOptions = {
+  soundEnabled: true,
+  theme: "light",
+  language: "en"
+};
+
+// ============================================================================
+// 2. DICTIONNAIRES D'INTERNATIONALISATION (I18N)
+// ============================================================================
 
 const copy = {
+  // Dictionnaire de langue anglaise
   en: {
     appTitle: "Pomodoro",
     skipLink: "Skip to main content",
@@ -98,43 +161,54 @@ const copy = {
       statsReset: "Today's statistics reset.",
       statsRestored: "Today's statistics restored.",
       paused: "Timer paused.",
-      selected: (modeLabel) => `${modeLabel} selected.`,
-      restored: (modeLabel) => `${modeLabel} resumed where you left off.`,
+      selected: (modeLabel) => `${modeLabel} mode selected.`,
+      restored: (modeLabel) => `Resumed previous ${modeLabel} timer.`,
     },
     hints: {
       space: "start / pause",
     },
-    deferred: "From the next session",
     dialogs: {
-      modeTitle: "Session in progress",
-      modeBody: (remaining, currentLabel, nextLabel) =>
-        `${remaining} left in ${currentLabel}. Switching to ${nextLabel} ends this run — come back to ${currentLabel} and it resumes where you stopped.`,
-      modeConfirm: "Switch anyway",
+      modeTitle: "Switch timer mode?",
+      modeBody: (remaining, currentMode, nextMode) =>
+        `You have ${remaining} left in your ${currentMode} session. If you switch to ${nextMode}, this run will pause so you can return to it later.`,
+      modeConfirm: "Switch mode",
       modeKeep: "Keep going",
-      settingsTitle: "Reset settings?",
+      settingsTitle: "Reset settings to defaults?",
       settingsBody:
-        "Focus, break and session lengths go back to 25, 5, 15 and 4, and sound notifications turn back on.",
-      settingsConfirm: "Reset settings",
-      statsTitle: "Reset today's stats?",
+        "Durations will return to 25 min focus, 5 min short break, 15 min long break, and 4 sessions before a long break.",
+      settingsConfirm: "Reset to defaults",
+      statsTitle: "Reset today's statistics?",
       statsBody: (sessions, minutes) =>
-        `${sessions} completed ${sessions === 1 ? "session" : "sessions"} and ${minutes} min of focus time will be cleared.`,
+        `This will clear ${sessions} completed session(s) and ${minutes} minute(s) of focus time for today.`,
       statsConfirm: "Reset stats",
       cancel: "Cancel",
     },
     toast: {
-      statsReset: "Today's statistics reset.",
+      statsReset: "Today's stats reset.",
       undo: "Undo",
     },
+    deferred: "From the next session",
     stepper: {
-      focus: { increase: "Increase focus minutes", decrease: "Decrease focus minutes" },
-      short: { increase: "Increase short break minutes", decrease: "Decrease short break minutes" },
-      long: { increase: "Increase long break minutes", decrease: "Decrease long break minutes" },
+      focus: {
+        increase: "Increase focus minutes",
+        decrease: "Decrease focus minutes",
+      },
+      short: {
+        increase: "Increase short break minutes",
+        decrease: "Decrease short break minutes",
+      },
+      long: {
+        increase: "Increase long break minutes",
+        decrease: "Decrease long break minutes",
+      },
       sessions: {
         increase: "Increase sessions before long break",
         decrease: "Decrease sessions before long break",
       },
     },
   },
+
+  // Dictionnaire de langue française
   fr: {
     appTitle: "Pomodoro",
     skipLink: "Aller au contenu principal",
@@ -208,43 +282,43 @@ const copy = {
     },
     notifications: {
       body: "Appuie sur Démarrer quand tu es prêt pour la prochaine session.",
-      completeTitle: (modeLabel) => `Pomodoro · ${modeLabel} terminée`,
+      completeTitle: (modeLabel) => `Pomodoro · ${modeLabel} terminé`,
     },
     announcements: {
-      complete: (modeLabel) => `${modeLabel} terminée. Appuie sur Démarrer pour continuer.`,
-      started: (modeText) => `Minuteur lancé : ${modeText}.`,
+      complete: (modeLabel) => `${modeLabel} terminé. Appuie sur Démarrer pour continuer.`,
+      started: (modeText) => `Minuteur ${modeText.toLowerCase()} démarré.`,
       reset: "Minuteur réinitialisé.",
-      settingsReset: "Réglages réinitialisés par défaut.",
-      statsReset: "Statistiques du jour réinitialisées.",
-      statsRestored: "Statistiques du jour rétablies.",
+      settingsReset: "Réglages réinitialisés aux valeurs par défaut.",
+      statsReset: "Statistiques d'aujourd'hui réinitialisées.",
+      statsRestored: "Statistiques d'aujourd'hui restaurées.",
       paused: "Minuteur en pause.",
-      selected: (modeLabel) => `${modeLabel} sélectionné.`,
-      restored: (modeLabel) => `${modeLabel} reprise là où tu t'étais arrêté.`,
+      selected: (modeLabel) => `Mode ${modeLabel.toLowerCase()} sélectionné.`,
+      restored: (modeLabel) => `Minuteur précédent ${modeLabel.toLowerCase()} repris.`,
     },
     hints: {
       space: "démarrer / pause",
     },
-    deferred: "Dès la prochaine session",
     dialogs: {
-      modeTitle: "Session en cours",
-      modeBody: (remaining, currentLabel, nextLabel) =>
-        `Il reste ${remaining} en ${currentLabel}. Passer à ${nextLabel} met fin à cette session — reviens sur ${currentLabel} pour la reprendre là où tu t'es arrêté.`,
-      modeConfirm: "Changer quand même",
-      modeKeep: "Continuer",
-      settingsTitle: "Réinitialiser les réglages ?",
+      modeTitle: "Changer de mode ?",
+      modeBody: (remaining, currentMode, nextMode) =>
+        `Il te reste ${remaining} dans ta session de ${currentMode.toLowerCase()}. Si tu passes à ${nextMode.toLowerCase()}, ce décompte se mettra en pause pour que tu puisses y revenir plus tard.`,
+      modeConfirm: "Changer de mode",
+      modeKeep: "Continuer la session",
+      settingsTitle: "Rétablir les réglages par défaut ?",
       settingsBody:
-        "Les durées de focus, de pause et le nombre de sessions reviennent à 25, 5, 15 et 4, et les notifications sonores se réactivent.",
-      settingsConfirm: "Réinitialiser",
-      statsTitle: "Réinitialiser les statistiques du jour ?",
+        "Les durées reviendront à 25 min de focus, 5 min de pause courte, 15 min de pause longue et 4 sessions avant pause longue.",
+      settingsConfirm: "Rétablir par défaut",
+      statsTitle: "Réinitialiser les statistiques d'aujourd'hui ?",
       statsBody: (sessions, minutes) =>
-        `${sessions} session(s) terminée(s) et ${minutes} min de focus seront effacées.`,
-      statsConfirm: "Réinitialiser",
+        `Cette action effacera ${sessions} session(s) terminée(s) et ${minutes} minute(s) de concentration pour aujourd'hui.`,
+      statsConfirm: "Réinitialiser les stats",
       cancel: "Annuler",
     },
     toast: {
-      statsReset: "Statistiques du jour réinitialisées.",
-      undo: "Rétablir",
+      statsReset: "Statistiques d'aujourd'hui réinitialisées.",
+      undo: "Annuler",
     },
+    deferred: "À partir de la prochaine session",
     stepper: {
       focus: {
         increase: "Augmenter les minutes de focus",
@@ -266,7 +340,14 @@ const copy = {
   },
 };
 
-// Build a clean state object used for first visits and invalid saved data.
+// ============================================================================
+// 3. UTILITAIRES ET ÉTAT INITIAL
+// ============================================================================
+
+/**
+ * Construit un objet d'état par défaut vierge, utilisé lors de la première
+ * visite ou si les données sauvegardées sont corrompues.
+ */
 const getDefaultState = () => ({
   _schemaVersion: CURRENT_SCHEMA_VERSION,
   settings: { focus: 25, shortBreak: 5, longBreak: 15, sessions: 4 },
@@ -284,10 +365,16 @@ const getDefaultState = () => ({
   },
 });
 
-// Keep numeric user input inside the accepted UI range.
+/**
+ * Restreint une valeur numérique dans une plage définie [min, max].
+ */
 const clampValue = (value, min, max) => Math.min(Math.max(value, min), max);
 
-// Convert a second count into the mm:ss timer format.
+/**
+ * Convertit un nombre total de secondes en chaîne formattée "mm:ss".
+ * @param {number} totalSeconds
+ * @returns {string} Ex: "25:00"
+ */
 const formatTime = (totalSeconds) => {
   const safeSeconds = Math.max(0, totalSeconds);
   const minutes = Math.floor(safeSeconds / 60);
@@ -295,27 +382,36 @@ const formatTime = (totalSeconds) => {
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 };
 
-// Return the short user-facing label for a timer mode.
+/**
+ * Retourne le libellé localisé d'un mode de minuteur (ex: "Focus", "Pause courte").
+ */
 const getModeLabel = (mode = "focus", language = "en") => {
   const safeLanguage = getSafeLanguage(language);
   return copy[safeLanguage].modes[mode] || copy[safeLanguage].modes.focus;
 };
 
-// Return the helper text shown below the timer for a mode.
+/**
+ * Retourne le texte d'encouragement affiché sous le minuteur selon le mode.
+ */
 const getModeText = (mode = "focus", language = "en") => {
   const safeLanguage = getSafeLanguage(language);
   return copy[safeLanguage].modeText[mode] || copy[safeLanguage].modeText.focus;
 };
 
-// Keep theme values constrained to the supported theme list.
+/**
+ * Garantit que la valeur du thème est strictement "light" ou "dark".
+ */
 const getSafeTheme = (theme) => (THEME_VALUES.includes(theme) ? theme : "light");
 
-// Keep language values constrained to the supported language list.
+/**
+ * Garantit que la langue est strictement "en" ou "fr".
+ */
 const getSafeLanguage = (language) => (LANGUAGE_VALUES.includes(language) ? language : "en");
 
-// ============================================================
-// DOM REFERENCES
-// ============================================================
+// ============================================================================
+// 4. RÉFÉRENCES AUX ÉLÉMENTS DU DOM
+// ============================================================================
+
 const dom = {
   skipLink: document.getElementById("skipLink"),
   tabletHint: document.getElementById("tabletHint"),
@@ -385,12 +481,18 @@ const dom = {
 };
 
 if (Object.values(dom).some((el) => !el)) {
-  console.warn("Some Pomodoro DOM elements are missing or pending hydration.");
+  console.warn("Certains éléments du DOM Pomodoro sont absents ou en attente d'hydratation.");
 }
 
-// ============================================================
-// STATE VALIDATION (hardened localStorage)
-// ============================================================
+// ============================================================================
+// 5. VALIDATION STRICTE DE L'ÉTAT LOCAL (SÉCURITÉ LOCALSTORAGE)
+// ============================================================================
+
+/**
+ * Valide l'intégrité de la structure JSON extraite du localStorage.
+ * Si le schéma ou les types ne correspondent pas, retourne null pour forcer
+ * la réinitialisation propre vers les valeurs par défaut saines.
+ */
 const validateState = (parsed) => {
   if (!parsed || typeof parsed !== "object") return null;
   if (parsed._schemaVersion !== CURRENT_SCHEMA_VERSION) return null;
@@ -413,28 +515,28 @@ const validateState = (parsed) => {
   if (!isFiniteNum(settings.sessions)) return null;
   if (!isBool(options.soundEnabled)) return null;
   if (options.theme !== undefined && !validTheme(options.theme)) return null;
-  if (options.language !== undefined && !validLanguage(options.language))
-    return null;
+  if (options.language !== undefined && !validLanguage(options.language)) return null;
   if (!validMode(progress.mode)) return null;
   if (!isStrOrNull(progress.pendingMode)) return null;
-  if (progress.pendingMode !== null && !validMode(progress.pendingMode))
-    return null;
+  if (progress.pendingMode !== null && !validMode(progress.pendingMode)) return null;
   if (!isFiniteNum(progress.remainingSeconds)) return null;
   if (!isFiniteNum(progress.currentDurationSeconds)) return null;
   if (!isFiniteNum(progress.sessionNumber)) return null;
   if (!isFiniteNum(progress.completedSessions)) return null;
   if (!isFiniteNum(progress.totalFocusMinutes)) return null;
   if (!isBool(progress.isRunning)) return null;
-  if (progress.lastTickAt !== null && !isFiniteNum(Number(progress.lastTickAt)))
-    return null;
+  if (progress.lastTickAt !== null && !isFiniteNum(Number(progress.lastTickAt))) return null;
 
   return parsed;
 };
 
-// ============================================================
-// SETTINGS HELPERS
-// ============================================================
-// Read and sanitize all duration inputs from the settings panel.
+// ============================================================================
+// 6. GESTION DES RÉGLAGES DE DURÉE
+// ============================================================================
+
+/**
+ * Lit, valide et borne toutes les valeurs numériques des champs de réglages.
+ */
 const readDurations = () => {
   const focus = clampValue(Number(dom.focusInput.value) || 25, 1, 120);
   const shortBreak = clampValue(Number(dom.shortInput.value) || 5, 1, 60);
@@ -447,7 +549,9 @@ const readDurations = () => {
   return { focus, shortBreak, longBreak, sessions };
 };
 
-// Populate settings inputs from saved state while enforcing safe bounds.
+/**
+ * Remplit les champs de saisie des réglages à partir d'un objet de paramètres.
+ */
 const setDurationInputs = (settings) => {
   dom.focusInput.value = clampValue(Number(settings.focus) || 25, 1, 120);
   dom.shortInput.value = clampValue(Number(settings.shortBreak) || 5, 1, 60);
@@ -455,7 +559,9 @@ const setDurationInputs = (settings) => {
   dom.sessionsInput.value = clampValue(Number(settings.sessions) || 4, 1, 20);
 };
 
-// Resolve a mode into its active duration in seconds.
+/**
+ * Calcule la durée totale en secondes pour un mode donné d'après les réglages.
+ */
 const getModeDurationSeconds = (mode) => {
   const { focus, shortBreak, longBreak } = readDurations();
   if (mode === "focus") return focus * 60;
@@ -463,7 +569,11 @@ const getModeDurationSeconds = (mode) => {
   return longBreak * 60;
 };
 
-// Choose the next timer mode after the current session finishes.
+/**
+ * Détermine quel est le mode suivant une fois la session active terminée :
+ * - Après une pause (courte ou longue) -> toujours retour au mode Focus.
+ * - Après un bloc Focus -> pause longue si le cycle est atteint, sinon pause courte.
+ */
 const getNextModeAfterCurrent = ({ mode, completedSessions, sessions }) => {
   if (mode === "focus") {
     const nextCompleted = completedSessions + 1;
@@ -472,10 +582,13 @@ const getNextModeAfterCurrent = ({ mode, completedSessions, sessions }) => {
   return "focus";
 };
 
-// ============================================================
-// STORAGE
-// ============================================================
-// Load persisted state and fall back to defaults if storage is missing or invalid.
+// ============================================================================
+// 7. PERSISTANCE LOCALSTORAGE
+// ============================================================================
+
+/**
+ * Charge l'état persisté depuis le localStorage avec repli sécurisé.
+ */
 const loadState = () => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -488,18 +601,21 @@ const loadState = () => {
   }
 };
 
-// Persist state without breaking the app if browser storage is unavailable.
+/**
+ * Écrit l'état complet dans le localStorage sans générer d'exception bloquante.
+ */
 const saveState = (state) => {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   } catch { }
 };
 
-// ============================================================
-// MAIN APP
-// ============================================================
-// Create the app runtime after the DOM is ready.
+// ============================================================================
+// 8. COEUR APPLICATIF : MINUTEUR, AUDIO, THÈME, INTERFACE
+// ============================================================================
+
 const initPomodoro = () => {
+  // Variables d'état en mémoire
   let timerId = null;
   let mode = "focus";
   let pendingMode = null;
@@ -512,14 +628,14 @@ const initPomodoro = () => {
   let lastTickAt = null;
   let options = { ...defaultOptions };
   let audioContext = null;
-  // A run interrupted by a mode switch, kept so it can be picked up again.
   let suspendedSession = null;
 
   const getLanguage = () => getSafeLanguage(options.language);
   const getText = () => copy[getLanguage()];
 
-  // --- Screen reader announcements ---
-  // Clear and rewrite the live region so assistive tech announces repeated messages.
+  /**
+   * Diffuse un message vocal pour les lecteurs d'écran via la zone aria-live.
+   */
   const announce = (message) => {
     dom.srAnnouncement.textContent = "";
     window.setTimeout(() => {
@@ -527,27 +643,32 @@ const initPomodoro = () => {
     }, 10);
   };
 
-  // --- Title update ---
-  // Mirror the active timer state in the browser tab title.
+  /**
+   * Met à jour le titre de l'onglet du navigateur avec le compte à rebours dynamique.
+   */
   const updateTitle = () => {
     document.title = `${formatTime(remainingSeconds)} · ${getModeLabel(mode, getLanguage())} · ${TITLE_BASE}`;
   };
 
-  // --- Status badge ---
-  // Update the pill label and color for the current timer state.
+  /**
+   * Met à jour le badge visuel d'état ("Prêt", "En cours", "En pause").
+   */
   const updateStatusBadge = (statusKey = "ready") => {
     const text = getText();
     dom.statusBadge.textContent = text.status[statusKey] || text.status.ready;
     dom.statusBadge.className = "rounded-full px-3 py-1 text-sm font-medium";
-    if (statusKey === "running")
+    if (statusKey === "running") {
       dom.statusBadge.classList.add("bg-emerald-50", "text-emerald-700");
-    else if (statusKey === "paused")
+    } else if (statusKey === "paused") {
       dom.statusBadge.classList.add("bg-amber-50", "text-amber-700");
-    else dom.statusBadge.classList.add("bg-slate-100", "text-slate-700");
+    } else {
+      dom.statusBadge.classList.add("bg-slate-100", "text-slate-700");
+    }
   };
 
-  // --- Theme ---
-  // Apply the selected visual theme and keep switch accessibility state in sync.
+  /**
+   * Applique le thème visuel (clair ou sombre) sur les éléments du DOM.
+   */
   const applyTheme = (theme) => {
     const text = getText();
     const safeTheme = getSafeTheme(theme);
@@ -565,8 +686,9 @@ const initPomodoro = () => {
     });
   };
 
-  // --- Language ---
-  // Apply localized UI strings and accessibility labels.
+  /**
+   * Applique toutes les chaînes de texte localisées selon la langue sélectionnée.
+   */
   const applyLanguage = () => {
     const language = getLanguage();
     const text = getText();
@@ -622,7 +744,9 @@ const initPomodoro = () => {
     applyTheme(options.theme);
   };
 
-  // --- Mode tabs ARIA + visual state ---
+  /**
+   * Met à jour les classes visuelles et les attributs ARIA des onglets de mode.
+   */
   const applyModeSelection = () => {
     const buttons = [
       { el: dom.modeFocusBtn, targetMode: "focus" },
@@ -630,14 +754,7 @@ const initPomodoro = () => {
       { el: dom.modeLongBtn, targetMode: "long" },
     ];
 
-    const baseClasses = [
-      "rounded-full",
-      "px-4",
-      "py-1",
-      "text-sm",
-      "font-semibold",
-      "transition",
-    ];
+    const baseClasses = ["rounded-full", "px-4", "py-1", "text-sm", "font-semibold", "transition"];
     const inactiveClasses = ["text-slate-500", "hover:text-slate-900"];
     const activeClasses = ["bg-slate-900", "text-white"];
 
@@ -645,17 +762,15 @@ const initPomodoro = () => {
       const active = mode === targetMode;
       el.className = "";
       baseClasses.forEach((c) => el.classList.add(c));
-      (active ? activeClasses : inactiveClasses).forEach((c) =>
-        el.classList.add(c),
-      );
-      // ARIA: update tab selection state
+      (active ? activeClasses : inactiveClasses).forEach((c) => el.classList.add(c));
       el.setAttribute("aria-selected", active ? "true" : "false");
       el.setAttribute("tabindex", active ? "0" : "-1");
     });
   };
 
-  // A duration edited mid-session cannot be applied yet, so the recap card says so
-  // instead of showing a figure the dial contradicts.
+  /**
+   * Indique si une durée a été modifiée en cours de route et s'appliquera au prochain tour.
+   */
   const isDeferredDuration = (targetMode, configuredSeconds) =>
     targetMode === mode &&
     remainingSeconds !== currentDurationSeconds &&
@@ -667,7 +782,9 @@ const initPomodoro = () => {
     dom.longNote.hidden = !isDeferredDuration("long", longBreak * 60);
   };
 
-  // Disable a stepper once it has reached the bound of its field.
+  /**
+   * Désactive les boutons steppers (−/+) lorsqu'une limite min ou max est atteinte.
+   */
   const updateStepperBounds = () => {
     dom.steppers.forEach((button) => {
       const input = dom[button.dataset.stepper];
@@ -678,8 +795,9 @@ const initPomodoro = () => {
     });
   };
 
-  // --- Labels & stats ---
-  // Refresh settings summaries and daily progress counters.
+  /**
+   * Rafraîchit les synthèses chiffrées (durées et compteurs statistiques).
+   */
   const updateLabels = () => {
     const text = getText();
     const { focus, shortBreak, longBreak } = readDurations();
@@ -693,23 +811,22 @@ const initPomodoro = () => {
     updateStepperBounds();
   };
 
-  // --- Progress ring visual + ARIA ---
+  /**
+   * Anime l'anneau circulaire SVG selon le pourcentage de temps écoulé.
+   */
   const updateProgressRing = () => {
     const safeDuration = Math.max(1, currentDurationSeconds);
-    const progress = Math.min(
-      1,
-      Math.max(0, (safeDuration - remainingSeconds) / safeDuration),
-    );
+    const progress = Math.min(1, Math.max(0, (safeDuration - remainingSeconds) / safeDuration));
     const offset = RING_CIRCUMFERENCE * (1 - progress);
     dom.progressRing.style.strokeDasharray = `${RING_CIRCUMFERENCE}`;
     dom.progressRing.style.strokeDashoffset = `${offset}`;
-    // ARIA: update progressbar value (0-100)
     const percent = Math.round(progress * 100);
     dom.progressRing.setAttribute("aria-valuenow", String(percent));
   };
 
-  // --- Time display ---
-  // Refresh the visible timer text, helper copy, title and ring.
+  /**
+   * Rafraîchit l'affichage temporel chiffré ("mm:ss"), le titre et l'anneau.
+   */
   const updateTimeDisplay = () => {
     dom.timeDisplay.textContent = formatTime(remainingSeconds);
     dom.modeText.textContent = getModeText(mode, getLanguage());
@@ -717,8 +834,9 @@ const initPomodoro = () => {
     updateProgressRing();
   };
 
-  // --- Full UI sync ---
-  // Re-render all UI pieces from the current in-memory state.
+  /**
+   * Synchronise l'intégralité de l'interface utilisateur d'après l'état en mémoire.
+   */
   const syncUi = () => {
     applyLanguage();
     applyTheme(options.theme);
@@ -734,8 +852,9 @@ const initPomodoro = () => {
     updateStatusBadge(isRunning ? "running" : "ready");
   };
 
-  // --- State snapshot ---
-  // Capture the full serializable state for localStorage.
+  /**
+   * Crée un instantané sérialisable de l'état pour la persistance locale.
+   */
   const snapshot = () => ({
     _schemaVersion: CURRENT_SCHEMA_VERSION,
     settings: readDurations(),
@@ -753,10 +872,7 @@ const initPomodoro = () => {
     },
   });
 
-  // ============================================================
-  // AUDIO
-  // ============================================================
-  // Lazily create or resume the audio context after a user gesture.
+  // --- Audio natif (Web Audio API) ---
   const ensureAudio = async () => {
     if (!options.soundEnabled) return null;
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -772,7 +888,9 @@ const initPomodoro = () => {
     return audioContext;
   };
 
-  // Play a short completion chime using the Web Audio API.
+  /**
+   * Joue un carillon doux et harmonieux de fin de session via des oscillateurs sinusoïdaux.
+   */
   const playBeep = async () => {
     if (!options.soundEnabled) return;
     const ctx = await ensureAudio();
@@ -794,10 +912,7 @@ const initPomodoro = () => {
     });
   };
 
-  // ============================================================
-  // NOTIFICATIONS
-  // ============================================================
-  // Show a desktop notification after a session completes when permission exists.
+  // --- Notifications de bureau ---
   const notifyCompletion = (completedMode) => {
     const text = getText();
     if (!("Notification" in window)) return;
@@ -809,14 +924,12 @@ const initPomodoro = () => {
     } catch { }
   };
 
-  // Only ask for notification permission once per browser profile.
   const canAskNotificationPermission = () => {
     if (!("Notification" in window)) return false;
     if (Notification.permission !== "default") return false;
     return !localStorage.getItem(NOTIFICATION_PROMPT_KEY);
   };
 
-  // Request notification permission on the first timer start.
   const requestNotificationPermissionOnce = async () => {
     if (!canAskNotificationPermission()) return;
     localStorage.setItem(NOTIFICATION_PROMPT_KEY, "1");
@@ -825,10 +938,7 @@ const initPomodoro = () => {
     } catch { }
   };
 
-  // ============================================================
-  // CONFIRMATION DIALOG
-  // ============================================================
-  // Resolve true only when the user takes the destructive branch.
+  // --- Boîte de dialogue de confirmation accessible (<dialog>) ---
   const askConfirm = ({ title, body, confirmLabel, safeLabel }) =>
     new Promise((resolve) => {
       dom.appDialogTitle.textContent = title;
@@ -842,13 +952,10 @@ const initPomodoro = () => {
       };
       dom.appDialog.addEventListener("close", handleClose);
       dom.appDialog.showModal();
-      // Focus the safe branch: the risky one is never the default.
       dom.appDialogCancel.focus();
     });
 
-  // ============================================================
-  // UNDO TOAST
-  // ============================================================
+  // --- Notifications Toast avec bouton d'annulation (Undo) ---
   let toastTimeout = null;
   let toastDeadline = 0;
   let toastRemaining = 0;
@@ -887,7 +994,7 @@ const initPomodoro = () => {
     dom.appToast.hidden = false;
     dom.appToastProgress.style.animationDuration = `${TOAST_DURATION}ms`;
     dom.appToast.classList.remove("app-toast--paused", "app-toast--counting");
-    void dom.appToast.offsetWidth; // restart the draining rule
+    void dom.appToast.offsetWidth;
     dom.appToast.classList.add("app-toast--counting");
     toastDeadline = Date.now() + TOAST_DURATION;
     toastRemaining = 0;
@@ -907,10 +1014,7 @@ const initPomodoro = () => {
   dom.appToast.addEventListener("focusin", pauseToast);
   dom.appToast.addEventListener("focusout", resumeToast);
 
-  // ============================================================
-  // TIMER CONTROL
-  // ============================================================
-  // Pause the timer loop and persist the stopped state.
+  // --- Contrôle du décompte temporel ---
   const stopTimer = (statusKey = "paused") => {
     clearInterval(timerId);
     timerId = null;
@@ -922,7 +1026,9 @@ const initPomodoro = () => {
     saveState(snapshot());
   };
 
-  // Advance the countdown by one second and handle session completion.
+  /**
+   * Avance le compte à rebours d'une seconde et gère la transition de mode à l'échéance.
+   */
   const tick = () => {
     if (remainingSeconds > 0) {
       remainingSeconds -= 1;
@@ -962,12 +1068,12 @@ const initPomodoro = () => {
     saveState(snapshot());
     playBeep();
     notifyCompletion(getModeLabel(completedMode, getLanguage()));
-    announce(
-      getText().announcements.complete(getModeLabel(completedMode, getLanguage())),
-    );
+    announce(getText().announcements.complete(getModeLabel(completedMode, getLanguage())));
   };
 
-  // Start or resume the active mode, applying any queued next mode first.
+  /**
+   * Démarre ou reprend le décompte du mode actif.
+   */
   const startTimer = async () => {
     if (isRunning) return;
     options = { ...options, soundEnabled: dom.soundEnabledInput.checked };
@@ -996,7 +1102,9 @@ const initPomodoro = () => {
     announce(getText().announcements.started(getModeText(mode, getLanguage())));
   };
 
-  // Reset only the current countdown timer to its initial duration without altering mode or session stats.
+  /**
+   * Réinitialise uniquement le chrono en cours sans affecter les statistiques du jour ni les modes.
+   */
   const resetTimer = () => {
     stopTimer("ready");
     pendingMode = null;
@@ -1008,10 +1116,7 @@ const initPomodoro = () => {
     announce(getText().announcements.reset);
   };
 
-  // ============================================================
-  // SETTINGS HANDLERS
-  // ============================================================
-  // Apply duration changes immediately when the timer is idle.
+  // --- Gestionnaires des paramètres et réinitialisations ---
   const handleSettingsChange = () => {
     const { focus, shortBreak, longBreak } = readDurations();
     if (!isRunning && remainingSeconds === currentDurationSeconds) {
@@ -1025,8 +1130,6 @@ const initPomodoro = () => {
     saveState(snapshot());
   };
 
-  // Commit a duration edit: clamp it, re-render, persist, and let the break
-  // media resync. Called on blur, on Enter and on stepper clicks — never per keystroke.
   const commitDurations = () => {
     handleSettingsChange();
     [dom.shortInput, dom.longInput].forEach((input) => {
@@ -1034,7 +1137,9 @@ const initPomodoro = () => {
     });
   };
 
-  // Reset all settings (durations + sound) back to default values.
+  /**
+   * Réinitialise les paramètres (durées et son) aux valeurs d'usine après confirmation.
+   */
   const resetSettings = async () => {
     const proceed = await askConfirm({
       title: getText().dialogs.settingsTitle,
@@ -1052,7 +1157,9 @@ const initPomodoro = () => {
     announce(getText().announcements.settingsReset);
   };
 
-  // Reset today's counters, keeping a snapshot so the action stays reversible.
+  /**
+   * Réinitialise les statistiques d'aujourd'hui avec possibilité d'annulation via toast.
+   */
   const resetStats = async () => {
     const previous = { completedSessions, totalFocusMinutes, sessionNumber };
     const proceed = await askConfirm({
@@ -1080,13 +1187,11 @@ const initPomodoro = () => {
     });
   };
 
-  // Persist non-duration options from the settings panel.
   const handleOptionsChange = () => {
     options = { ...options, soundEnabled: dom.soundEnabledInput.checked };
     saveState(snapshot());
   };
 
-  // Switch between the two saved visual themes.
   const handleThemeToggle = () => {
     const nextTheme = getSafeTheme(options.theme) === "dark" ? "light" : "dark";
     options = { ...options, theme: nextTheme };
@@ -1097,7 +1202,6 @@ const initPomodoro = () => {
     announce(getText().theme.selected(nextTheme === "dark" ? getText().theme.dark : getText().theme.light));
   };
 
-  // Switch between English and French UI copy.
   const handleLanguageChange = (language) => {
     const nextLanguage = getSafeLanguage(language);
     if (nextLanguage === getLanguage()) return;
@@ -1107,9 +1211,7 @@ const initPomodoro = () => {
     announce(getText().language[nextLanguage === "fr" ? "frSelected" : "enSelected"]);
   };
 
-  // ============================================================
-  // KEYBOARD NAVIGATION (tablist pattern)
-  // ============================================================
+  // --- Navigation au clavier (Pattern Tablist WAI-ARIA) ---
   const modeButtons = [dom.modeFocusBtn, dom.modeShortBtn, dom.modeLongBtn];
   const modeOrder = ["focus", "short", "long"];
 
@@ -1140,8 +1242,6 @@ const initPomodoro = () => {
         return;
     }
 
-    const nextMode = modeOrder[nextIndex];
-    // Simulate click on the target button
     const targetBtn = modeButtons[nextIndex];
     if (targetBtn) {
       targetBtn.click();
@@ -1149,42 +1249,22 @@ const initPomodoro = () => {
     }
   });
 
-  // ============================================================
-  // RESTORE STATE
-  // ============================================================
+  // --- Restauration de l'état persistant ---
   const restoreState = () => {
     const state = loadState();
     setDurationInputs(state.settings);
     options = { ...defaultOptions, ...(state.options || {}) };
-    mode = ["focus", "short", "long"].includes(state.progress.mode)
-      ? state.progress.mode
-      : "focus";
-    pendingMode = ["focus", "short", "long"].includes(
-      state.progress.pendingMode,
-    )
-      ? state.progress.pendingMode
-      : null;
-    remainingSeconds = Math.max(
-      0,
-      Number(state.progress.remainingSeconds) || getModeDurationSeconds(mode),
-    );
-    currentDurationSeconds = Math.max(
-      1,
-      Number(state.progress.currentDurationSeconds) ||
-      getModeDurationSeconds(mode),
-    );
+    mode = ["focus", "short", "long"].includes(state.progress.mode) ? state.progress.mode : "focus";
+    pendingMode = ["focus", "short", "long"].includes(state.progress.pendingMode) ? state.progress.pendingMode : null;
+    remainingSeconds = Math.max(0, Number(state.progress.remainingSeconds) || getModeDurationSeconds(mode));
+    currentDurationSeconds = Math.max(1, Number(state.progress.currentDurationSeconds) || getModeDurationSeconds(mode));
     sessionNumber = Math.max(1, Number(state.progress.sessionNumber) || 1);
-    completedSessions = Math.max(
-      0,
-      Number(state.progress.completedSessions) || 0,
-    );
-    totalFocusMinutes = Math.max(
-      0,
-      Number(state.progress.totalFocusMinutes) || 0,
-    );
+    completedSessions = Math.max(0, Number(state.progress.completedSessions) || 0);
+    totalFocusMinutes = Math.max(0, Number(state.progress.totalFocusMinutes) || 0);
     isRunning = Boolean(state.progress.isRunning);
     lastTickAt = state.progress.lastTickAt || null;
 
+    // Calcul du temps écoulé si la page a été fermée alors que le timer tournait
     if (isRunning && lastTickAt) {
       const elapsedSeconds = Math.floor((Date.now() - lastTickAt) / 1000);
       if (elapsedSeconds > 0) {
@@ -1203,10 +1283,7 @@ const initPomodoro = () => {
     }
   };
 
-  // ============================================================
-  // EVENT LISTENERS
-  // ============================================================
-  // Tablet orientation handling (favor landscape)
+  // --- Gestion de l'orientation paysage sur tablette ---
   const handleTabletOrientation = () => {
     try {
       const minDim = Math.min(window.screen.width, window.screen.height);
@@ -1214,11 +1291,10 @@ const initPomodoro = () => {
       if (hasTouch && minDim >= 600 && screen.orientation && typeof screen.orientation.lock === "function") {
         screen.orientation.lock("landscape").catch(() => {});
       }
-    } catch {
-      // Ignore if not permitted
-    }
+    } catch { }
   };
 
+  // --- Écouteurs d'événements principaux ---
   dom.startPauseBtn.addEventListener("click", async () => {
     handleTabletOrientation();
     if (isRunning) {
@@ -1239,8 +1315,6 @@ const initPomodoro = () => {
     const nextMode = button.dataset.mode;
     if (!nextMode || nextMode === mode) return;
 
-    // Switching mid-run throws the remaining time away: ask first, keep the
-    // interrupted run so coming back to that mode resumes it.
     if (isRunning) {
       const interrupted = { mode, remainingSeconds, currentDurationSeconds };
       const proceed = await askConfirm({
@@ -1288,7 +1362,6 @@ const initPomodoro = () => {
   });
 
   [dom.focusInput, dom.shortInput, dom.longInput, dom.sessionsInput].forEach((input) => {
-    // Commit on blur or Enter only: clamping mid-keystroke fights the typist.
     input.addEventListener("change", commitDurations);
     input.addEventListener("keydown", (event) => {
       if (event.key !== "Enter") return;
@@ -1318,8 +1391,7 @@ const initPomodoro = () => {
   dom.languageEnBtn.addEventListener("click", () => handleLanguageChange("en"));
   dom.languageFrBtn.addEventListener("click", () => handleLanguageChange("fr"));
 
-  // Space toggles start/pause from anywhere that is not already a control,
-  // so it never fights a button, field or the dialog.
+  // Raccourci Espace pour Démarrer / Mettre en pause depuis n'importe où
   document.addEventListener("keydown", (event) => {
     if (event.key !== " " && event.code !== "Space") return;
     if (event.repeat) return;
@@ -1330,25 +1402,22 @@ const initPomodoro = () => {
     dom.startPauseBtn.click();
   });
 
-  // ============================================================
-  // INIT
-  // ============================================================
+  // --- Initialisation au chargement ---
   handleTabletOrientation();
   restoreState();
 };
 
-// ============================================================
-// SERVICE WORKER REGISTRATION (PWA)
-// ============================================================
-// Register the service worker for offline cache support.
+// ============================================================================
+// 9. ENREGISTREMENT DU SERVICE WORKER (PWA & MODE HORS-LIGNE)
+// ============================================================================
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
     .register("./sw.js")
-    .then((reg) => console.log("SW registered:", reg.scope))
-    .catch((err) => console.error("SW registration failed:", err));
+    .then((reg) => console.log("Service Worker enregistré avec succès (scope) :", reg.scope))
+    .catch((err) => console.error("Échec de l'enregistrement du Service Worker :", err));
 }
 
-// Wait for DOM readiness before querying and wiring interactive elements.
+// Démarrage sécurisé lorsque le DOM est totalement chargé
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initPomodoro);
 } else {

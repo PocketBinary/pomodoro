@@ -1,7 +1,27 @@
+/**
+ * ============================================================================
+ * MODULE : GESTIONNAIRE DES MÉDIAS DE PAUSE (break-media.js)
+ * ============================================================================
+ * 
+ * Ce script gère l'ambiance sonore et visuelle lors des phases de pause :
+ * 1. Pistes musicales relaxantes (.mp3) synchronisées avec le minuteur.
+ * 2. Animations vectorielles zen (.svg) assainies et synchronisées sur la durée.
+ * 3. Asservissement automatique : la musique démarre avec le chrono et se met en
+ *    pause automatiquement quand le minuteur s'arrête ou bascule en mode Focus.
+ * 4. Persistance du réglage de volume dans le localStorage.
+ * 5. Respect strict de la politique de sécurité (CSP) et assainissement anti-XSS.
+ * ============================================================================
+ */
+
 (() => {
+  // Clé de persistance pour les préférences de volume de la pause
   const STORAGE_KEY = "pomodoro-break-media-v1";
+
+  // Expressions régulières pour valider les noms de fichiers autorisés (sécurité)
   const AUDIO_NAME = /^[A-Za-z0-9][A-Za-z0-9 _.-]{0,80}\.(mp3|ogg|wav|m4a)$/i;
   const SVG_NAME = /^[A-Za-z0-9][A-Za-z0-9 _.-]{0,80}\.svg$/i;
+
+  // Textes d'inspiration / slogans affichés sous le logo selon le mode actif
   const slogans = {
     en: {
       focus: "This block only.",
@@ -12,6 +32,8 @@
       pause: "Lève les yeux. Le prochain bloc attend.",
     },
   };
+
+  // Dictionnaire de textes d'accessibilité et d'interface pour le lecteur
   const ui = {
     en: {
       player: "Break music",
@@ -33,6 +55,7 @@
     },
   };
 
+  // Récupération des éléments du Document Object Model (DOM)
   const sloganEl = document.getElementById("appSlogan");
   const atmosphere = document.getElementById("breakAtmosphere");
   const playBtn = document.getElementById("breakPlayBtn");
@@ -52,16 +75,19 @@
   const shortInput = document.getElementById("shortInput");
   const longInput = document.getElementById("longInput");
 
+  // Si des éléments essentiels manquent dans la page, on interrompt silencieusement
   if (!sloganEl || !atmosphere || !playBtn || !select || !pickLabel || !volume || !volumeLabel || !audio || !animation || !fallback || !player || !switcher || !stage) {
     return;
   }
 
+  // Conteneur dynamique sécurisé pour les SVG injectés
   const svgHost = document.createElement("div");
   svgHost.className = "break-svg";
   svgHost.style.cssText = "position:relative;z-index:1;width:100%;height:100%";
   stage.append(svgHost);
   animation.hidden = true;
 
+  // Liste de secours des fichiers MP3 disponibles par défaut dans /media/
   const DEFAULT_PLAYLIST = [
     "zen calming.mp3",
     "zen garden.mp3",
@@ -70,6 +96,7 @@
     "zen piano.mp3",
   ];
 
+  // Liste de secours des animations vectorielles disponibles par défaut dans /media/
   const DEFAULT_ANIMATIONS = [
     "Zen Ying-Yang.svg",
     "ZenMan.svg",
@@ -77,6 +104,7 @@
     "ZENWoman.svg",
   ];
 
+  // États internes du lecteur de pause
   let playlist = [...DEFAULT_PLAYLIST];
   let animations = [...DEFAULT_ANIMATIONS];
   let currentTrackIndex = 0;
@@ -88,15 +116,31 @@
   const svgCache = new Map();
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /**
+   * Détecte la langue courante du document ('fr' ou 'en').
+   * @returns {'fr'|'en'}
+   */
   const lang = () => (document.documentElement.lang === "fr" ? "fr" : "en");
+
+  /**
+   * Retourne le dictionnaire de libellés pour la langue courante.
+   */
   const copy = () => ui[lang()];
 
+  /**
+   * Détermine le mode de minuteur actuellement sélectionné dans l'interface.
+   * @returns {'focus'|'short'|'long'}
+   */
   const currentMode = () => {
     const selected = switcher.querySelector('[aria-selected="true"]');
     const value = selected && selected.dataset.mode;
     return value === "short" || value === "long" ? value : "focus";
   };
 
+  /**
+   * Assainit et valide un nom de fichier par rapport à une regex de sécurité.
+   * Évite les attaques par traversée de répertoire ('..').
+   */
   const safeName = (value, pattern) => {
     if (typeof value !== "string") return null;
     const name = value.trim();
@@ -104,11 +148,20 @@
     return name;
   };
 
+  /**
+   * Construit une URL absolue propre pour un média situé dans le dossier media/.
+   */
   const fileUrl = (name) =>
     new URL(`media/${encodeURIComponent(name)}`, document.baseURI).href;
 
+  /**
+   * Borne une valeur numérique entre un minimum et un maximum.
+   */
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
+  /**
+   * Lit le niveau de volume sauvegardé dans le localStorage (par défaut : 40%).
+   */
   const readVolume = () => {
     try {
       const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
@@ -120,6 +173,9 @@
     return 0.4;
   };
 
+  /**
+   * Enregistre le niveau de volume actuel dans le localStorage.
+   */
   const saveVolume = (value) => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({ volume: value }));
@@ -128,12 +184,22 @@
     }
   };
 
+  /**
+   * Retourne la liste filtrée et sécurisée des pistes audio valides.
+   */
   const tracksFor = () =>
     (playlist || []).map((name) => safeName(name, AUDIO_NAME)).filter(Boolean);
 
+  /**
+   * Retourne la liste filtrée et sécurisée des animations SVG valides.
+   */
   const svgsFor = () =>
     (animations || []).map((name) => safeName(name, SVG_NAME)).filter(Boolean);
 
+  /**
+   * Inspecte le badge de statut pour déterminer si le minuteur tourne ou est en pause.
+   * @returns {'running'|'paused'|'ready'}
+   */
   const timerState = () => {
     const cls = statusBadge ? statusBadge.className : "";
     if (cls.includes("emerald")) return "running";
@@ -141,18 +207,27 @@
     return "ready";
   };
 
+  /**
+   * Récupère le temps restant en secondes depuis l'affichage visible (ex: '05:00').
+   */
   const remainingSeconds = () => {
     const match = (timeDisplay && timeDisplay.textContent || "").trim().match(/^(\d{1,3}):(\d{2})$/);
     if (!match) return null;
     return Number(match[1]) * 60 + Number(match[2]);
   };
 
+  /**
+   * Récupère la durée configurée pour un mode de pause donné.
+   */
   const configuredSeconds = (mode) => {
     const input = mode === "long" ? longInput : shortInput;
     const fallbackMinutes = mode === "long" ? 15 : 5;
     return clamp(Number(input && input.value) || fallbackMinutes, 1, 60) * 60;
   };
 
+  /**
+   * Calcule la durée totale et le temps écoulé de la pause pour caler l'animation.
+   */
   const timeline = (mode) => {
     const configured = configuredSeconds(mode);
     const remaining = remainingSeconds();
@@ -167,11 +242,17 @@
     return { duration, elapsed };
   };
 
+  /**
+   * Met à jour le slogan inspirant selon le mode actif (focus vs pause).
+   */
   const applySlogan = () => {
     const key = currentMode() === "focus" ? "focus" : "pause";
     sloganEl.textContent = slogans[lang()][key];
   };
 
+  /**
+   * Met à jour les libellés d'accessibilité ARIA du lecteur.
+   */
   const applyLabels = () => {
     const text = copy();
     player.setAttribute("aria-label", text.player);
@@ -179,6 +260,9 @@
     volumeLabel.textContent = text.volume;
   };
 
+  /**
+   * Remplit le menu déroulant <select> avec la liste des morceaux audio disponibles.
+   */
   const fillSelect = () => {
     const text = copy();
     const tracks = tracksFor();
@@ -202,8 +286,14 @@
     select.value = String(currentTrackIndex);
   };
 
+  /**
+   * Détecte les URLs potentielles de scripts ou de requêtes réseau non autorisées.
+   */
   const unsafeUrl = (value) => /^(javascript:|data:|https?:|\/\/)/i.test(value.trim());
 
+  /**
+   * Assainit le DOM SVG pour supprimer tout script, iframe ou attribut dangereux (anti-XSS).
+   */
   const sanitizeSvg = (doc) => {
     doc.querySelectorAll("script,foreignObject,iframe,object,embed,audio,video,link,meta").forEach((node) => node.remove());
     doc.querySelectorAll("*").forEach((node) => {
@@ -238,6 +328,9 @@
     return svg;
   };
 
+  /**
+   * Charge et assainit une animation SVG depuis le dossier media/ avec mise en cache mémoire.
+   */
   const loadSvg = (name) => {
     const url = fileUrl(name);
     if (!svgCache.has(url)) {
@@ -253,6 +346,9 @@
     return svgCache.get(url);
   };
 
+  /**
+   * Met en pause ou réactive les animations SVG selon l'état du minuteur et les préférences système.
+   */
   const setMotion = (paused) => {
     fallback.style.animationPlayState = paused || reduceMotion ? "paused" : "running";
     const svg = svgHost.querySelector("svg");
@@ -266,6 +362,9 @@
     }
   };
 
+  /**
+   * Efface l'animation SVG active du conteneur.
+   */
   const clearSvg = () => {
     shownFile = "";
     svgToken += 1;
@@ -276,6 +375,9 @@
     animation.removeAttribute("src");
   };
 
+  /**
+   * Synchronise l'affichage de l'animation SVG avec l'avancement temporel de la pause.
+   */
   const syncAnimations = async () => {
     const mode = currentMode();
     if (mode === "focus") {
@@ -317,6 +419,9 @@
     setMotion(paused);
   };
 
+  /**
+   * Charge une piste musicale et démarre la lecture si requis.
+   */
   const loadTrack = async (shouldPlay) => {
     const tracks = tracksFor();
     missing = false;
@@ -344,6 +449,12 @@
     applyLabels();
   };
 
+  /**
+   * Asservit la musique de pause au minuteur :
+   * - En mode Focus : arrêt complet.
+   * - En mode Pause (courte/longue) et chrono actif : lecture automatique.
+   * - En mode Pause et chrono suspendu : mise en pause du son.
+   */
   const syncMusicWithTimer = () => {
     const mode = currentMode();
     if (mode === "focus") {
@@ -361,6 +472,9 @@
     }
   };
 
+  /**
+   * Synchronisation globale de l'interface des médias de pause.
+   */
   const sync = () => {
     const mode = currentMode();
     applySlogan();
@@ -380,8 +494,9 @@
     applyLabels();
   };
 
-  // Note : playBtn est une icône décorative sans clic (la lecture est asservie au timer).
+  // --- Événements utilisateurs du lecteur de pause ---
 
+  // Changement de morceau via le menu déroulant
   select.addEventListener("change", async () => {
     const next = Number(select.value);
     if (!Number.isInteger(next)) return;
@@ -390,12 +505,14 @@
     await loadTrack(shouldPlay);
   });
 
+  // Ajustement du curseur de volume avec sauvegarde
   volume.addEventListener("input", () => {
     const value = clamp(Number(volume.value) || 0, 0, 1);
     audio.volume = value;
     saveVolume(value);
   });
 
+  // Enchaînement automatique sur la piste suivante à la fin d'un morceau
   audio.addEventListener("ended", async () => {
     const tracks = tracksFor();
     if (tracks.length < 2) return;
@@ -414,10 +531,11 @@
     applyLabels();
   });
 
+  // Initialisation du volume initial
   volume.value = String(readVolume());
   audio.volume = Number(volume.value);
 
-  // Synchronisation avec les boutons du minuteur
+  // Synchronisation avec les clics sur Démarrer / Pause et Réinitialiser
   const startPauseBtn = document.getElementById("startPauseBtn");
   if (startPauseBtn) {
     startPauseBtn.addEventListener("click", () => {
@@ -431,6 +549,7 @@
     });
   }
 
+  // Observateurs de mutations DOM pour réagir aux changements de mode et de statut
   new MutationObserver(sync).observe(switcher, {
     attributes: true,
     subtree: true,
@@ -462,6 +581,7 @@
     });
   });
 
+  // Découverte dynamique de la configuration média via media/media.json
   const readMediaConfig = () => {
     fetch(new URL("media/media.json", document.baseURI).href, { cache: "no-store" })
       .then((res) => (res.ok ? res.json() : null))
@@ -482,6 +602,7 @@
       .catch(() => { });
   };
 
+  // Démarrage initial
   fillSelect();
   readMediaConfig();
   sync();
