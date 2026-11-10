@@ -26,9 +26,9 @@ media/
   ],
   "animations": [
     "Zen Ying-Yang.svg",
-    "ZenMan.svg",
-    "ZenNenuphar.svg",
-    "ZENWoman.svg"
+    "Zen Man.svg",
+    "Zen Nenuphar.svg",
+    "Zen Woman.svg"
   ]
 }
 ```

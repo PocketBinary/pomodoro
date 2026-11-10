@@ -1412,8 +1412,13 @@ const initPomodoro = () => {
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
     .register("./sw.js")
-    .then((reg) => console.log("Service Worker enregistré avec succès (scope) :", reg.scope))
-    .catch((err) => console.error("Échec de l'enregistrement du Service Worker :", err));
+    .then((reg) => {
+      // Certains navigateurs résolvent sans enregistrement (mode privé,
+      // politiques d'entreprise, aperçu en bac à sable) : on ne lit la portée
+      // que si l'enregistrement existe réellement.
+      if (reg) console.log(`Service Worker actif (portée : ${reg.scope})`);
+    })
+    .catch((err) => console.warn("Service Worker indisponible, mode en ligne seul :", err));
 }
 
 // Démarrage sécurisé lorsque le DOM est totalement chargé

@@ -120,9 +120,9 @@ pomodoro/
     ├── zen music 02.mp3
     ├── zen piano.mp3
     ├── Zen Ying-Yang.svg
-    ├── ZenMan.svg
-    ├── ZenNenuphar.svg
-    └── ZENWoman.svg
+    ├── Zen Man.svg
+    ├── Zen Nenuphar.svg
+    └── Zen Woman.svg
 ```
 
 ### Architecture technique

@@ -97,9 +97,9 @@
   // Liste de secours des animations vectorielles disponibles par défaut dans /media/
   const DEFAULT_ANIMATIONS = [
     "Zen Ying-Yang.svg",
-    "ZenMan.svg",
-    "ZenNenuphar.svg",
-    "ZENWoman.svg",
+    "Zen Man.svg",
+    "Zen Nenuphar.svg",
+    "Zen Woman.svg",
   ];
 
   // États internes du lecteur de pause
@@ -356,7 +356,7 @@
   /**
    * Mesure la boîte du dessin réellement peint, marges internes retirées.
    * Les planches SVG réservent de grandes marges dans leur viewBox (la femme de
-   * ZENWoman dessine dans 360×830 d'une planche de 1080×1080) et y laissent
+   * Zen Woman dessine dans 346×830 d'une planche de 1080×1080) et y laissent
    * parfois un résidu minuscule dans un coin. Mesurer le <g> englobant cadre
    * alors du résidu jusqu'au dessin : l'illustration se retrouve décalée d'un
    * côté et rétrécie. On projette donc chaque forme peinte dans le repère du
@@ -405,7 +405,7 @@
       });
     };
 
-    // Une pièce mobile sort de sa boîte de départ (ZenNenuphar voyage de ~50 unités).
+    // Une pièce mobile sort de sa boîte de départ (Zen Nenuphar voyage de ~50 unités).
     // On échantillonne la timeline SMIL pour cadrer tout le trajet, pas seulement t=0.
     if (typeof svg.setCurrentTime === "function" && typeof svg.pauseAnimations === "function") {
       const origin = typeof svg.getCurrentTime === "function" ? svg.getCurrentTime() : 0;

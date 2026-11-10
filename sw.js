@@ -18,7 +18,7 @@
  */
 
 // Nom et version du cache (à incrémenter lors de chaque mise à jour majeure)
-const CACHE_NAME = "pomodoro-cache-v11";
+const CACHE_NAME = "pomodoro-cache-v12";
 
 // Liste des ressources essentielles pré-chargées dès l'installation du Service Worker
 const PRECACHE_ASSETS = [
@@ -40,9 +40,9 @@ const PRECACHE_ASSETS = [
   "./fonts/chivo-mono-latin-ext.woff2",
   "./media/media.json",
   "./media/Zen Ying-Yang.svg",
-  "./media/ZenMan.svg",
-  "./media/ZenNenuphar.svg",
-  "./media/ZENWoman.svg"
+  "./media/Zen Man.svg",
+  "./media/Zen Nenuphar.svg",
+  "./media/Zen Woman.svg"
 ];
 
 // ============================================================================
