@@ -52,3 +52,4 @@ All durations (focus, short break, long break, and long break interval) are full
 - **Styling**: Pre-compiled standalone Tailwind CSS (`css/tailwind.min.css`, ~12 KB) + design tokens (`css/style.css`).
 - **Typography**: Self-hosted `Archivo` and `Chivo Mono` web fonts.
 - **Service Worker**: Cache-First strategy for static assets and Network-First for HTML navigation.
+

@@ -359,17 +359,46 @@
    * 411×310 d'un viewBox de 800×600) : sans ce recadrage l'illustration est
    * réduite à un timbre-poste dans une scène large. La scène, elle, ne change pas.
    */
+  const measureAnimatedBox = (svg) => {
+    const union = { x0: Infinity, y0: Infinity, x1: -Infinity, y1: -Infinity };
+    const take = () => {
+      let box;
+      try {
+        box = svg.getBBox();
+      } catch {
+        return;
+      }
+      if (!box || (!box.width && !box.height)) return;
+      union.x0 = Math.min(union.x0, box.x);
+      union.y0 = Math.min(union.y0, box.y);
+      union.x1 = Math.max(union.x1, box.x + box.width);
+      union.y1 = Math.max(union.y1, box.y + box.height);
+    };
+
+    // Une pièce mobile sort de sa boîte de départ (ZenNenuphar voyage de ~50 unités).
+    // On échantillonne la timeline SMIL pour cadrer tout le trajet, pas seulement t=0.
+    if (typeof svg.setCurrentTime === "function" && typeof svg.pauseAnimations === "function") {
+      const origin = typeof svg.getCurrentTime === "function" ? svg.getCurrentTime() : 0;
+      svg.pauseAnimations();
+      for (let t = 0; t <= 8; t += 0.5) {
+        svg.setCurrentTime(t);
+        take();
+      }
+      svg.setCurrentTime(origin);
+      svg.unpauseAnimations();
+    } else {
+      take();
+    }
+
+    if (!Number.isFinite(union.x0) || union.x1 <= union.x0) return null;
+    return { x: union.x0, y: union.y0, width: union.x1 - union.x0, height: union.y1 - union.y0 };
+  };
+
   const fitSvgToContent = (svg) => {
     if (!svg || typeof svg.getBBox !== "function") return;
-    let box;
-    try {
-      box = svg.getBBox();
-    } catch {
-      return;
-    }
-    if (!box || !box.width || !box.height) return;
-    // Marge de sécurité : certaines pièces bougent pendant l'animation
-    const pad = Math.max(box.width, box.height) * 0.04;
+    const box = measureAnimatedBox(svg);
+    if (!box) return;
+    const pad = Math.max(box.width, box.height) * 0.03;
     svg.setAttribute(
       "viewBox",
       `${box.x - pad} ${box.y - pad} ${box.width + pad * 2} ${box.height + pad * 2}`,
