@@ -533,6 +533,9 @@
 
     .break-player input[type="range"] {
       width: 4.5rem;
+      /* 24 px minimum target size (WCAG 2.2 SC 2.5.8): the thumb stays the same,
+         the clickable band grows around it */
+      min-height: 1.5rem;
       accent-color: var(--app-checkbox, #475569);
     }
 
@@ -555,6 +558,15 @@
 
     .app-main-grid>aside>.today-card {
       margin-top: auto;
+    }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    /* GitHub link: the icon row must reach the 24 px minimum target size
+       (WCAG 2.2 SC 2.5.8) without visually enlarging anything */
+    #githubLink {
+      min-height: 1.5rem;
     }
 
     /* ============================================================
