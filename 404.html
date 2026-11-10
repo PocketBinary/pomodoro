@@ -1,11 +1,12 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>404 — Page Not Found · Pomodoro</title>
-  <meta name="description" content="The requested page could not be found. Return to Pomodoro Timer.">
+  <title>404 — Page not found · Pomodoro</title>
+  <meta name="description"
+    content="This address does not exist in Pomodoro Timer. Return to the timer to start a focus session.">
   <meta name="robots" content="noindex, follow">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="Content-Security-Policy"
@@ -18,59 +19,132 @@
   <link rel="icon" type="image/png" href="icons/pomodoro.png" sizes="32x32">
   <link rel="apple-touch-icon" href="icons/pomodoro.png" sizes="180x180">
   <link rel="preload" href="fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/chivo-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
 
   <link rel="stylesheet" href="css/tailwind.min.css">
   <link rel="stylesheet" href="css/style.css">
+
+  <script>
+    // Le thème choisi dans l'app (options.theme) est posé sur <html> avant le
+    // premier rendu : un visiteur en mode sombre ne voit jamais de flash blanc.
+    try {
+      var saved = JSON.parse(localStorage.getItem("pomodoro-app-state-v10") || "null");
+      var stored = saved && saved.options && saved.options.theme;
+      var dark = stored ? stored === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+    } catch (error) {
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+  </script>
 </head>
 
-<body class="flex min-h-screen flex-col items-center justify-center bg-[#F5F6F8] px-6 py-12 text-slate-900"
-  data-theme="light">
-  <main class="w-full max-w-md text-center">
-    <div
-      class="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-black/5">
-      <img src="icons/pomodoro.png" alt="Pomodoro Logo" width="48" height="48" class="brand-logo" />
+<body class="error-shell" data-theme="light">
+  <main class="error-main">
+
+    <!-- Le cadran du minuteur, arrêté : même anneau, même épaisseur de trait,
+         la valeur affichée n'est simplement pas une durée -->
+    <div class="error-dial" aria-hidden="true">
+      <svg class="error-dial__ring" viewBox="0 0 320 320" focusable="false">
+        <circle class="error-dial__track" cx="160" cy="160" r="150"></circle>
+        <circle class="error-dial__arc" cx="160" cy="160" r="150"></circle>
+      </svg>
+      <div class="error-dial__face">
+        <span class="error-dial__code">404</span>
+        <span class="error-dial__caption" data-i18n="caption">Page not found</span>
+      </div>
     </div>
 
-    <span
-      class="inline-block rounded-full bg-slate-200/70 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-slate-700">
-      Error 404
-    </span>
+    <h1 class="sr-only" data-i18n="heading">Error 404 — page not found</h1>
 
-    <h1 class="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-      Page not found
-    </h1>
-
-    <p class="mt-3 text-sm text-slate-600 sm:text-base">
-      The page you are looking for doesn't exist or has been moved.
-      <br>
-      <span class="text-xs text-slate-400">La page demandée est introuvable ou a été déplacée.</span>
-    </p>
-
-    <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-      <a href="./"
-        class="inline-flex min-h-11 items-center justify-center rounded-full bg-slate-900 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 active:scale-[0.98]">
-        ← Back to Pomodoro Timer
+    <!-- Registre : l'adresse demandée d'un côté, la sortie de l'autre -->
+    <div class="error-ledger">
+      <div class="error-row">
+        <span class="error-row__label" data-i18n="requested">Requested address</span>
+        <span class="error-row__value" id="errorPath">/</span>
+      </div>
+      <a class="error-row error-row--link" id="backLink" href="./" data-i18n-aria="back"
+        aria-label="Return to the timer">
+        <span data-i18n="back">Return to the timer</span>
+        <span class="error-row__hint" aria-hidden="true">←</span>
       </a>
     </div>
   </main>
 
-  <footer class="mt-4 text-center text-xs text-slate-400">
-    <p>© 2026 Pomodoro · Created by PocketBinary</p>
+  <footer class="error-footer">
+    <span>© 2026 Pomodoro · Created by PocketBinary</span>
+    <a id="githubLink" href="https://github.com/PocketBinary/pomodoro" target="_blank" rel="noopener noreferrer"
+      data-i18n-aria="github" aria-label="View the source on GitHub">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+        <path
+          d="M12 2C6.48 2 2 6.58 2 12.26c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.38-3.37-1.38-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.89 1.57 2.34 1.12 2.91.86.09-.66.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 6.99c.85 0 1.71.12 2.51.34 1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.8-4.57 5.05.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.59.69.49A10.13 10.13 0 0 0 22 12.26C22 6.58 17.52 2 12 2Z" />
+      </svg>
+      <span>GitHub</span>
+    </a>
   </footer>
 
   <script>
-    // Harmonisation automatique avec le thème système utilisateur
-    try {
-      const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const savedTheme = localStorage.getItem('pomodoro.theme');
-      if (savedTheme === 'dark' || (!savedTheme && isDark)) {
-        document.body.setAttribute('data-theme', 'dark');
-        document.body.classList.remove('bg-[#F5F6F8]');
-        document.body.classList.add('bg-[#0B1120]');
+    (() => {
+      // Textes localisés : l'app est bilingue, la 404 ne doit pas l'être à moitié
+      const copy = {
+        en: {
+          title: "404 — Page not found · Pomodoro",
+          heading: "Error 404 — page not found",
+          caption: "Page not found",
+          requested: "Requested address",
+          back: "Return to the timer",
+          github: "View the source on GitHub",
+        },
+        fr: {
+          title: "404 — Page introuvable · Pomodoro",
+          heading: "Erreur 404 — page introuvable",
+          caption: "Page introuvable",
+          requested: "Adresse demandée",
+          back: "Revenir au minuteur",
+          github: "Voir le code source sur GitHub",
+        },
+      };
+
+      let options = {};
+      try {
+        const state = JSON.parse(localStorage.getItem("pomodoro-app-state-v10") || "null");
+        if (state && state.options && typeof state.options === "object") options = state.options;
+      } catch (error) {
+        options = {};
       }
-    } catch (e) {
-      // Ignoré sans bloquer l'affichage
-    }
+
+      // Thème : le choix enregistré dans l'app prime, sinon la préférence système
+      const storedTheme = options.theme === "dark" || options.theme === "light" ? options.theme : null;
+      document.body.setAttribute("data-theme", storedTheme || document.documentElement.getAttribute("data-theme") || "light");
+
+      // Langue : même règle, avec la langue du navigateur en repli
+      const browserFrench = /^fr/i.test(navigator.language || "");
+      const lang = options.language === "fr" || options.language === "en" ? options.language : (browserFrench ? "fr" : "en");
+      const text = copy[lang];
+
+      document.documentElement.lang = lang;
+      document.title = text.title;
+      document.querySelectorAll("[data-i18n]").forEach((node) => {
+        const value = text[node.getAttribute("data-i18n")];
+        if (value) node.textContent = value;
+      });
+      document.querySelectorAll("[data-i18n-aria]").forEach((node) => {
+        const value = text[node.getAttribute("data-i18n-aria")];
+        if (value) node.setAttribute("aria-label", value);
+      });
+
+      // L'adresse refusée est affichée telle que demandée, tronquée visuellement
+      const pathNode = document.getElementById("errorPath");
+      if (pathNode) {
+        let path = window.location.pathname + window.location.search;
+        try {
+          path = decodeURIComponent(path);
+        } catch (error) {
+          // Chemin mal encodé : on garde la valeur brute plutôt que de casser la page
+        }
+        pathNode.textContent = path || "/";
+        pathNode.title = path;
+      }
+    })();
   </script>
 </body>
 
