@@ -84,6 +84,8 @@ pomodoro/
 ├── LICENSE                 # MIT open-source license
 ├── README.md               # English project documentation
 ├── README_FR.md            # French project documentation
+├── .nojekyll               # Skips Jekyll processing on GitHub Pages
+├── .gitignore              # Excludes local tooling, macOS and Windows artefacts
 │
 ├── css/                    # Stylesheet architecture
 │   └── style.css           # Design tokens, light/dark themes, components, tablet rules

@@ -32,8 +32,6 @@ const PRECACHE_ASSETS = [
   "./icons/pomodoro-192.png",
   "./icons/pomodoro-512.png",
   "./pomodoro.png",
-  "./pomodoro-192.png",
-  "./pomodoro-512.png",
   "./fonts/archivo-latin.woff2",
   "./fonts/archivo-latin-ext.woff2",
   "./fonts/chivo-mono-latin.woff2",
