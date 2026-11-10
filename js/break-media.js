@@ -71,7 +71,6 @@
   const stage = document.getElementById("breakStage");
   const timeDisplay = document.getElementById("timeDisplay");
   const statusBadge = document.getElementById("statusBadge");
-  const progressRing = document.getElementById("progressRing");
   const shortInput = document.getElementById("shortInput");
   const longInput = document.getElementById("longInput");
 
@@ -111,7 +110,6 @@
   // Animation choisie par l'utilisateur (nom de fichier), null = première de la liste
   let chosenAnimation = null;
   let wantsPlay = false;
-  let missing = false;
   let shownMode = null;
   let shownFile = "";
   let svgToken = 0;
@@ -237,6 +235,7 @@
     const text = copy();
     player.setAttribute("aria-label", text.player);
     pickLabel.textContent = text.choose;
+    animLabel.textContent = text.chooseAnim;
     volumeLabel.textContent = text.volume;
   };
 
@@ -264,6 +263,34 @@
     });
     currentTrackIndex = ((currentTrackIndex % tracks.length) + tracks.length) % tracks.length;
     select.value = String(currentTrackIndex);
+  };
+
+  /**
+   * Remplit le menu déroulant des animations et restaure le choix sauvegardé.
+   */
+  const fillAnimSelect = () => {
+    const text = copy();
+    const files = svgsFor();
+    animSelect.replaceChildren();
+    if (!files.length) {
+      const option = document.createElement("option");
+      option.value = "";
+      option.textContent = text.emptyAnim;
+      animSelect.append(option);
+      animSelect.disabled = true;
+      return;
+    }
+    animSelect.disabled = false;
+    files.forEach((name, index) => {
+      const option = document.createElement("option");
+      option.value = String(index);
+      option.textContent = name.replace(/\.[^.]+$/, "");
+      animSelect.append(option);
+    });
+    const savedIndex = files.indexOf(chosenAnimation);
+    const index = savedIndex >= 0 ? savedIndex : 0;
+    chosenAnimation = files[index];
+    animSelect.value = String(index);
   };
 
   /**
@@ -403,7 +430,6 @@
    */
   const loadTrack = async (shouldPlay) => {
     const tracks = tracksFor();
-    missing = false;
     if (!tracks.length) {
       audio.pause();
       audio.removeAttribute("src");
@@ -468,6 +494,7 @@
     atmosphere.hidden = false;
     shownMode = mode;
     fillSelect();
+    fillAnimSelect();
     syncAnimations();
     syncMusicWithTimer();
     applyLabels();
@@ -482,6 +509,16 @@
     currentTrackIndex = next;
     const shouldPlay = timerState() === "running" && currentMode() !== "focus";
     await loadTrack(shouldPlay);
+  });
+
+  // Choix manuel de l'animation de pause, mémorisé pour les pauses suivantes
+  animSelect.addEventListener("change", () => {
+    const files = svgsFor();
+    const next = files[Number(animSelect.value)];
+    if (!next) return;
+    chosenAnimation = next;
+    savePrefs({ animation: next });
+    if (currentMode() !== "focus") syncAnimations();
   });
 
   // Ajustement du curseur de volume avec sauvegarde
@@ -506,7 +543,6 @@
   audio.addEventListener("pause", applyLabels);
   audio.addEventListener("error", () => {
     if (!audio.getAttribute("src")) return;
-    missing = true;
     wantsPlay = false;
     applyLabels();
   });
@@ -516,6 +552,10 @@
   volume.value = String(initialVolume);
   volume.setAttribute("aria-valuenow", String(Math.round(initialVolume * 100)));
   audio.volume = initialVolume;
+
+  // Restauration de l'animation choisie lors d'une pause précédente
+  const savedAnimation = readPrefs().animation;
+  if (typeof savedAnimation === "string") chosenAnimation = savedAnimation;
 
   // Synchronisation avec les clics sur Démarrer / Pause et Réinitialiser
   const startPauseBtn = document.getElementById("startPauseBtn");
@@ -576,6 +616,7 @@
           animations = data.animations;
         }
         fillSelect();
+        fillAnimSelect();
         if (currentMode() !== "focus") {
           syncAnimations();
           if (wantsPlay) loadTrack(true);
@@ -586,6 +627,7 @@
 
   // Démarrage initial
   fillSelect();
+  fillAnimSelect();
   readMediaConfig();
   sync();
 })();
