@@ -20,6 +20,7 @@ const PRECACHE_ASSETS = [
   "./fonts/chivo-mono-latin.woff2",
   "./fonts/chivo-mono-latin-ext.woff2",
   "./media/media.json",
+  "./media/Zen Ying-Yang.svg",
   "./media/ZenMan.svg",
   "./media/ZenNenuphar.svg",
   "./media/ZENWoman.svg"
