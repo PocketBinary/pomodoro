@@ -55,40 +55,95 @@
   <meta name="twitter:image" content="https://pocketbinary.github.io/pomodoro/icons/pomodoro.png">
   <meta name="twitter:image:alt" content="Pomodoro Timer Logo">
 
-  <!-- Données structurées Schema.org pour les moteurs de recherche (JSON-LD) -->
+  <!-- Données structurées Schema.org pour les moteurs de recherche et agents IA (JSON-LD) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Pomodoro Timer",
-    "description": "Simple Pomodoro timer with focus sessions, short breaks, long breaks, ambient Zen music and daily statistics.",
-    "applicationCategory": "ProductivityApplication",
-    "applicationSubCategory": "TimeManagement",
-    "operatingSystem": "Any",
-    "browserRequirements": "Requires JavaScript. Requires HTML5.",
-    "softwareVersion": "1.2.0",
-    "inLanguage": ["en", "fr"],
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "author": {
-      "@type": "Person",
-      "name": "PocketBinary"
-    },
-    "featureList": [
-      "Customizable focus and break timers",
-      "Ambient Zen break music and meditative SVG animations",
-      "Daily productivity statistics tracking",
-      "WCAG 2.1 AA accessible interface",
-      "Offline Progressive Web App (PWA) support",
-      "Keyboard shortcuts navigation",
-      "Harmonized light and dark themes"
-    ],
-    "url": "https://pocketbinary.github.io/pomodoro/",
-    "image": "https://pocketbinary.github.io/pomodoro/icons/pomodoro.png",
-    "screenshot": "https://pocketbinary.github.io/pomodoro/icons/pomodoro-512.png"
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://pocketbinary.github.io/pomodoro/#website",
+        "url": "https://pocketbinary.github.io/pomodoro/",
+        "name": "Pomodoro Timer",
+        "description": "Free, elegant Pomodoro timer with custom focus sessions, ambient Zen break music, SVG animations and daily statistics.",
+        "inLanguage": ["en", "fr"],
+        "publisher": {
+          "@type": "Person",
+          "name": "PocketBinary"
+        }
+      },
+      {
+        "@type": "WebApplication",
+        "@id": "https://pocketbinary.github.io/pomodoro/#app",
+        "name": "Pomodoro Timer",
+        "description": "Simple Pomodoro timer with focus sessions, short breaks, long breaks, ambient Zen music and daily statistics.",
+        "applicationCategory": "ProductivityApplication",
+        "applicationSubCategory": "TimeManagement",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript. Requires HTML5.",
+        "softwareVersion": "1.2.0",
+        "inLanguage": ["en", "fr"],
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "PocketBinary"
+        },
+        "featureList": [
+          "Customizable focus and break timers",
+          "Ambient Zen break music and meditative SVG animations",
+          "Daily productivity statistics tracking",
+          "WCAG 2.1 AA accessible interface",
+          "Offline Progressive Web App (PWA) support",
+          "Keyboard shortcuts navigation",
+          "Harmonized light and dark themes"
+        ],
+        "url": "https://pocketbinary.github.io/pomodoro/",
+        "image": "https://pocketbinary.github.io/pomodoro/icons/pomodoro.png",
+        "screenshot": "https://pocketbinary.github.io/pomodoro/icons/pomodoro-512.png"
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://pocketbinary.github.io/pomodoro/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is the Pomodoro Technique?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The Pomodoro Technique is a time-management method that breaks work into intervals—traditionally 25 minutes of focused work separated by 5-minute short breaks, followed by a 15-minute long break after four consecutive sessions."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does this Pomodoro timer work offline?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Pomodoro is built as an offline-first Progressive Web App (PWA). All assets and audio chimes are stored locally by the Service Worker, allowing complete offline functionality without an internet connection."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is my data tracked or sent to remote servers?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. The application is completely private. It runs entirely on the client side with zero telemetry, zero cookies, and zero third-party scripts. Your preferences and daily statistics are saved exclusively in your browser's local storage."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I customize the focus and break intervals?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Through the settings panel, you can customize focus duration, short break duration, long break duration, and the session interval between long breaks from 1 to 60 minutes."
+            }
+          }
+        ]
+      }
+    ]
   }
   </script>
 
@@ -119,6 +174,19 @@
        CONTENEUR PRINCIPAL DE L'APPLICATION
        ====================================================================== -->
   <main id="main-content" class="mx-auto max-w-5xl px-6 py-10" role="main">
+
+    <!-- Message sémantique d'accessibilité et de repli si JavaScript est désactivé (Indexation SEO & Agents IA) -->
+    <noscript>
+      <div class="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-amber-900 shadow-sm" role="alert">
+        <h2 class="text-base font-semibold">JavaScript Required / JavaScript requis</h2>
+        <p class="mt-1.5 text-sm text-amber-800">
+          Pomodoro Timer is a private, client-side productivity app that operates entirely in your browser with zero remote servers. Please enable JavaScript to run the focus timer, customize intervals (25 min focus, 5 min short break, 15 min long break), and enjoy ambient Zen melodies.
+        </p>
+        <p class="mt-1 text-xs text-amber-700">
+          Cette application fonctionne exclusivement en local dans votre navigateur. Activez JavaScript pour lancer le minuteur, régler vos intervalles et profiter de la musique de pause.
+        </p>
+      </div>
+    </noscript>
 
     <!-- Bandeau informatif d'orientation pour tablette (affiché si tenue en mode portrait) -->
     <div id="tabletHint" class="tablet-orientation-hint" role="status" aria-live="polite">

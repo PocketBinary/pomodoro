@@ -354,6 +354,31 @@
   };
 
   /**
+   * Recadre le viewBox sur le dessin réellement dessiné.
+   * Les SVG sources réservent de grandes marges internes (ZenMan dessine dans
+   * 411×310 d'un viewBox de 800×600) : sans ce recadrage l'illustration est
+   * réduite à un timbre-poste dans une scène large. La scène, elle, ne change pas.
+   */
+  const fitSvgToContent = (svg) => {
+    if (!svg || typeof svg.getBBox !== "function") return;
+    let box;
+    try {
+      box = svg.getBBox();
+    } catch {
+      return;
+    }
+    if (!box || !box.width || !box.height) return;
+    // Marge de sécurité : certaines pièces bougent pendant l'animation
+    const pad = Math.max(box.width, box.height) * 0.04;
+    svg.setAttribute(
+      "viewBox",
+      `${box.x - pad} ${box.y - pad} ${box.width + pad * 2} ${box.height + pad * 2}`,
+    );
+    // Le dessin doit tenir entièrement dans la scène, jamais être rogné
+    svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+  };
+
+  /**
    * Met en pause ou réactive les animations SVG selon l'état du minuteur et les préférences système.
    */
   const setMotion = (paused) => {
@@ -420,6 +445,10 @@
       animation.hidden = true;
       animation.removeAttribute("src");
       svgHost.append(svg.cloneNode(true));
+      // getBBox() can answer zero on the very frame of insertion, before the
+      // browser has laid the clone out: fit now, then once more on the next frame.
+      fitSvgToContent(svgHost.querySelector("svg"));
+      window.requestAnimationFrame(() => fitSvgToContent(svgHost.querySelector("svg")));
       fallback.hidden = true;
     }
     setMotion(paused);

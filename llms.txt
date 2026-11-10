@@ -1,0 +1,54 @@
+# Pomodoro Timer
+
+> A free, minimalist, private Pomodoro focus timer with ambient Zen music, meditative SVG animations, and daily productivity tracking.
+
+- Website: https://pocketbinary.github.io/pomodoro/
+- Source Code: https://github.com/PocketBinary/pomodoro
+- Author: PocketBinary
+- License: MIT
+- Architecture: 100% client-side, zero trackers, offline-ready Progressive Web App (PWA)
+
+## Overview & Methodology
+
+Pomodoro Timer implements the classic time management technique developed by Francesco Cirillo:
+1. **Focus Session**: 25 minutes of deep, uninterrupted work.
+2. **Short Break**: 5 minutes of rest, accompanied by relaxing Zen music and subtle SVG animations.
+3. **Long Break**: 15 minutes of recovery every 4 completed focus sessions.
+
+All durations (focus, short break, long break, and long break interval) are fully customizable by the user between 1 and 60 minutes.
+
+## Key Features
+
+- **Ambient Audio & Visuals**:
+  - Built-in sound notifications generated dynamically through the browser's Web Audio API (sine-wave oscillator synthesis; no remote downloads required).
+  - Optional ambient background music during breaks (5 relaxing Zen tracks).
+  - Meditative SVG animations (Yin-Yang, Zen Lotus, Meditating figures) playing exclusively during breaks.
+- **Privacy & Security First**:
+  - Zero tracking, zero telemetry, zero cookies, zero third-party scripts.
+  - Strict Content Security Policy (`default-src 'self'`).
+  - No external CDN; all stylesheets, icons, audio, and fonts are self-hosted locally.
+  - Preferences and daily statistics are stored strictly on the client device via `localStorage`.
+- **Accessibility (WCAG 2.1 AA)**:
+  - Full keyboard accessibility with intuitive shortcuts (`Space` to start/pause).
+  - WAI-ARIA compliant semantics (`role="timer"`, `role="tablist"`, `role="switch"`, `role="slider"`, `role="alertdialog"`).
+  - Dynamic `aria-live` region announcements for screen reader users.
+  - High-contrast light and dark themes meeting WCAG AA standards.
+- **Multilingual Support**:
+  - Instant toggle between English (EN) and French (FR) with localized announcements and microcopy.
+- **Offline & PWA Capabilities**:
+  - Installable as a standalone app on desktop and mobile platforms.
+  - Cache-First Service Worker ensures reliable operation without any internet connection.
+
+## Keyboard Controls
+
+- `Space`: Start or pause the active timer.
+- `Tab` / `Shift + Tab`: Move between controls.
+- `Enter` / `Space`: Activate buttons and toggle options.
+- `Escape`: Close open dialog modals.
+
+## Technical Stack
+
+- **Markup & Logic**: Vanilla HTML5, modern JavaScript ES6+ (no external frameworks, zero runtime dependencies).
+- **Styling**: Pre-compiled standalone Tailwind CSS (`css/tailwind.min.css`, ~12 KB) + design tokens (`css/style.css`).
+- **Typography**: Self-hosted `Archivo` and `Chivo Mono` web fonts.
+- **Service Worker**: Cache-First strategy for static assets and Network-First for HTML navigation.

@@ -54,3 +54,8 @@ Allow: /
 # Découverte du plan du site (URL absolue obligatoire, une relative est ignorée).
 # ----------------------------------------------------------------------------
 Sitemap: https://pocketbinary.github.io/pomodoro/sitemap.xml
+
+# ----------------------------------------------------------------------------
+# Spécification pour les modèles de langage et agents IA (standard llmstxt.org)
+# ----------------------------------------------------------------------------
+# LLMs-Txt: https://pocketbinary.github.io/pomodoro/llms.txt

@@ -77,15 +77,20 @@ Organized following modern static PWA standards with separation of concerns:
 ```text
 pomodoro/
 ├── index.html              # Main semantic HTML5 page with accessible structure
+├── 404.html                # Custom styled 404 error page for GitHub Pages
 ├── manifest.json           # Web App Manifest for native installation
 ├── sw.js                   # Service Worker (Cache-First assets & Network-First HTML)
-├── robots.txt              # Search engine crawl directives
+├── robots.txt              # Search engine crawl directives & AI bot allowances
 ├── sitemap.xml             # XML sitemap for SEO discovery
+├── llms.txt                # Machine-readable context for AI agents & LLMs (llmstxt.org)
 ├── LICENSE                 # MIT open-source license
 ├── README.md               # English project documentation
 ├── README_FR.md            # French project documentation
 ├── .nojekyll               # Skips Jekyll processing on GitHub Pages
 ├── .gitignore              # Excludes local tooling, macOS and Windows artefacts
+│
+├── .well-known/            # Standard web security declarations
+│   └── security.txt        # RFC 9116 vulnerability reporting standard
 │
 ├── css/                    # Stylesheet architecture
 │   ├── tailwind.min.css    # Standalone minified Tailwind CSS bundle (zero external CDN)

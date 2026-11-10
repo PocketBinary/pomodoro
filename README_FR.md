@@ -77,15 +77,20 @@ Organisé selon les normes actuelles d'architecture pour les applications statiq
 ```text
 pomodoro/
 ├── index.html              # Page principale en HTML5 sémantique et accessible
+├── 404.html                # Page d'erreur 404 personnalisée pour GitHub Pages
 ├── manifest.json           # Manifest PWA pour l'installation sur appareil
 ├── sw.js                   # Service Worker (Cache-First assets & Network-First HTML)
-├── robots.txt              # Directives d'indexation pour les moteurs de recherche
+├── robots.txt              # Directives d'indexation pour les moteurs et agents IA
 ├── sitemap.xml             # Plan de site XML pour le référencement SEO
+├── llms.txt                # Contexte structuré pour agents IA & LLMs (llmstxt.org)
 ├── LICENSE                 # Licence open-source MIT
 ├── README.md               # Documentation en anglais
 ├── README_FR.md            # Documentation en français
 ├── .nojekyll               # Désactive le traitement Jekyll de GitHub Pages
 ├── .gitignore              # Exclut l'outillage local, les artefacts macOS et Windows
+│
+├── .well-known/            # Déclarations standardisées de sécurité web
+│   └── security.txt        # Déclaration de sécurité conforme au RFC 9116
 │
 ├── css/                    # Architecture des feuilles de style
 │   ├── tailwind.min.css    # Bundle Tailwind CSS autonome et minifié (zéro CDN externe)

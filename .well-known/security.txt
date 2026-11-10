@@ -1,0 +1,11 @@
+# ==============================================================================
+# security.txt — Pomodoro Timer (RFC 9116)
+# https://pocketbinary.github.io/pomodoro/.well-known/security.txt
+# ==============================================================================
+
+Contact: https://github.com/PocketBinary/pomodoro/issues
+Expires: 2027-12-31T23:59:59.000Z
+Preferred-Languages: en, fr
+Canonical: https://pocketbinary.github.io/pomodoro/.well-known/security.txt
+Policy: https://github.com/PocketBinary/pomodoro/blob/main/README.md
+Acknowledgments: https://github.com/PocketBinary/pomodoro

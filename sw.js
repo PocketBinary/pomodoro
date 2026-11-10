@@ -18,12 +18,13 @@
  */
 
 // Nom et version du cache (à incrémenter lors de chaque mise à jour majeure)
-const CACHE_NAME = "pomodoro-cache-v9";
+const CACHE_NAME = "pomodoro-cache-v10";
 
 // Liste des ressources essentielles pré-chargées dès l'installation du Service Worker
 const PRECACHE_ASSETS = [
   "./",
   "./index.html",
+  "./404.html",
   "./css/tailwind.min.css",
   "./css/style.css",
   "./js/app.js",
