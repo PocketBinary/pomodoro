@@ -54,7 +54,7 @@
 - **Sauvegarde automatique et résiliente** : Persistance dans le `localStorage` avec validation stricte du schéma de données ; reprise fluide après veille ou rechargement d'onglet.
 - **Thèmes clair et sombre harmonisés** : Prise en charge intégrale du mode sombre (y compris le sélecteur audio et ses menus déroulants) sur tous les systèmes d'exploitation.
 - **Interface bilingue instantanée** : Bascule immédiate Français / Anglais sans rechargement de page.
-- **Progressive Web App (PWA)** : Installable sur smartphone, tablette et ordinateur comme une application native, propulsée par un Service Worker robuste (`pomodoro-cache-v8`) pour un usage 100 % hors-ligne.
+- **Progressive Web App (PWA)** : Installable sur smartphone, tablette et ordinateur comme une application native, propulsée par un Service Worker robuste (`pomodoro-cache-v12`) pour un usage 100 % hors-ligne.
 - **Accessible (WCAG 2.1 AA)** : Navigation clavier complète (pattern tablist WAI-ARIA, raccourci <kbd>Espace</kbd>), annonces vocales en direct pour les lecteurs d'écran, et respect des préférences de mouvements réduits (`prefers-reduced-motion`).
 - **Optimisé SEO** : Balises Open Graph, Twitter Cards, métadonnées JSON-LD Schema.org, robots.txt et plan de site sitemap.xml.
 
@@ -65,6 +65,37 @@
 ## Démo en direct
 
 **[Découvrir l'application en ligne sur GitHub Pages](https://pocketbinary.github.io/pomodoro/)**
+
+<br />
+
+---
+
+## Captures d'écran
+
+<div align="center">
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="screenshots/01-focus-light.png" alt="Session de focus en cours dans le thème clair, anneau de progression à 27 % et cycle 3 sur 4" width="480" />
+    </td>
+    <td align="center">
+      <img src="screenshots/02-break-dark.png" alt="Pause longue dans le thème sombre : surface de carte inversée, animation Zen Ying-Yang et lecteur d'ambiance" width="480" />
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Session de focus — thème clair</sub></td>
+    <td align="center"><sub>Pause longue avec médias d'ambiance — thème sombre</sub></td>
+  </tr>
+</table>
+
+<br />
+
+<img src="screenshots/03-mobile-light.png" alt="Minuteur Pomodoro sur mobile : pause courte avec l'animation Zen Woman, sélecteurs de musique et d'animation, réglages et statistiques du jour" width="300" />
+<br />
+<sub>Mobile — pause courte avec choix de l'animation</sub>
+
+</div>
 
 <br />
 
@@ -88,6 +119,11 @@ pomodoro/
 ├── README_FR.md            # Documentation en français
 ├── .nojekyll               # Désactive le traitement Jekyll de GitHub Pages
 ├── .gitignore              # Exclut l'outillage local, les artefacts macOS et Windows
+│
+├── screenshots/            # Captures d'écran du README (desktop clair/sombre, mobile)
+│   ├── 01-focus-light.png
+│   ├── 02-break-dark.png
+│   └── 03-mobile-light.png
 │
 ├── .well-known/            # Déclarations standardisées de sécurité web
 │   └── security.txt        # Déclaration de sécurité conforme au RFC 9116

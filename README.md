@@ -54,7 +54,7 @@
 - **Automatic State Persistence**: Safe `localStorage` schema with strict type validation; resumes smoothly after tab reload or sleep.
 - **Responsive & Themed**: Harmonized Light / Dark themes across all UI components (including dropdown menus) and full mobile / tablet / desktop support.
 - **Bilingual Interface**: Instant English / French switching without page reload.
-- **Progressive Web App (PWA)**: Installable like a native app, driven by a resilient Service Worker (`pomodoro-cache-v8`) for complete offline usage.
+- **Progressive Web App (PWA)**: Installable like a native app, driven by a resilient Service Worker (`pomodoro-cache-v12`) for complete offline usage.
 - **Accessible (WCAG 2.1 AA)**: Full keyboard navigation (WAI-ARIA tablist pattern, <kbd>Space</kbd> toggle), screen reader live announcements, and `prefers-reduced-motion` compliance.
 - **SEO Ready**: JSON-LD semantic metadata, Open Graph cards, Twitter Cards, robots.txt, and sitemap.
 
@@ -65,6 +65,37 @@
 ## Live Demo
 
 **[Explore the live application on GitHub Pages](https://pocketbinary.github.io/pomodoro/)**
+
+<br />
+
+---
+
+## Screenshots
+
+<div align="center">
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="screenshots/01-focus-light.png" alt="Focus session running in the light theme, with the progress ring at 27% and the cycle at 3 of 4" width="480" />
+    </td>
+    <td align="center">
+      <img src="screenshots/02-break-dark.png" alt="Long break in the dark theme: inverted card surface, Zen Ying-Yang animation and the ambient music player" width="480" />
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Focus session — light theme</sub></td>
+    <td align="center"><sub>Long break with ambient media — dark theme</sub></td>
+  </tr>
+</table>
+
+<br />
+
+<img src="screenshots/03-mobile-light.png" alt="Pomodoro timer on a phone: short break with the Zen Woman animation, music and animation pickers, settings and daily stats" width="300" />
+<br />
+<sub>Mobile — short break with animation selection</sub>
+
+</div>
 
 <br />
 
@@ -88,6 +119,11 @@ pomodoro/
 ├── README_FR.md            # French project documentation
 ├── .nojekyll               # Skips Jekyll processing on GitHub Pages
 ├── .gitignore              # Excludes local tooling, macOS and Windows artefacts
+│
+├── screenshots/            # README showcase captures (desktop light/dark, mobile)
+│   ├── 01-focus-light.png
+│   ├── 02-break-dark.png
+│   └── 03-mobile-light.png
 │
 ├── .well-known/            # Standard web security declarations
 │   └── security.txt        # RFC 9116 vulnerability reporting standard

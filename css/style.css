@@ -522,6 +522,15 @@
       color: #0F172A !important;
     }
 
+    /* Volume row: the label wraps the slider, so the row has to lay it out
+       itself — otherwise the slider keeps its fixed width and hugs the left edge */
+    .break-player__volume {
+      display: flex;
+      min-width: 0;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
     .break-player input[type="range"] {
       width: 4.5rem;
       accent-color: var(--app-checkbox, #475569);
@@ -531,6 +540,21 @@
       border: 0 !important;
       background: transparent !important;
       padding: 0 !important;
+    }
+
+    /* ============================================================
+       COLUMN BALANCE — the timer card grows with its break media
+       ============================================================ */
+    /* Settings column: the panel stretches to the timer card's height, so the
+       daily summary is seated at the bottom instead of leaving a dead gap under
+       it. With no free height (single column) the auto margin simply collapses. */
+    .app-main-grid>aside {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .app-main-grid>aside>.today-card {
+      margin-top: auto;
     }
 
     /* ============================================================
@@ -1140,9 +1164,17 @@
         max-width: none;
       }
 
+      /* Volume takes the second row on its own, spanning the bar: a slider reads
+         as a slider, not as a chip abandoned on the left edge */
       .break-player__volume {
         flex: 1 0 100%;
         justify-content: center;
+        padding: 0.15rem 0.35rem 0.3rem;
+      }
+
+      .break-player input[type="range"] {
+        width: 100%;
+        max-width: 16rem;
       }
 
       .app-dialog__actions {
