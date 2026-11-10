@@ -395,7 +395,9 @@
 
     .break-stage {
       position: relative;
-      height: 6.5rem;
+      /* Scales with the viewport height: the stage is the one block that can give
+         room back on short laptop screens without hurting the hero timer */
+      height: clamp(6rem, 12vh, 8rem);
       overflow: hidden;
       border: 1px solid var(--app-border);
       border-radius: 1rem;
@@ -1089,9 +1091,6 @@
         height: 4rem;
       }
 
-      .break-stage {
-        height: 8rem;
-      }
     }
 
     @media (max-width: 639px) {
@@ -1249,5 +1248,51 @@
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ==========================================================================
+       SHORT VIEWPORTS (laptops <= 940 px tall)
+       ==========================================================================
+       A break adds the animation stage and the media player to an already tall
+       timer card, which used to push the footer under the fold on a 900 px
+       screen. The stage height is fluid (clamp) and the vertical rhythm tightens
+       here, so the whole page fits without touching the hero dial.
+       1040 px is the exact height where the regular rhythm stops overflowing. */
+    @media (min-width: 768px) and (max-height: 1040px) {
+      #main-content {
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+      }
+
+      .app-header {
+        margin-bottom: 1.25rem;
+      }
+
+      #timerCard,
+      .app-main-grid>aside {
+        padding: 1.25rem;
+      }
+
+      #timerStack {
+        margin-top: 1.25rem;
+        gap: 1rem;
+      }
+
+      .timer-controls {
+        gap: 1rem;
+      }
+
+      .break-atmosphere {
+        margin-top: 0;
+        gap: 0.5rem;
+      }
+
+      .break-stage {
+        height: clamp(5rem, 10vh, 7rem);
+      }
+
+      body footer {
+        padding-bottom: 1rem;
       }
     }

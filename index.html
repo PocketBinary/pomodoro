@@ -269,7 +269,7 @@
         </div>
 
         <!-- ZONE DU COMPTE À REBOURS AVEC ANNEAU CIRCULAIRE SVG (Rôle timer & progressbar) -->
-        <div class="mt-8 flex flex-col items-center gap-6">
+        <div id="timerStack" class="mt-8 flex flex-col items-center gap-6">
           <div class="relative flex items-center justify-center" id="timer-display" role="tabpanel"
             aria-labelledby="modeSwitcher">
             <svg class="absolute inset-0 h-full w-full -rotate-90 overflow-visible" viewBox="0 0 320 320"
@@ -298,7 +298,7 @@
           </div>
 
           <!-- BOUTONS D'ACTION PRINCIPAUX (Démarrer / Mettre en pause, Réinitialiser) -->
-          <div class="flex flex-col items-center gap-6">
+          <div class="timer-controls flex flex-col items-center gap-6">
             <div class="flex flex-wrap items-center justify-center gap-3">
               <button id="startPauseBtn" type="button"
                 class="min-h-11 rounded-full bg-slate-900 px-6 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 active:scale-[0.98] focus:outline-none"
