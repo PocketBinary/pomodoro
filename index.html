@@ -2,62 +2,20 @@
 <html lang="en">
 
 <head>
-  <!-- ============================================================ -->
-  <!-- 1. CHARSET — Must be within first 1024 bytes of document     -->
-  <!-- ============================================================ -->
   <meta charset="UTF-8">
-
-  <!-- ============================================================ -->
-  <!-- 2. VIEWPORT — Critical for responsive rendering              -->
-  <!-- ============================================================ -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- ============================================================ -->
-  <!-- 3. TITLE — Early for SEO and browser tab                     -->
-  <!-- ============================================================ -->
   <title>Pomodoro — Simple Focus Timer</title>
-
-  <!-- ============================================================ -->
-  <!-- 4. META DESCRIPTION — SEO snippet                             -->
-  <!-- ============================================================ -->
   <meta name="description"
     content="Free Pomodoro timer with focus sessions, short breaks, long breaks and saved settings. No signup required. Works offline.">
-
-  <!-- ============================================================ -->
-  <!-- 5. ROBOTS — Crawl directives                                 -->
-  <!-- ============================================================ -->
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-
-  <!-- ============================================================ -->
-  <!-- 6. SECURITY HEADERS (meta equivalents)                       -->
-  <!-- ============================================================ -->
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
-  <meta http-equiv="X-XSS-Protection" content="1; mode=block">
-
-  <!-- ============================================================ -->
-  <!-- 7. CONTENT SECURITY POLICY                                   -->
-  <!--    Update the canonical URL when the final domain is ready    -->
-  <!-- ============================================================ -->
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; upgrade-insecure-requests;">
-
-  <!-- ============================================================ -->
-  <!-- 8. THEME & COLOR                                             -->
-  <!-- ============================================================ -->
+    content="default-src 'self'; script-src 'self' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; img-src 'self' data:; media-src 'self'; connect-src 'self'; font-src 'self'; worker-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests;">
   <meta name="theme-color" content="#F5F6F8" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0F172A" media="(prefers-color-scheme: dark)">
   <meta name="color-scheme" content="light dark">
-
-  <!-- ============================================================ -->
-  <!-- 9. CANONICAL URL                                             -->
-  <!--    Replace this with the production GitHub Pages domain       -->
-  <!-- ============================================================ -->
   <link rel="canonical" href="https://pocketbinary.github.io/pomodoro/">
-
-  <!-- ============================================================ -->
-  <!-- 10. OPEN GRAPH — Social sharing (Facebook, LinkedIn, etc.)     -->
-  <!-- ============================================================ -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Pomodoro Timer">
   <meta property="og:locale" content="en_US">
@@ -69,23 +27,12 @@
   <meta property="og:image:width" content="512">
   <meta property="og:image:height" content="512">
   <meta property="og:image:alt" content="Pomodoro Timer Logo">
-
-  <!-- ============================================================ -->
-  <!-- 11. TWITTER CARDS                                            -->
-  <!-- ============================================================ -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Pomodoro — Simple Focus Timer">
   <meta name="twitter:description"
     content="Free Pomodoro timer with focus sessions, breaks and progress tracking. No signup required.">
   <meta name="twitter:image" content="https://pocketbinary.github.io/pomodoro/pomodoro.png">
   <meta name="twitter:image:alt" content="Pomodoro Timer Logo">
-  <!-- Optional Twitter/X account handles for richer attribution -->
-  <!-- <meta name="twitter:site" content="@youraccount"> -->
-  <!-- <meta name="twitter:creator" content="@youraccount"> -->
-
-  <!-- ============================================================ -->
-  <!-- 12. STRUCTURED DATA (JSON-LD) — Rich Snippets Google         -->
-  <!-- ============================================================ -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -101,41 +48,70 @@
     },
     "author": {
       "@type": "Person",
-      "name": "Ton Nom"
+      "name": "PocketBinary"
     },
     "url": "https://pocketbinary.github.io/pomodoro/",
     "image": "https://pocketbinary.github.io/pomodoro/pomodoro.png"
   }
   </script>
-
-  <!-- ============================================================ -->
-  <!-- 13. PWA / MANIFEST                                           -->
-  <!-- ============================================================ -->
   <link rel="manifest" href="manifest.json">
-
-  <!-- ============================================================ -->
-  <!-- 14. PRECONNECT / DNS-PREFETCH — Performance                  -->
-  <!-- ============================================================ -->
   <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
   <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
-
-  <!-- ============================================================ -->
-  <!-- 15. FAVICON & TOUCH ICONS                                    -->
-  <!-- ============================================================ -->
   <link rel="icon" type="image/png" href="pomodoro.png" sizes="32x32">
   <link rel="apple-touch-icon" href="pomodoro.png" sizes="180x180">
   <link rel="mask-icon" href="pomodoro.png" color="#0F172A">
-
-  <!-- ============================================================ -->
-  <!-- 16. STYLESHEETS                                              -->
-  <!-- ============================================================ -->
+  <link rel="preload" href="fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/chivo-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- ============================================================ -->
-  <!-- 17. CRITICAL CSS INLINE — Focus visible + Skip link          -->
-  <!-- ============================================================ -->
   <style>
-    /* Skip link for keyboard navigation */
+    /* ============================================================
+       TYPOGRAPHY
+       Self-hosted to respect CSP font-src 'self' and to work offline.
+       Archivo carries the interface copy, Chivo Mono every figure.
+       ============================================================ */
+    @font-face {
+      font-family: "Archivo";
+      font-style: normal;
+      font-weight: 400 700;
+      font-stretch: 100%;
+      font-display: swap;
+      src: url("fonts/archivo-latin.woff2") format("woff2");
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    }
+
+    @font-face {
+      font-family: "Archivo";
+      font-style: normal;
+      font-weight: 400 700;
+      font-stretch: 100%;
+      font-display: swap;
+      src: url("fonts/archivo-latin-ext.woff2") format("woff2");
+      unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    }
+
+    @font-face {
+      font-family: "Chivo Mono";
+      font-style: normal;
+      font-weight: 400 600;
+      font-display: swap;
+      src: url("fonts/chivo-mono-latin.woff2") format("woff2");
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    }
+
+    @font-face {
+      font-family: "Chivo Mono";
+      font-style: normal;
+      font-weight: 400 600;
+      font-display: swap;
+      src: url("fonts/chivo-mono-latin-ext.woff2") format("woff2");
+      unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    }
+
+    :root {
+      --font-ui: "Archivo", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      --font-figures: "Chivo Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+
     .skip-link {
       position: absolute;
       top: -100%;
@@ -154,35 +130,41 @@
       top: 1rem;
     }
 
-    /* Focus visible enhancement for all interactive elements */
     button:focus-visible,
     input:focus-visible,
+    select:focus-visible,
     a:focus-visible {
       outline: 3px solid #0F172A;
       outline-offset: 2px;
       border-radius: 0.375rem;
     }
 
-    /* Number inputs: keep the value visually separated from native spinner arrows */
+    /* Native spinners are replaced by explicit −/+ steppers in the markup. */
     input[type="number"] {
-      padding-right: 1.75rem;
+      -moz-appearance: textfield;
+      appearance: textfield;
     }
 
     input[type="number"]::-webkit-inner-spin-button,
     input[type="number"]::-webkit-outer-spin-button {
-      margin-left: 0.5rem;
+      -webkit-appearance: none;
+      appearance: none;
+      margin: 0;
     }
 
-    /* Checkbox controls: match the neutral light theme instead of browser blue */
     input[type="checkbox"] {
       accent-color: #475569;
     }
 
-    /* Theme tokens and component overrides */
     body {
+      font-family: var(--font-ui);
       transition:
         background-color 0.2s ease,
         color 0.2s ease;
+    }
+
+    body[data-theme] {
+      font-family: var(--font-ui);
     }
 
     body[data-theme="light"] {
@@ -202,6 +184,8 @@
       --app-focus: #0F172A;
       --app-checkbox: #475569;
       --app-shadow: rgba(15, 23, 42, 0.08);
+      --app-danger: #B3261E;
+      --app-danger-soft: rgba(179, 38, 30, 0.08);
     }
 
     body[data-theme="dark"] {
@@ -221,6 +205,8 @@
       --app-focus: #F8FAFC;
       --app-checkbox: #CBD5E1;
       --app-shadow: rgba(0, 0, 0, 0.35);
+      --app-danger: #FCA5A5;
+      --app-danger-soft: rgba(252, 165, 165, 0.14);
     }
 
     body[data-theme] {
@@ -300,9 +286,18 @@
       color: var(--app-primary-text) !important;
     }
 
-    body[data-theme] #resetBtn {
+    body[data-theme] #resetBtn,
+    body[data-theme] #resetSettingsBtn,
+    body[data-theme] #resetStatsBtn {
       border-color: var(--app-border) !important;
       color: var(--app-text) !important;
+    }
+
+    body[data-theme] #resetBtn:hover,
+    body[data-theme] #resetSettingsBtn:hover,
+    body[data-theme] #resetStatsBtn:hover {
+      background-color: var(--app-panel-soft) !important;
+      border-color: var(--app-muted) !important;
     }
 
     body[data-theme] #progressRing {
@@ -325,6 +320,7 @@
 
     body[data-theme] button:focus-visible,
     body[data-theme] input:focus-visible,
+    body[data-theme] select:focus-visible,
     body[data-theme] a:focus-visible {
       outline-color: var(--app-focus);
     }
@@ -396,6 +392,7 @@
 
     .language-toggle button {
       min-width: 2.25rem;
+      min-height: 2rem;
       border-radius: 999px;
       padding: 0.25rem 0.625rem;
       color: var(--app-muted);
@@ -412,7 +409,667 @@
       color: var(--app-primary-text);
     }
 
-    /* Reduced motion respect */
+    .app-slogan {
+      margin: 0.2rem 0 0;
+      max-width: 14rem;
+      color: var(--app-muted);
+      font-size: 0.875rem;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+
+    .brand-logo {
+      width: 3rem;
+      height: 3rem;
+    }
+
+    .break-atmosphere {
+      display: grid;
+      width: min(100%, 28rem);
+      gap: 0.75rem;
+    }
+
+    .break-atmosphere[hidden] {
+      display: none;
+    }
+
+    .break-stage {
+      position: relative;
+      height: 6.5rem;
+      overflow: hidden;
+      border: 1px solid var(--app-border);
+      border-radius: 1rem;
+      background: var(--app-panel-soft);
+    }
+
+    .break-stage img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .break-fallback {
+      position: absolute;
+      inset: 18% 22%;
+      border-radius: 999px;
+      background: radial-gradient(circle, var(--app-text) 0%, transparent 68%);
+      opacity: 0.12;
+      animation: break-breathe 6s ease-in-out infinite;
+    }
+
+    @keyframes break-breathe {
+
+      0%,
+      100% {
+        transform: scale(0.92);
+        opacity: 0.1;
+      }
+
+      50% {
+        transform: scale(1);
+        opacity: 0.2;
+      }
+    }
+
+    .break-player {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-height: 2.75rem;
+      padding: 0.25rem 0.45rem 0.25rem 0.25rem;
+      border: 1px solid var(--app-border);
+      border-radius: 999px;
+      background: var(--app-panel-soft);
+    }
+
+    .break-player__icon,
+    .break-player button {
+      display: grid;
+      width: 2.25rem;
+      height: 2.25rem;
+      flex: 0 0 auto;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--app-panel);
+      border: 1px solid var(--app-border);
+      color: var(--app-muted);
+      cursor: default;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .break-player__pick {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .break-player select {
+      width: 100%;
+      min-height: 2.25rem;
+      border: 0;
+      background: transparent;
+      color: var(--app-text);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .break-player input[type="range"] {
+      width: 4.5rem;
+      accent-color: var(--app-checkbox, #475569);
+    }
+
+    body[data-theme] .break-player input[type="range"] {
+      border: 0 !important;
+      background: transparent !important;
+      padding: 0 !important;
+    }
+
+    /* ============================================================
+       HEADER — three zones pinned to the page grid, never wraps
+       ============================================================ */
+    .app-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .app-header__identity {
+      display: flex;
+      min-width: 0;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .app-header__titles {
+      min-width: 0;
+    }
+
+    .app-header__actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      justify-self: end;
+    }
+
+    /* ============================================================
+       FIGURES — tabular everywhere so digits never shift while counting
+       ============================================================ */
+    #timeDisplay,
+    #focusLabel,
+    #shortLabel,
+    #longLabel,
+    #completedCount,
+    #totalFocus,
+    .stepper__input {
+      font-family: var(--font-figures);
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum" 1;
+    }
+
+    #timeDisplay {
+      font-size: 3rem;
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: -0.01em;
+    }
+
+    .recap-note {
+      margin: 0.3rem 0 0;
+      font-family: var(--font-ui);
+      font-size: 0.75rem;
+      font-weight: 500;
+      line-height: 1.3;
+      color: var(--app-muted);
+    }
+
+    .recap-note[hidden] {
+      display: none;
+    }
+
+    /* ============================================================
+       SETTINGS — a single ruled ledger: one row height, one value edge
+       ============================================================ */
+    .settings-list {
+      display: flex;
+      flex-direction: column;
+      margin-top: 1.25rem;
+    }
+
+    .settings-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 0.75rem 1rem;
+      min-height: 3rem;
+      padding: 0.375rem 0;
+      border-top: 1px solid var(--app-border);
+    }
+
+    .settings-row:first-child {
+      border-top: 0;
+    }
+
+    .settings-row--switch {
+      cursor: pointer;
+    }
+
+    .settings-row__label {
+      min-width: 0;
+      font-size: 0.875rem;
+      font-weight: 500;
+      line-height: 1.3;
+      color: var(--app-text);
+    }
+
+    /* ============================================================
+       STEPPER — every duration is a value with a unit and two ± targets
+       ============================================================ */
+    .stepper {
+      display: inline-flex;
+      flex: 0 0 auto;
+      align-items: center;
+      gap: 0.125rem;
+    }
+
+    .stepper__button {
+      display: grid;
+      width: 2rem;
+      height: 2rem;
+      place-items: center;
+      border-radius: 0.5rem;
+      font-family: var(--font-figures);
+      font-size: 1rem;
+      line-height: 1;
+      color: var(--app-muted);
+      transition:
+        color 0.16s cubic-bezier(0.16, 1, 0.3, 1),
+        background-color 0.16s cubic-bezier(0.16, 1, 0.3, 1),
+        opacity 0.16s ease,
+        transform 0.1s ease;
+    }
+
+    .stepper__button:hover:not(:disabled) {
+      color: var(--app-text);
+      background: var(--app-panel-soft);
+    }
+
+    .stepper__button:active:not(:disabled) {
+      transform: scale(0.94);
+    }
+
+    .stepper__button:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .stepper__value {
+      display: inline-flex;
+      min-width: 3.75rem;
+      align-items: baseline;
+      justify-content: flex-end;
+      gap: 0.25rem;
+    }
+
+    .stepper__input {
+      width: 2.25rem;
+      border: 0 !important;
+      background: transparent !important;
+      padding: 0 !important;
+      text-align: right;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--app-text);
+      outline: none;
+    }
+
+    .stepper__input:focus-visible {
+      outline: 2px solid var(--app-focus) !important;
+      outline-offset: 3px;
+      border-radius: 0.25rem;
+    }
+
+    .stepper__unit {
+      font-family: var(--font-ui);
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--app-muted);
+    }
+
+    /* ============================================================
+       SWITCH — the same control as the theme toggle, used in the ledger
+       ============================================================ */
+    .switch {
+      position: relative;
+      display: inline-flex;
+      width: 2.75rem;
+      height: 1.5rem;
+      flex: 0 0 auto;
+    }
+
+    .switch__input {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .switch__track {
+      position: absolute;
+      inset: 0;
+      border: 1px solid var(--app-border);
+      border-radius: 999px;
+      background: var(--app-panel-soft);
+      transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+    }
+
+    .switch__thumb {
+      position: absolute;
+      top: 50%;
+      left: 0.1875rem;
+      width: 1rem;
+      height: 1rem;
+      margin-top: -0.5rem;
+      border-radius: 999px;
+      background: var(--app-muted);
+      transition:
+        transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+        background-color 0.2s ease;
+    }
+
+    .switch__input:checked+.switch__track {
+      background: var(--app-primary);
+      border-color: var(--app-primary);
+    }
+
+    .switch__input:checked+.switch__track .switch__thumb {
+      transform: translateX(1.25rem);
+      background: var(--app-primary-text);
+    }
+
+    .switch__input:focus-visible+.switch__track {
+      outline: 3px solid var(--app-focus);
+      outline-offset: 2px;
+    }
+
+    /* ============================================================
+       SHORTCUT HINT
+       ============================================================ */
+    .shortcut-hint {
+      display: flex;
+      margin: 0;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      color: var(--app-muted);
+    }
+
+    .kbd {
+      display: inline-grid;
+      min-width: 1.5rem;
+      height: 1.25rem;
+      padding: 0 0.35rem;
+      place-items: center;
+      border: 1px solid var(--app-border);
+      border-bottom-width: 2px;
+      border-radius: 0.375rem;
+      background: var(--app-panel-soft);
+      font-family: var(--font-figures);
+      font-size: 0.6875rem;
+      font-weight: 500;
+      color: var(--app-text);
+    }
+
+    @media (hover: none), (pointer: coarse) {
+      .shortcut-hint {
+        display: none;
+      }
+    }
+
+    /* ============================================================
+       DIALOG — guards the two irreversible decisions
+       ============================================================ */
+    .app-dialog {
+      width: min(23rem, calc(100vw - 2rem));
+      margin: auto;
+      padding: 0;
+      border: 1px solid var(--app-border);
+      border-radius: 1rem;
+      background: var(--app-panel);
+      color: var(--app-text);
+      box-shadow: 0 28px 60px -24px var(--app-shadow);
+    }
+
+    .app-dialog::backdrop {
+      background: rgba(11, 17, 32, 0.45);
+      backdrop-filter: blur(2px);
+    }
+
+    .app-dialog__inner {
+      padding: 1.25rem 1.25rem 1.125rem;
+    }
+
+    .app-dialog__title {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .app-dialog__text {
+      margin: 0.5rem 0 0;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      color: var(--app-muted);
+    }
+
+    .app-dialog__actions {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0 1.25rem 1.25rem;
+    }
+
+    .app-dialog__actions>* {
+      flex: 1;
+    }
+
+    .dialog-button {
+      min-height: 2.5rem;
+      border: 1px solid var(--app-border);
+      border-radius: 0.625rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--app-text);
+      transition:
+        background-color 0.16s ease,
+        border-color 0.16s ease,
+        color 0.16s ease;
+    }
+
+    .dialog-button:hover {
+      background: var(--app-panel-soft);
+    }
+
+    .dialog-button--safe {
+      border-color: var(--app-primary);
+      background: var(--app-primary);
+      color: var(--app-primary-text);
+    }
+
+    .dialog-button--safe:hover {
+      border-color: var(--app-primary-hover);
+      background: var(--app-primary-hover);
+    }
+
+    .dialog-button--danger {
+      color: var(--app-danger);
+    }
+
+    .dialog-button--danger:hover {
+      border-color: var(--app-danger);
+      background: var(--app-danger-soft);
+    }
+
+    /* ============================================================
+       TOAST — reversible actions announce themselves and can be undone
+       ============================================================ */
+    .app-toast {
+      position: fixed;
+      bottom: 1.25rem;
+      left: 50%;
+      z-index: 60;
+      display: flex;
+      width: min(26rem, calc(100vw - 2rem));
+      align-items: center;
+      gap: 0.75rem;
+      overflow: hidden;
+      padding: 0.75rem 0.6875rem 0.8125rem 0.9375rem;
+      border: 1px solid var(--app-border);
+      border-radius: 0.75rem;
+      background: var(--app-panel);
+      color: var(--app-text);
+      box-shadow: 0 20px 44px -18px var(--app-shadow);
+      transform: translateX(-50%);
+      animation: toast-rise 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .app-toast[hidden] {
+      display: none;
+    }
+
+    .app-toast__text {
+      flex: 1;
+      font-size: 0.8125rem;
+      line-height: 1.35;
+    }
+
+    .app-toast__action {
+      flex: 0 0 auto;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.375rem;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--app-text);
+      text-decoration: underline;
+      text-decoration-thickness: 1.5px;
+      text-underline-offset: 3px;
+      transition: background-color 0.16s ease;
+    }
+
+    .app-toast__action:hover {
+      background: var(--app-panel-soft);
+    }
+
+    .app-toast__action[hidden] {
+      display: none;
+    }
+
+    .app-toast__progress {
+      position: absolute;
+      inset: auto 0 0;
+      height: 2px;
+      transform-origin: left center;
+      background: var(--app-text);
+      opacity: 0.3;
+    }
+
+    .app-toast--counting .app-toast__progress {
+      animation: toast-drain 6.5s linear forwards;
+    }
+
+    .app-toast--paused .app-toast__progress {
+      animation-play-state: paused;
+    }
+
+    @keyframes toast-rise {
+      from {
+        opacity: 0;
+        transform: translate(-50%, 0.5rem);
+      }
+
+      to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+    }
+
+    @keyframes toast-drain {
+      from {
+        transform: scaleX(1);
+      }
+
+      to {
+        transform: scaleX(0);
+      }
+    }
+
+    @media (min-width: 640px) {
+      .app-slogan {
+        max-width: 24rem;
+      }
+
+      .brand-logo {
+        width: 4rem;
+        height: 4rem;
+      }
+
+      .break-stage {
+        height: 8rem;
+      }
+    }
+
+    @media (max-width: 639px) {
+      #main-content {
+        padding: 1.5rem 1rem calc(2rem + env(safe-area-inset-bottom));
+      }
+
+      /* Header keeps its three zones on one baseline: identity shrinks, never wraps */
+      .app-header {
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .app-header__identity {
+        gap: 0.5rem;
+      }
+
+      .brand-logo {
+        width: 2.5rem;
+        height: 2.5rem;
+      }
+
+      #appTitle {
+        font-size: 1.375rem;
+      }
+
+      .app-slogan {
+        display: -webkit-box;
+        max-width: 100%;
+        overflow: hidden;
+        font-size: 0.8125rem;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+      }
+
+      /* The theme word is the first thing to go when space runs out */
+      #themeLabel {
+        display: none;
+      }
+
+      #timer-display {
+        width: 15rem;
+        height: 15rem;
+      }
+
+      #timer-display>.relative {
+        width: 12rem;
+        height: 12rem;
+      }
+
+      #timeDisplay {
+        font-size: 2.5rem;
+      }
+
+      /* The three modes stay on one line: a wrapped pill loses its shape */
+      #modeSwitcher {
+        max-width: 100%;
+        flex-wrap: nowrap;
+      }
+
+      #modeSwitcher button {
+        padding-right: 0.625rem;
+        padding-left: 0.625rem;
+        white-space: nowrap;
+      }
+
+      .break-player {
+        border-radius: 1rem;
+      }
+
+      .app-dialog__actions {
+        flex-direction: column-reverse;
+      }
+
+      .app-dialog__actions>* {
+        flex: 0 0 auto;
+      }
+    }
+
+    @media (max-width: 359px) {
+      .app-slogan {
+        display: none;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
 
       *,
@@ -424,23 +1081,21 @@
       }
     }
   </style>
-  <base target="_blank">
 </head>
 
 <body class="min-h-screen bg-[#F5F6F8] text-slate-900" data-theme="light">
-  <!-- Skip link for accessibility -->
   <a id="skipLink" href="#main-content" class="skip-link">Skip to main content</a>
 
-  <!-- Main application shell -->
   <main id="main-content" class="mx-auto max-w-5xl px-6 py-10">
-    <!-- Brand header -->
-    <header class="mb-8 flex flex-wrap items-center justify-between gap-4">
-      <div class="inline-flex items-center gap-3">
+    <header class="app-header">
+      <div class="app-header__identity">
         <img src="pomodoro.png" alt="Pomodoro Timer Logo" width="64" height="64" class="brand-logo" />
-        <h1 class="m-0 text-4xl font-semibold tracking-tight text-slate-900">Pomodoro</h1>
+        <div class="app-header__titles">
+          <h1 id="appTitle" class="m-0 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">Pomodoro</h1>
+          <p id="appSlogan" class="app-slogan">This block only.</p>
+        </div>
       </div>
-      <!-- Header controls -->
-      <div class="flex flex-wrap items-center justify-end gap-3">
+      <div class="app-header__actions">
         <div class="language-toggle" role="group" aria-label="Language selection">
           <button id="languageEnBtn" type="button" aria-pressed="true">EN</button>
           <button id="languageFrBtn" type="button" aria-pressed="false">FR</button>
@@ -470,16 +1125,13 @@
       </div>
     </header>
 
-    <!-- Primary timer layout: timer controls on the left, settings on the right -->
     <section class="grid gap-6 lg:grid-cols-[2fr_1fr]">
-      <!-- Timer card -->
       <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div class="space-y-2">
-            <!-- Mode tabs switch between focus, short break and long break sessions -->
             <div id="modeSwitcher"
-              class="inline-flex overflow-hidden rounded-full border border-slate-200 bg-slate-50 p-1" role="tablist"
-              aria-label="Timer modes">
+              class="inline-flex max-w-full flex-wrap overflow-hidden rounded-full border border-slate-200 bg-slate-50 p-1"
+              role="tablist" aria-label="Timer modes">
               <button id="modeFocusBtn" type="button" data-mode="focus"
                 class="rounded-full px-4 py-1 text-sm font-semibold" role="tab" aria-selected="true"
                 aria-controls="timer-display">Focus</button>
@@ -491,7 +1143,6 @@
                 aria-controls="timer-display">Long Break</button>
             </div>
           </div>
-          <!-- Session metadata and current timer status -->
           <div class="flex items-center gap-2">
             <span id="sessionCount"
               class="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">Session 1</span>
@@ -501,7 +1152,6 @@
         </div>
 
         <div class="mt-8 flex flex-col items-center gap-6">
-          <!-- Circular timer display with SVG progress ring -->
           <div class="relative flex h-64 w-64 items-center justify-center" id="timer-display" role="region"
             aria-label="Timer display">
             <svg class="absolute inset-0 h-full w-full -rotate-90 overflow-visible" viewBox="0 0 260 260"
@@ -517,84 +1167,170 @@
               <div class="relative text-center p-6">
                 <p id="timeDisplay" class="text-4xl font-semibold tabular-nums" aria-live="off">25:00</p>
                 <p id="modeText" class="mt-2 text-sm text-slate-500">Stay focused</p>
-                <!-- Hidden live region used for screen reader status changes -->
                 <p id="srAnnouncement" class="sr-only" aria-live="polite" aria-atomic="true"></p>
               </div>
             </div>
           </div>
 
-          <!-- Main timer actions -->
-          <div class="flex flex-wrap items-center justify-center gap-3">
-            <button id="startPauseBtn" type="button"
-              class="rounded-full bg-slate-900 px-6 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none"
-              aria-label="Start timer">Start</button>
-            <button id="resetBtn" type="button"
-              class="rounded-full border border-slate-200 px-6 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-900 focus:outline-none"
-              aria-label="Reset timer">Reset</button>
+          <div class="flex flex-col items-center gap-2.5">
+            <div class="flex flex-wrap items-center justify-center gap-3">
+              <button id="startPauseBtn" type="button"
+                class="min-h-11 rounded-full bg-slate-900 px-6 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 active:scale-[0.98] focus:outline-none"
+                aria-label="Start timer" aria-keyshortcuts="Space">Start</button>
+              <button id="resetBtn" type="button"
+                class="min-h-11 rounded-full border border-slate-200 px-6 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-900 focus:outline-none"
+                aria-label="Reset timer">Reset</button>
+            </div>
+            <p class="shortcut-hint">
+              <kbd class="kbd" id="shortcutKey">Space</kbd>
+              <span id="shortcutLabel">start / pause</span>
+            </p>
           </div>
 
-          <!-- Quick duration summary cards -->
-          <div class="mt-8 grid gap-4 sm:grid-cols-3">
+          <div id="breakAtmosphere" class="break-atmosphere" hidden>
+            <div id="breakStage" class="break-stage" aria-hidden="true">
+              <div class="break-fallback"></div>
+              <img id="breakAnimation" alt="" hidden>
+            </div>
+            <div id="breakPlayer" class="break-player" role="group" aria-label="Break music">
+              <div id="breakPlayBtn" class="break-player__icon" aria-hidden="true" title="Musique de pause">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 18V5l12-2v13"></path>
+                  <circle cx="6" cy="18" r="3"></circle>
+                  <circle cx="18" cy="16" r="3"></circle>
+                </svg>
+              </div>
+              <label class="break-player__pick">
+                <span id="breakPickLabel" class="sr-only">Choose a track</span>
+                <select id="breakTrackSelect">
+                  <option value="0">zen calming</option>
+                  <option value="1">zen garden</option>
+                  <option value="2">zen music 01</option>
+                  <option value="3">zen music 02</option>
+                  <option value="4">zen piano</option>
+                </select>
+              </label>
+              <label class="break-player__volume">
+                <span id="breakVolumeLabel" class="sr-only">Volume</span>
+                <input id="breakVolume" type="range" min="0" max="1" step="0.05" value="0.4">
+              </label>
+              <audio id="breakAudio" preload="none"></audio>
+            </div>
+          </div>
+
+          <div class="mt-2 grid w-full gap-4 sm:grid-cols-3">
             <div class="rounded-xl border border-slate-100 bg-slate-50 p-4">
               <p id="focusLengthTitle" class="text-xs font-medium uppercase tracking-wide text-slate-500">Focus Length
               </p>
               <p id="focusLabel" class="mt-2 text-lg font-semibold">25 min</p>
+              <p id="focusNote" class="recap-note" hidden>From the next session</p>
             </div>
             <div class="rounded-xl border border-slate-100 bg-slate-50 p-4">
               <p id="shortBreakTitle" class="text-xs font-medium uppercase tracking-wide text-slate-500">Short Break</p>
               <p id="shortLabel" class="mt-2 text-lg font-semibold">5 min</p>
+              <p id="shortNote" class="recap-note" hidden>From the next session</p>
             </div>
             <div class="rounded-xl border border-slate-100 bg-slate-50 p-4">
               <p id="longBreakTitle" class="text-xs font-medium uppercase tracking-wide text-slate-500">Long Break</p>
               <p id="longLabel" class="mt-2 text-lg font-semibold">15 min</p>
+              <p id="longNote" class="recap-note" hidden>From the next session</p>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Settings panel -->
       <aside class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
         <h2 id="settingsTitle" class="text-lg font-semibold">Settings</h2>
         <p id="settingsSubtitle" class="mt-1 text-sm text-slate-500">Adjust your rhythm without losing progress.</p>
 
-        <!-- Editable timer preferences -->
-        <div class="mt-6 space-y-5">
-          <div class="flex items-center justify-between gap-4">
-            <label id="focusInputLabel" for="focusInput" class="text-sm font-medium text-slate-700">Focus
-              minutes</label>
-            <input id="focusInput" type="number" min="1" max="120" step="1" value="25"
-              class="w-24 rounded-xl border border-slate-200 px-3 py-2 text-right text-sm font-semibold text-slate-900 focus:border-slate-400 focus:outline-none"
-              aria-describedby="focusLabel">
+        <div class="settings-list">
+          <div class="settings-row">
+            <label id="focusInputLabel" for="focusInput" class="settings-row__label">Focus minutes</label>
+            <div class="stepper" role="group" aria-labelledby="focusInputLabel">
+              <button type="button" class="stepper__button" data-stepper="focusInput" data-step="-1"
+                aria-label="Decrease focus minutes" aria-controls="focusInput"><span aria-hidden="true">−</span></button>
+              <span class="stepper__value">
+                <input id="focusInput" type="number" min="1" max="120" step="1" value="25" inputmode="numeric"
+                  class="stepper__input" aria-describedby="focusLabel">
+                <span class="stepper__unit" aria-hidden="true">min</span>
+              </span>
+              <button type="button" class="stepper__button" data-stepper="focusInput" data-step="1"
+                aria-label="Increase focus minutes" aria-controls="focusInput"><span aria-hidden="true">+</span></button>
+            </div>
           </div>
-          <div class="flex items-center justify-between gap-4">
-            <label id="shortInputLabel" for="shortInput" class="text-sm font-medium text-slate-700">Short break
-              minutes</label>
-            <input id="shortInput" type="number" min="1" max="60" step="1" value="5"
-              class="w-24 rounded-xl border border-slate-200 px-3 py-2 text-right text-sm font-semibold text-slate-900 focus:border-slate-400 focus:outline-none"
-              aria-describedby="shortLabel">
+
+          <div class="settings-row">
+            <label id="shortInputLabel" for="shortInput" class="settings-row__label">Short break minutes</label>
+            <div class="stepper" role="group" aria-labelledby="shortInputLabel">
+              <button type="button" class="stepper__button" data-stepper="shortInput" data-step="-1"
+                aria-label="Decrease short break minutes" aria-controls="shortInput"><span
+                  aria-hidden="true">−</span></button>
+              <span class="stepper__value">
+                <input id="shortInput" type="number" min="1" max="60" step="1" value="5" inputmode="numeric"
+                  class="stepper__input" aria-describedby="shortLabel">
+                <span class="stepper__unit" aria-hidden="true">min</span>
+              </span>
+              <button type="button" class="stepper__button" data-stepper="shortInput" data-step="1"
+                aria-label="Increase short break minutes" aria-controls="shortInput"><span
+                  aria-hidden="true">+</span></button>
+            </div>
           </div>
-          <div class="flex items-center justify-between gap-4">
-            <label id="longInputLabel" for="longInput" class="text-sm font-medium text-slate-700">Long break
-              minutes</label>
-            <input id="longInput" type="number" min="1" max="60" step="1" value="15"
-              class="w-24 rounded-xl border border-slate-200 px-3 py-2 text-right text-sm font-semibold text-slate-900 focus:border-slate-400 focus:outline-none"
-              aria-describedby="longLabel">
+
+          <div class="settings-row">
+            <label id="longInputLabel" for="longInput" class="settings-row__label">Long break minutes</label>
+            <div class="stepper" role="group" aria-labelledby="longInputLabel">
+              <button type="button" class="stepper__button" data-stepper="longInput" data-step="-1"
+                aria-label="Decrease long break minutes" aria-controls="longInput"><span aria-hidden="true">−</span></button>
+              <span class="stepper__value">
+                <input id="longInput" type="number" min="1" max="60" step="1" value="15" inputmode="numeric"
+                  class="stepper__input" aria-describedby="longLabel">
+                <span class="stepper__unit" aria-hidden="true">min</span>
+              </span>
+              <button type="button" class="stepper__button" data-stepper="longInput" data-step="1"
+                aria-label="Increase long break minutes" aria-controls="longInput"><span
+                  aria-hidden="true">+</span></button>
+            </div>
           </div>
-          <div class="flex items-center justify-between gap-4">
-            <label id="sessionsInputLabel" for="sessionsInput" class="text-sm font-medium text-slate-700">Sessions
-              before long break</label>
-            <input id="sessionsInput" type="number" min="1" max="20" step="1" value="4"
-              class="w-24 rounded-xl border border-slate-200 px-3 py-2 text-right text-sm font-semibold text-slate-900 focus:border-slate-400 focus:outline-none">
+
+          <div class="settings-row">
+            <label id="sessionsInputLabel" for="sessionsInput" class="settings-row__label">Sessions before long
+              break</label>
+            <div class="stepper" role="group" aria-labelledby="sessionsInputLabel">
+              <button type="button" class="stepper__button" data-stepper="sessionsInput" data-step="-1"
+                aria-label="Decrease sessions before long break" aria-controls="sessionsInput"><span
+                  aria-hidden="true">−</span></button>
+              <span class="stepper__value">
+                <input id="sessionsInput" type="number" min="1" max="20" step="1" value="4" inputmode="numeric"
+                  class="stepper__input">
+              </span>
+              <button type="button" class="stepper__button" data-stepper="sessionsInput" data-step="1"
+                aria-label="Increase sessions before long break" aria-controls="sessionsInput"><span
+                  aria-hidden="true">+</span></button>
+            </div>
           </div>
-          <label
-            class="flex items-center justify-between gap-4 rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700 cursor-pointer">
-            <span id="soundNotificationsLabel">Sound notifications</span>
-            <input id="soundEnabledInput" type="checkbox"
-              class="h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-400" checked>
+
+          <label class="settings-row settings-row--switch" for="soundEnabledInput">
+            <span id="soundNotificationsLabel" class="settings-row__label">Sound notifications</span>
+            <span class="switch">
+              <input id="soundEnabledInput" type="checkbox" class="switch__input" checked>
+              <span class="switch__track" aria-hidden="true"><span class="switch__thumb"></span></span>
+            </span>
           </label>
         </div>
 
-        <!-- Daily progress summary -->
+        <div class="mt-3 flex justify-center">
+          <button id="resetSettingsBtn" type="button"
+            class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-slate-400 hover:bg-slate-50 hover:text-slate-900 focus:outline-none"
+            aria-label="Reset settings to default">
+            <svg class="h-3.5 w-3.5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+              <path d="M3 3v5h5" />
+            </svg>
+            <span id="resetSettingsLabel">Reset settings</span>
+          </button>
+        </div>
+
         <div class="mt-6 rounded-xl border border-slate-100 bg-slate-50 p-4">
           <p id="todayLabel" class="text-xs font-medium uppercase tracking-wide text-slate-500">Today</p>
           <div class="mt-3 grid gap-3">
@@ -607,17 +1343,28 @@
               <span id="totalFocus" class="font-semibold text-slate-900">0 min</span>
             </div>
           </div>
+          <div class="mt-4 flex justify-center border-t border-slate-200/80 pt-3">
+            <button id="resetStatsBtn" type="button"
+              class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-slate-400 hover:bg-slate-100 hover:text-slate-900 focus:outline-none"
+              aria-label="Reset today's statistics">
+              <svg class="h-3.5 w-3.5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                <path d="M3 3v5h5" />
+              </svg>
+              <span id="resetStatsLabel">Reset stats</span>
+            </button>
+          </div>
         </div>
       </aside>
     </section>
   </main>
 
-  <!-- Lightweight footer with credits, a focus quote and the project repository link -->
   <footer
     class="mx-auto flex max-w-5xl flex-col items-center gap-3 px-6 pb-8 text-center text-sm text-slate-500 md:grid md:grid-cols-3 md:text-left">
     <p id="footerCredits">© 2026 Pomodoro · Created by PocketBinary</p>
     <p id="footerQuote" class="italic text-slate-400 md:text-center">One tomato at a time, return to calm focus.</p>
-    <a id="githubLink" href="https://github.com/PocketBinary/pomodoro" rel="noopener noreferrer"
+    <a id="githubLink" href="https://github.com/PocketBinary/pomodoro" target="_blank" rel="noopener noreferrer"
       class="inline-flex items-center gap-2 font-medium text-slate-600 transition hover:text-slate-900 md:justify-self-end"
       aria-label="View the Pomodoro repository on GitHub">
       <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -628,8 +1375,25 @@
     </a>
   </footer>
 
-  <!-- Application behavior -->
+  <dialog id="appDialog" class="app-dialog" aria-labelledby="appDialogTitle" aria-describedby="appDialogText">
+    <div class="app-dialog__inner">
+      <h2 id="appDialogTitle" class="app-dialog__title">Session in progress</h2>
+      <p id="appDialogText" class="app-dialog__text"></p>
+    </div>
+    <div class="app-dialog__actions">
+      <button id="appDialogConfirm" type="button" class="dialog-button dialog-button--danger">Switch mode</button>
+      <button id="appDialogCancel" type="button" class="dialog-button dialog-button--safe">Keep going</button>
+    </div>
+  </dialog>
+
+  <div id="appToast" class="app-toast" role="status" aria-live="polite" hidden>
+    <span id="appToastText" class="app-toast__text"></span>
+    <button id="appToastAction" type="button" class="app-toast__action" hidden>Undo</button>
+    <span id="appToastProgress" class="app-toast__progress" aria-hidden="true"></span>
+  </div>
+
   <script src="./script.js" defer></script>
+  <script src="./break-media.js" defer></script>
 </body>
 
 </html>

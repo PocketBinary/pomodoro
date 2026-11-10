@@ -72,7 +72,11 @@
 pomodoro/
 ├── index.html          # Main page with semantic HTML and SEO metadata
 ├── script.js           # Timer logic, UI state and preferences
+├── break-media.js      # Break media manager (music and animations)
 ├── sw.js               # Service worker for PWA/offline support
+├── media/              # Break media assets (.mp3 audio and .svg animations)
+│   ├── media.json      # Media configuration
+│   └── README.md       # Media documentation
 ├── pomodoro.png        # Logo, favicon and Open Graph image
 ├── pomodoro-192.png    # 192x192 PWA icon
 ├── pomodoro-512.png    # 512x512 PWA icon

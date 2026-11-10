@@ -9,6 +9,8 @@ const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
 const CURRENT_SCHEMA_VERSION = 1;
 const THEME_VALUES = ["light", "dark"];
 const LANGUAGE_VALUES = ["en", "fr"];
+// How long an undoable action stays reversible. Mirrors the toast drain in CSS.
+const TOAST_DURATION = 6000;
 
 const defaultOptions = { soundEnabled: true, theme: "light", language: "en" };
 
@@ -62,6 +64,8 @@ const copy = {
       longBreakMinutes: "Long break minutes",
       sessionsBeforeLongBreak: "Sessions before long break",
       soundNotifications: "Sound notifications",
+      reset: "Reset settings",
+      resetAria: "Reset settings to default",
     },
     summary: {
       focusLength: "Focus Length",
@@ -72,9 +76,11 @@ const copy = {
       totalFocusTime: "Total focus time",
       session: (number) => `Session ${number}`,
       minutes: (number) => `${number} min`,
+      reset: "Reset stats",
+      resetAria: "Reset today's statistics",
     },
     footer: {
-      credits: "© 2026 GenPass · Created by PocketBinary",
+      credits: "© 2026 Pomodoro · Created by PocketBinary",
       quote: "One tomato at a time, return to calm focus.",
       github: "GitHub",
       githubAria: "View the Pomodoro repository on GitHub",
@@ -87,8 +93,45 @@ const copy = {
       complete: (modeLabel) => `${modeLabel} complete. Press Start to continue.`,
       started: (modeText) => `${modeText} timer started.`,
       reset: "Timer reset.",
+      settingsReset: "Settings reset to defaults.",
+      statsReset: "Today's statistics reset.",
+      statsRestored: "Today's statistics restored.",
       paused: "Timer paused.",
       selected: (modeLabel) => `${modeLabel} selected.`,
+      restored: (modeLabel) => `${modeLabel} resumed where you left off.`,
+    },
+    hints: {
+      space: "start / pause",
+    },
+    deferred: "From the next session",
+    dialogs: {
+      modeTitle: "Session in progress",
+      modeBody: (remaining, currentLabel, nextLabel) =>
+        `${remaining} left in ${currentLabel}. Switching to ${nextLabel} ends this run — come back to ${currentLabel} and it resumes where you stopped.`,
+      modeConfirm: "Switch anyway",
+      modeKeep: "Keep going",
+      settingsTitle: "Reset settings?",
+      settingsBody:
+        "Focus, break and session lengths go back to 25, 5, 15 and 4, and sound notifications turn back on.",
+      settingsConfirm: "Reset settings",
+      statsTitle: "Reset today's stats?",
+      statsBody: (sessions, minutes) =>
+        `${sessions} completed ${sessions === 1 ? "session" : "sessions"} and ${minutes} min of focus time will be cleared.`,
+      statsConfirm: "Reset stats",
+      cancel: "Cancel",
+    },
+    toast: {
+      statsReset: "Today's statistics reset.",
+      undo: "Undo",
+    },
+    stepper: {
+      focus: { increase: "Increase focus minutes", decrease: "Decrease focus minutes" },
+      short: { increase: "Increase short break minutes", decrease: "Decrease short break minutes" },
+      long: { increase: "Increase long break minutes", decrease: "Decrease long break minutes" },
+      sessions: {
+        increase: "Increase sessions before long break",
+        decrease: "Decrease sessions before long break",
+      },
     },
   },
   fr: {
@@ -140,6 +183,8 @@ const copy = {
       longBreakMinutes: "Minutes de pause longue",
       sessionsBeforeLongBreak: "Sessions avant pause longue",
       soundNotifications: "Notifications sonores",
+      reset: "Réinitialiser",
+      resetAria: "Réinitialiser les réglages par défaut",
     },
     summary: {
       focusLength: "Durée de focus",
@@ -150,9 +195,11 @@ const copy = {
       totalFocusTime: "Temps total de focus",
       session: (number) => `Session ${number}`,
       minutes: (number) => `${number} min`,
+      reset: "Réinitialiser",
+      resetAria: "Réinitialiser les statistiques d'aujourd'hui",
     },
     footer: {
-      credits: "© 2026 GenPass · Créé par PocketBinary",
+      credits: "© 2026 Pomodoro · Créé par PocketBinary",
       quote: "Une tomate à la fois, retrouve le calme et la concentration.",
       github: "GitHub",
       githubAria: "Voir le dépôt Pomodoro sur GitHub",
@@ -165,8 +212,54 @@ const copy = {
       complete: (modeLabel) => `${modeLabel} terminée. Appuie sur Démarrer pour continuer.`,
       started: (modeText) => `Minuteur lancé : ${modeText}.`,
       reset: "Minuteur réinitialisé.",
+      settingsReset: "Réglages réinitialisés par défaut.",
+      statsReset: "Statistiques du jour réinitialisées.",
+      statsRestored: "Statistiques du jour rétablies.",
       paused: "Minuteur en pause.",
       selected: (modeLabel) => `${modeLabel} sélectionné.`,
+      restored: (modeLabel) => `${modeLabel} reprise là où tu t'étais arrêté.`,
+    },
+    hints: {
+      space: "démarrer / pause",
+    },
+    deferred: "Dès la prochaine session",
+    dialogs: {
+      modeTitle: "Session en cours",
+      modeBody: (remaining, currentLabel, nextLabel) =>
+        `Il reste ${remaining} en ${currentLabel}. Passer à ${nextLabel} met fin à cette session — reviens sur ${currentLabel} pour la reprendre là où tu t'es arrêté.`,
+      modeConfirm: "Changer quand même",
+      modeKeep: "Continuer",
+      settingsTitle: "Réinitialiser les réglages ?",
+      settingsBody:
+        "Les durées de focus, de pause et le nombre de sessions reviennent à 25, 5, 15 et 4, et les notifications sonores se réactivent.",
+      settingsConfirm: "Réinitialiser",
+      statsTitle: "Réinitialiser les statistiques du jour ?",
+      statsBody: (sessions, minutes) =>
+        `${sessions} session(s) terminée(s) et ${minutes} min de focus seront effacées.`,
+      statsConfirm: "Réinitialiser",
+      cancel: "Annuler",
+    },
+    toast: {
+      statsReset: "Statistiques du jour réinitialisées.",
+      undo: "Rétablir",
+    },
+    stepper: {
+      focus: {
+        increase: "Augmenter les minutes de focus",
+        decrease: "Diminuer les minutes de focus",
+      },
+      short: {
+        increase: "Augmenter les minutes de pause courte",
+        decrease: "Diminuer les minutes de pause courte",
+      },
+      long: {
+        increase: "Augmenter les minutes de pause longue",
+        decrease: "Diminuer les minutes de pause longue",
+      },
+      sessions: {
+        increase: "Augmenter les sessions avant pause longue",
+        decrease: "Diminuer les sessions avant pause longue",
+      },
     },
   },
 };
@@ -255,14 +348,32 @@ const dom = {
   longInput: document.getElementById("longInput"),
   sessionsInput: document.getElementById("sessionsInput"),
   soundEnabledInput: document.getElementById("soundEnabledInput"),
+  resetSettingsBtn: document.getElementById("resetSettingsBtn"),
+  resetSettingsLabel: document.getElementById("resetSettingsLabel"),
   focusLabel: document.getElementById("focusLabel"),
   shortLabel: document.getElementById("shortLabel"),
   longLabel: document.getElementById("longLabel"),
+  focusNote: document.getElementById("focusNote"),
+  shortNote: document.getElementById("shortNote"),
+  longNote: document.getElementById("longNote"),
+  shortcutLabel: document.getElementById("shortcutLabel"),
+  steppers: Array.from(document.querySelectorAll("[data-stepper]")),
+  appDialog: document.getElementById("appDialog"),
+  appDialogTitle: document.getElementById("appDialogTitle"),
+  appDialogText: document.getElementById("appDialogText"),
+  appDialogConfirm: document.getElementById("appDialogConfirm"),
+  appDialogCancel: document.getElementById("appDialogCancel"),
+  appToast: document.getElementById("appToast"),
+  appToastText: document.getElementById("appToastText"),
+  appToastAction: document.getElementById("appToastAction"),
+  appToastProgress: document.getElementById("appToastProgress"),
   todayLabel: document.getElementById("todayLabel"),
   completedSessionsLabel: document.getElementById("completedSessionsLabel"),
   totalFocusTimeLabel: document.getElementById("totalFocusTimeLabel"),
   completedCount: document.getElementById("completedCount"),
   totalFocus: document.getElementById("totalFocus"),
+  resetStatsBtn: document.getElementById("resetStatsBtn"),
+  resetStatsLabel: document.getElementById("resetStatsLabel"),
   footerCredits: document.getElementById("footerCredits"),
   footerQuote: document.getElementById("footerQuote"),
   githubLink: document.getElementById("githubLink"),
@@ -270,7 +381,7 @@ const dom = {
 };
 
 if (Object.values(dom).some((el) => !el)) {
-  throw new Error("Pomodoro DOM is incomplete");
+  console.warn("Some Pomodoro DOM elements are missing or pending hydration.");
 }
 
 // ============================================================
@@ -377,7 +488,7 @@ const loadState = () => {
 const saveState = (state) => {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch {}
+  } catch { }
 };
 
 // ============================================================
@@ -397,6 +508,8 @@ const initPomodoro = () => {
   let lastTickAt = null;
   let options = { ...defaultOptions };
   let audioContext = null;
+  // A run interrupted by a mode switch, kept so it can be picked up again.
+  let suspendedSession = null;
 
   const getLanguage = () => getSafeLanguage(options.language);
   const getText = () => copy[getLanguage()];
@@ -468,6 +581,19 @@ const initPomodoro = () => {
     dom.focusLengthTitle.textContent = text.summary.focusLength;
     dom.shortBreakTitle.textContent = text.summary.shortBreak;
     dom.longBreakTitle.textContent = text.summary.longBreak;
+    dom.focusNote.textContent = text.deferred;
+    dom.shortNote.textContent = text.deferred;
+    dom.longNote.textContent = text.deferred;
+    dom.shortcutLabel.textContent = text.hints.space;
+    dom.steppers.forEach((button) => {
+      const kind = String(button.dataset.stepper || "").replace("Input", "");
+      const labels = text.stepper[kind];
+      if (!labels) return;
+      button.setAttribute(
+        "aria-label",
+        Number(button.dataset.step) > 0 ? labels.increase : labels.decrease,
+      );
+    });
     dom.settingsTitle.textContent = text.settings.title;
     dom.settingsSubtitle.textContent = text.settings.subtitle;
     dom.focusInputLabel.textContent = text.settings.focusMinutes;
@@ -475,9 +601,13 @@ const initPomodoro = () => {
     dom.longInputLabel.textContent = text.settings.longBreakMinutes;
     dom.sessionsInputLabel.textContent = text.settings.sessionsBeforeLongBreak;
     dom.soundNotificationsLabel.textContent = text.settings.soundNotifications;
+    if (dom.resetSettingsLabel) dom.resetSettingsLabel.textContent = text.settings.reset;
+    if (dom.resetSettingsBtn) dom.resetSettingsBtn.setAttribute("aria-label", text.settings.resetAria);
     dom.todayLabel.textContent = text.summary.today;
     dom.completedSessionsLabel.textContent = text.summary.completedFocusSessions;
     dom.totalFocusTimeLabel.textContent = text.summary.totalFocusTime;
+    if (dom.resetStatsLabel) dom.resetStatsLabel.textContent = text.summary.reset;
+    if (dom.resetStatsBtn) dom.resetStatsBtn.setAttribute("aria-label", text.summary.resetAria);
     dom.resetBtn.textContent = text.controls.reset;
     dom.resetBtn.setAttribute("aria-label", text.controls.resetTimer);
     dom.footerCredits.textContent = text.footer.credits;
@@ -519,6 +649,30 @@ const initPomodoro = () => {
     });
   };
 
+  // A duration edited mid-session cannot be applied yet, so the recap card says so
+  // instead of showing a figure the dial contradicts.
+  const isDeferredDuration = (targetMode, configuredSeconds) =>
+    targetMode === mode &&
+    remainingSeconds !== currentDurationSeconds &&
+    configuredSeconds !== currentDurationSeconds;
+
+  const updateDeferredMarkers = ({ focus, shortBreak, longBreak }) => {
+    dom.focusNote.hidden = !isDeferredDuration("focus", focus * 60);
+    dom.shortNote.hidden = !isDeferredDuration("short", shortBreak * 60);
+    dom.longNote.hidden = !isDeferredDuration("long", longBreak * 60);
+  };
+
+  // Disable a stepper once it has reached the bound of its field.
+  const updateStepperBounds = () => {
+    dom.steppers.forEach((button) => {
+      const input = dom[button.dataset.stepper];
+      if (!input) return;
+      const step = Number(button.dataset.step) || 1;
+      const value = Number(input.value);
+      button.disabled = step > 0 ? value >= Number(input.max) : value <= Number(input.min);
+    });
+  };
+
   // --- Labels & stats ---
   // Refresh settings summaries and daily progress counters.
   const updateLabels = () => {
@@ -530,6 +684,8 @@ const initPomodoro = () => {
     dom.sessionCount.textContent = text.summary.session(sessionNumber);
     dom.completedCount.textContent = String(completedSessions);
     dom.totalFocus.textContent = text.summary.minutes(totalFocusMinutes);
+    updateDeferredMarkers({ focus, shortBreak, longBreak });
+    updateStepperBounds();
   };
 
   // --- Progress ring visual + ARIA ---
@@ -645,7 +801,7 @@ const initPomodoro = () => {
       new Notification(text.notifications.completeTitle(completedMode), {
         body: text.notifications.body,
       });
-    } catch {}
+    } catch { }
   };
 
   // Only ask for notification permission once per browser profile.
@@ -661,8 +817,90 @@ const initPomodoro = () => {
     localStorage.setItem(NOTIFICATION_PROMPT_KEY, "1");
     try {
       await Notification.requestPermission();
-    } catch {}
+    } catch { }
   };
+
+  // ============================================================
+  // CONFIRMATION DIALOG
+  // ============================================================
+  // Resolve true only when the user takes the destructive branch.
+  const askConfirm = ({ title, body, confirmLabel, safeLabel }) =>
+    new Promise((resolve) => {
+      dom.appDialogTitle.textContent = title;
+      dom.appDialogText.textContent = body;
+      dom.appDialogConfirm.textContent = confirmLabel;
+      dom.appDialogCancel.textContent = safeLabel || getText().dialogs.cancel;
+      dom.appDialog.returnValue = "cancel";
+      const handleClose = () => {
+        dom.appDialog.removeEventListener("close", handleClose);
+        resolve(dom.appDialog.returnValue === "confirm");
+      };
+      dom.appDialog.addEventListener("close", handleClose);
+      dom.appDialog.showModal();
+      // Focus the safe branch: the risky one is never the default.
+      dom.appDialogCancel.focus();
+    });
+
+  // ============================================================
+  // UNDO TOAST
+  // ============================================================
+  let toastTimeout = null;
+  let toastDeadline = 0;
+  let toastRemaining = 0;
+  let toastUndo = null;
+
+  const hideToast = () => {
+    window.clearTimeout(toastTimeout);
+    toastTimeout = null;
+    toastRemaining = 0;
+    toastUndo = null;
+    dom.appToast.hidden = true;
+    dom.appToast.classList.remove("app-toast--counting", "app-toast--paused");
+  };
+
+  const pauseToast = () => {
+    if (dom.appToast.hidden || !toastTimeout) return;
+    window.clearTimeout(toastTimeout);
+    toastTimeout = null;
+    toastRemaining = Math.max(0, toastDeadline - Date.now());
+    dom.appToast.classList.add("app-toast--paused");
+  };
+
+  const resumeToast = () => {
+    if (dom.appToast.hidden || toastTimeout || toastRemaining <= 0) return;
+    dom.appToast.classList.remove("app-toast--paused");
+    toastDeadline = Date.now() + toastRemaining;
+    toastTimeout = window.setTimeout(hideToast, toastRemaining);
+  };
+
+  const showToast = (message, undo) => {
+    window.clearTimeout(toastTimeout);
+    dom.appToastText.textContent = message;
+    toastUndo = undo ? undo.onUndo : null;
+    dom.appToastAction.hidden = !undo;
+    if (undo) dom.appToastAction.textContent = undo.label;
+    dom.appToast.hidden = false;
+    dom.appToastProgress.style.animationDuration = `${TOAST_DURATION}ms`;
+    dom.appToast.classList.remove("app-toast--paused", "app-toast--counting");
+    void dom.appToast.offsetWidth; // restart the draining rule
+    dom.appToast.classList.add("app-toast--counting");
+    toastDeadline = Date.now() + TOAST_DURATION;
+    toastRemaining = 0;
+    toastTimeout = window.setTimeout(hideToast, TOAST_DURATION);
+  };
+
+  dom.appDialogConfirm.addEventListener("click", () => dom.appDialog.close("confirm"));
+  dom.appDialogCancel.addEventListener("click", () => dom.appDialog.close("cancel"));
+
+  dom.appToastAction.addEventListener("click", () => {
+    const undo = toastUndo;
+    hideToast();
+    if (undo) undo();
+  });
+  dom.appToast.addEventListener("mouseenter", pauseToast);
+  dom.appToast.addEventListener("mouseleave", resumeToast);
+  dom.appToast.addEventListener("focusin", pauseToast);
+  dom.appToast.addEventListener("focusout", resumeToast);
 
   // ============================================================
   // TIMER CONTROL
@@ -704,11 +942,16 @@ const initPomodoro = () => {
       sessionNumber += 1;
     }
 
-    pendingMode = getNextModeAfterCurrent({
+    const nextMode = getNextModeAfterCurrent({
       mode: completedMode,
       completedSessions,
       sessions: readDurations().sessions,
     });
+    mode = nextMode;
+    pendingMode = null;
+    suspendedSession = null;
+    remainingSeconds = getModeDurationSeconds(mode);
+    currentDurationSeconds = remainingSeconds;
 
     syncUi();
     saveState(snapshot());
@@ -730,6 +973,8 @@ const initPomodoro = () => {
       pendingMode = null;
       remainingSeconds = getModeDurationSeconds(mode);
       currentDurationSeconds = remainingSeconds;
+      applyModeSelection();
+      updateLabels();
     } else if (remainingSeconds <= 0 || currentDurationSeconds <= 0) {
       remainingSeconds = getModeDurationSeconds(mode);
       currentDurationSeconds = remainingSeconds;
@@ -746,17 +991,14 @@ const initPomodoro = () => {
     announce(getText().announcements.started(getModeText(mode, getLanguage())));
   };
 
-  // Return the app to the initial focus-session state.
+  // Reset only the current countdown timer to its initial duration without altering mode or session stats.
   const resetTimer = () => {
     stopTimer("ready");
-    mode = "focus";
     pendingMode = null;
-    remainingSeconds = getModeDurationSeconds("focus");
+    suspendedSession = null;
+    remainingSeconds = getModeDurationSeconds(mode);
     currentDurationSeconds = remainingSeconds;
-    sessionNumber = 1;
-    completedSessions = 0;
-    totalFocusMinutes = 0;
-    syncUi();
+    updateTimeDisplay();
     saveState(snapshot());
     announce(getText().announcements.reset);
   };
@@ -767,7 +1009,7 @@ const initPomodoro = () => {
   // Apply duration changes immediately when the timer is idle.
   const handleSettingsChange = () => {
     const { focus, shortBreak, longBreak } = readDurations();
-    if (!isRunning) {
+    if (!isRunning && remainingSeconds === currentDurationSeconds) {
       if (mode === "focus") remainingSeconds = focus * 60;
       else if (mode === "short") remainingSeconds = shortBreak * 60;
       else remainingSeconds = longBreak * 60;
@@ -776,6 +1018,61 @@ const initPomodoro = () => {
     updateTimeDisplay();
     updateLabels();
     saveState(snapshot());
+  };
+
+  // Commit a duration edit: clamp it, re-render, persist, and let the break
+  // media resync. Called on blur, on Enter and on stepper clicks — never per keystroke.
+  const commitDurations = () => {
+    handleSettingsChange();
+    [dom.shortInput, dom.longInput].forEach((input) => {
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+  };
+
+  // Reset all settings (durations + sound) back to default values.
+  const resetSettings = async () => {
+    const proceed = await askConfirm({
+      title: getText().dialogs.settingsTitle,
+      body: getText().dialogs.settingsBody,
+      confirmLabel: getText().dialogs.settingsConfirm,
+    });
+    if (!proceed) return;
+    dom.focusInput.value = "25";
+    dom.shortInput.value = "5";
+    dom.longInput.value = "15";
+    dom.sessionsInput.value = "4";
+    dom.soundEnabledInput.checked = true;
+    options = { ...options, soundEnabled: true };
+    commitDurations();
+    announce(getText().announcements.settingsReset);
+  };
+
+  // Reset today's counters, keeping a snapshot so the action stays reversible.
+  const resetStats = async () => {
+    const previous = { completedSessions, totalFocusMinutes, sessionNumber };
+    const proceed = await askConfirm({
+      title: getText().dialogs.statsTitle,
+      body: getText().dialogs.statsBody(completedSessions, totalFocusMinutes),
+      confirmLabel: getText().dialogs.statsConfirm,
+    });
+    if (!proceed) return;
+    completedSessions = 0;
+    totalFocusMinutes = 0;
+    sessionNumber = 1;
+    updateLabels();
+    saveState(snapshot());
+    announce(getText().announcements.statsReset);
+    showToast(getText().toast.statsReset, {
+      label: getText().toast.undo,
+      onUndo: () => {
+        completedSessions = previous.completedSessions;
+        totalFocusMinutes = previous.totalFocusMinutes;
+        sessionNumber = previous.sessionNumber;
+        updateLabels();
+        saveState(snapshot());
+        announce(getText().announcements.statsRestored);
+      },
+    });
   };
 
   // Persist non-duration options from the settings panel.
@@ -869,7 +1166,7 @@ const initPomodoro = () => {
     currentDurationSeconds = Math.max(
       1,
       Number(state.progress.currentDurationSeconds) ||
-        getModeDurationSeconds(mode),
+      getModeDurationSeconds(mode),
     );
     sessionNumber = Math.max(1, Number(state.progress.sessionNumber) || 1);
     completedSessions = Math.max(
@@ -914,36 +1211,105 @@ const initPomodoro = () => {
   });
 
   dom.resetBtn.addEventListener("click", resetTimer);
+  if (dom.resetSettingsBtn) dom.resetSettingsBtn.addEventListener("click", resetSettings);
+  if (dom.resetStatsBtn) dom.resetStatsBtn.addEventListener("click", resetStats);
 
-  dom.modeSwitcher.addEventListener("click", (event) => {
+  dom.modeSwitcher.addEventListener("click", async (event) => {
     const button = event.target.closest("button");
     if (!button || !dom.modeSwitcher.contains(button)) return;
     const nextMode = button.dataset.mode;
-    if (!nextMode) return;
+    if (!nextMode || nextMode === mode) return;
+
+    // Switching mid-run throws the remaining time away: ask first, keep the
+    // interrupted run so coming back to that mode resumes it.
+    if (isRunning) {
+      const interrupted = { mode, remainingSeconds, currentDurationSeconds };
+      const proceed = await askConfirm({
+        title: getText().dialogs.modeTitle,
+        body: getText().dialogs.modeBody(
+          formatTime(interrupted.remainingSeconds),
+          getModeLabel(interrupted.mode, getLanguage()),
+          getModeLabel(nextMode, getLanguage()),
+        ),
+        confirmLabel: getText().dialogs.modeConfirm,
+        safeLabel: getText().dialogs.modeKeep,
+      });
+      if (!proceed) {
+        applyModeSelection();
+        button.blur();
+        return;
+      }
+      suspendedSession = interrupted;
+    }
+
     stopTimer("ready");
     pendingMode = null;
     mode = nextMode;
-    remainingSeconds = getModeDurationSeconds(nextMode);
-    currentDurationSeconds = remainingSeconds;
+
+    const resumable = suspendedSession && suspendedSession.mode === nextMode;
+    if (resumable) {
+      remainingSeconds = suspendedSession.remainingSeconds;
+      currentDurationSeconds = suspendedSession.currentDurationSeconds;
+      suspendedSession = null;
+    } else {
+      remainingSeconds = getModeDurationSeconds(nextMode);
+      currentDurationSeconds = remainingSeconds;
+    }
+
     applyModeSelection();
     updateLabels();
     updateTimeDisplay();
     updateStatusBadge("ready");
     saveState(snapshot());
-    announce(getText().announcements.selected(getModeLabel(mode, getLanguage())));
+    announce(
+      resumable
+        ? getText().announcements.restored(getModeLabel(mode, getLanguage()))
+        : getText().announcements.selected(getModeLabel(mode, getLanguage())),
+    );
   });
 
-  [dom.focusInput, dom.shortInput, dom.longInput, dom.sessionsInput].forEach(
-    (input) => {
-      input.addEventListener("change", handleSettingsChange);
-      input.addEventListener("input", handleSettingsChange);
-    },
-  );
+  [dom.focusInput, dom.shortInput, dom.longInput, dom.sessionsInput].forEach((input) => {
+    // Commit on blur or Enter only: clamping mid-keystroke fights the typist.
+    input.addEventListener("change", commitDurations);
+    input.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter") return;
+      event.preventDefault();
+      commitDurations();
+      input.blur();
+    });
+  });
+
+  dom.steppers.forEach((button) => {
+    button.addEventListener("click", () => {
+      const input = dom[button.dataset.stepper];
+      if (!input) return;
+      const step = Number(button.dataset.step) || 1;
+      const min = Number(input.min);
+      const max = Number(input.max);
+      const current = clampValue(Number(input.value) || min, min, max);
+      const next = clampValue(current + step, min, max);
+      if (next === current) return;
+      input.value = String(next);
+      commitDurations();
+    });
+  });
 
   dom.soundEnabledInput.addEventListener("change", handleOptionsChange);
   dom.themeToggleBtn.addEventListener("click", handleThemeToggle);
   dom.languageEnBtn.addEventListener("click", () => handleLanguageChange("en"));
   dom.languageFrBtn.addEventListener("click", () => handleLanguageChange("fr"));
+
+  // Space toggles start/pause from anywhere that is not already a control,
+  // so it never fights a button, field or the dialog.
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== " " && event.code !== "Space") return;
+    if (event.repeat) return;
+    if (dom.appDialog && dom.appDialog.open) return;
+    const target = event.target instanceof Element ? event.target : null;
+    if (target && target.closest("input, textarea, select, button, a[href], [contenteditable='true']")) return;
+    event.preventDefault();
+    dom.startPauseBtn.click();
+  });
 
   // ============================================================
   // INIT
