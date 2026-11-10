@@ -3,7 +3,7 @@
 // Stratégie : Network-First pour HTML (navigation) & Cache-First pour Assets
 // ============================================================
 
-const CACHE_NAME = "pomodoro-cache-v6";
+const CACHE_NAME = "pomodoro-cache-v7";
 
 // Assets essentiels pré-mis en cache à l'installation
 const PRECACHE_ASSETS = [

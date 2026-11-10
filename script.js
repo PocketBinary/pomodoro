@@ -79,6 +79,7 @@ const copy = {
       reset: "Reset stats",
       resetAria: "Reset today's statistics",
     },
+    tabletHint: "For an optimal tablet experience, please switch to landscape mode.",
     footer: {
       credits: "© 2026 Pomodoro · Created by PocketBinary",
       quote: "One tomato at a time, return to calm focus.",
@@ -198,6 +199,7 @@ const copy = {
       reset: "Réinitialiser",
       resetAria: "Réinitialiser les statistiques d'aujourd'hui",
     },
+    tabletHint: "Pour un confort optimal sur tablette, basculez en mode paysage.",
     footer: {
       credits: "© 2026 Pomodoro · Créé par PocketBinary",
       quote: "Une tomate à la fois, retrouve le calme et la concentration.",
@@ -316,6 +318,8 @@ const getSafeLanguage = (language) => (LANGUAGE_VALUES.includes(language) ? lang
 // ============================================================
 const dom = {
   skipLink: document.getElementById("skipLink"),
+  tabletHint: document.getElementById("tabletHint"),
+  tabletHintText: document.getElementById("tabletHintText"),
   timeDisplay: document.getElementById("timeDisplay"),
   modeText: document.getElementById("modeText"),
   srAnnouncement: document.getElementById("srAnnouncement"),
@@ -572,6 +576,7 @@ const initPomodoro = () => {
     dom.languageEnBtn.parentElement.setAttribute("aria-label", text.language.group);
 
     dom.skipLink.textContent = text.skipLink;
+    if (dom.tabletHintText) dom.tabletHintText.textContent = text.tabletHint;
     dom.modeSwitcher.setAttribute("aria-label", text.timerModesAria);
     dom.timerDisplay.setAttribute("aria-label", text.timerDisplayAria);
     dom.progressRing.setAttribute("aria-label", text.progressAria);
@@ -1201,7 +1206,21 @@ const initPomodoro = () => {
   // ============================================================
   // EVENT LISTENERS
   // ============================================================
+  // Tablet orientation handling (favor landscape)
+  const handleTabletOrientation = () => {
+    try {
+      const minDim = Math.min(window.screen.width, window.screen.height);
+      const hasTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+      if (hasTouch && minDim >= 600 && screen.orientation && typeof screen.orientation.lock === "function") {
+        screen.orientation.lock("landscape").catch(() => {});
+      }
+    } catch {
+      // Ignore if not permitted
+    }
+  };
+
   dom.startPauseBtn.addEventListener("click", async () => {
+    handleTabletOrientation();
     if (isRunning) {
       stopTimer("paused");
       announce(getText().announcements.paused);
@@ -1314,6 +1333,7 @@ const initPomodoro = () => {
   // ============================================================
   // INIT
   // ============================================================
+  handleTabletOrientation();
   restoreState();
 };
 
