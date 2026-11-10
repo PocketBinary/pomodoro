@@ -21,15 +21,15 @@
   const AUDIO_NAME = /^[A-Za-z0-9][A-Za-z0-9 _.-]{0,80}\.(mp3|ogg|wav|m4a)$/i;
   const SVG_NAME = /^[A-Za-z0-9][A-Za-z0-9 _.-]{0,80}\.svg$/i;
 
-  // Textes d'inspiration / slogans affichés sous le logo selon le mode actif
+  // Sous-titre affiché sous le logo, selon le mode actif
   const slogans = {
     en: {
-      focus: "This block only.",
-      pause: "Look up. The next block can wait.",
+      focus: "Concentrate until the timer ends.",
+      pause: "Stand up, look away, let the timer run.",
     },
     fr: {
-      focus: "Rien que ce bloc.",
-      pause: "Lève les yeux. Le prochain bloc attend.",
+      focus: "Concentre-toi jusqu'à la fin du minuteur.",
+      pause: "Lève-toi, regarde au loin, laisse le minuteur tourner.",
     },
   };
 
@@ -70,7 +70,6 @@
   const switcher = document.getElementById("modeSwitcher");
   const stage = document.getElementById("breakStage");
   const timeDisplay = document.getElementById("timeDisplay");
-  const statusBadge = document.getElementById("statusBadge");
   const shortInput = document.getElementById("shortInput");
   const longInput = document.getElementById("longInput");
 
@@ -210,15 +209,10 @@
     (animations || []).map((name) => safeName(name, SVG_NAME)).filter(Boolean);
 
   /**
-   * Inspecte le badge de statut pour déterminer si le minuteur tourne ou est en pause.
+   * Lit l'état d'exécution publié par le minuteur sur le body.
    * @returns {'running'|'paused'|'ready'}
    */
-  const timerState = () => {
-    const cls = statusBadge ? statusBadge.className : "";
-    if (cls.includes("emerald")) return "running";
-    if (cls.includes("amber")) return "paused";
-    return "ready";
-  };
+  const timerState = () => document.body.dataset.runstate || "ready";
 
   /**
    * Met à jour le slogan inspirant selon le mode actif (focus vs pause).
@@ -302,7 +296,9 @@
    * Assainit le DOM SVG pour supprimer tout script, iframe ou attribut dangereux (anti-XSS).
    */
   const sanitizeSvg = (doc) => {
-    doc.querySelectorAll("script,foreignObject,iframe,object,embed,audio,video,link,meta,use,set,handler,listener").forEach((node) => node.remove());
+    // "image" est écarté : les exports vectoriels y laissent un pixel raster
+    // (1×1) en coin de planche, invisible mais qui déforme la mesure du dessin.
+    doc.querySelectorAll("script,foreignObject,iframe,object,embed,audio,video,link,meta,image,use,set,handler,listener").forEach((node) => node.remove());
     doc.querySelectorAll("*").forEach((node) => {
       [...node.attributes].forEach((attr) => {
         const name = attr.name.toLowerCase();
@@ -353,26 +349,60 @@
     return svgCache.get(url);
   };
 
+  // Formes qui peignent réellement quelque chose : un <g> n'a pas de géométrie
+  // propre, il ne sert que de relais aux transformations de ses enfants.
+  const PAINTED_SHAPES = "path,circle,ellipse,rect,polygon,polyline,line,text";
+
   /**
-   * Recadre le viewBox sur le dessin réellement dessiné.
-   * Les SVG sources réservent de grandes marges internes (ZenMan dessine dans
-   * 411×310 d'un viewBox de 800×600) : sans ce recadrage l'illustration est
-   * réduite à un timbre-poste dans une scène large. La scène, elle, ne change pas.
+   * Mesure la boîte du dessin réellement peint, marges internes retirées.
+   * Les planches SVG réservent de grandes marges dans leur viewBox (la femme de
+   * ZENWoman dessine dans 360×830 d'une planche de 1080×1080) et y laissent
+   * parfois un résidu minuscule dans un coin. Mesurer le <g> englobant cadre
+   * alors du résidu jusqu'au dessin : l'illustration se retrouve décalée d'un
+   * côté et rétrécie. On projette donc chaque forme peinte dans le repère du
+   * <svg>, on écarte les formes négligeables, et on échantillonne la timeline
+   * pour englober les pièces qui voyagent.
    */
   const measureAnimatedBox = (svg) => {
+    const rootMatrix = svg.getScreenCTM();
+    if (!rootMatrix) return null;
+    const toRoot = rootMatrix.inverse();
+    const shapes = [...svg.querySelectorAll(PAINTED_SHAPES)];
+    if (!shapes.length) return null;
+
+    // La boîte locale d'un tracé ne change pas : seules les transformations animent
+    const local = shapes.map((shape) => {
+      try {
+        return shape.getBBox();
+      } catch {
+        return null;
+      }
+    });
+
+    // Seuil relatif au dessin principal : un détail de moins de 1,5 % de sa
+    // taille (poussière, repère d'export) ne doit pas décider du cadre
+    const biggest = local.reduce((max, box) => (box ? Math.max(max, box.width, box.height) : max), 0);
+    const floor = biggest * 0.015;
+
     const union = { x0: Infinity, y0: Infinity, x1: -Infinity, y1: -Infinity };
     const take = () => {
-      let box;
-      try {
-        box = svg.getBBox();
-      } catch {
-        return;
-      }
-      if (!box || (!box.width && !box.height)) return;
-      union.x0 = Math.min(union.x0, box.x);
-      union.y0 = Math.min(union.y0, box.y);
-      union.x1 = Math.max(union.x1, box.x + box.width);
-      union.y1 = Math.max(union.y1, box.y + box.height);
+      shapes.forEach((shape, index) => {
+        const box = local[index];
+        if (!box || Math.max(box.width, box.height) < floor) return;
+        const matrix = shape.getScreenCTM();
+        if (!matrix) return;
+        const m = toRoot.multiply(matrix);
+        for (const x of [box.x, box.x + box.width]) {
+          for (const y of [box.y, box.y + box.height]) {
+            const px = m.a * x + m.c * y + m.e;
+            const py = m.b * x + m.d * y + m.f;
+            union.x0 = Math.min(union.x0, px);
+            union.y0 = Math.min(union.y0, py);
+            union.x1 = Math.max(union.x1, px);
+            union.y1 = Math.max(union.y1, py);
+          }
+        }
+      });
     };
 
     // Une pièce mobile sort de sa boîte de départ (ZenNenuphar voyage de ~50 unités).
@@ -398,12 +428,14 @@
     if (!svg || typeof svg.getBBox !== "function") return;
     const box = measureAnimatedBox(svg);
     if (!box) return;
+    // Marge prise sur le côté dominant : de l'air sur l'axe réellement contraint,
+    // quelle que soit l'orientation du dessin (portrait ou paysage)
     const pad = Math.max(box.width, box.height) * 0.03;
     svg.setAttribute(
       "viewBox",
       `${box.x - pad} ${box.y - pad} ${box.width + pad * 2} ${box.height + pad * 2}`,
     );
-    // Le dessin doit tenir entièrement dans la scène, jamais être rogné
+    // Le dessin est centré dans son cadre et n'est jamais rogné
     svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
   };
 
@@ -644,16 +676,15 @@
       if (currentMode() !== "focus") syncAnimations();
     }).observe(timeDisplay, { childList: true, characterData: true, subtree: true });
   }
-  if (statusBadge) {
-    new MutationObserver(() => {
-      if (currentMode() !== "focus") {
-        syncAnimations();
-        syncMusicWithTimer();
-      } else {
-        audio.pause();
-      }
-    }).observe(statusBadge, { attributes: true, attributeFilter: ["class"] });
-  }
+  // L'état d'exécution est publié sur le body par le minuteur
+  new MutationObserver(() => {
+    if (currentMode() !== "focus") {
+      syncAnimations();
+      syncMusicWithTimer();
+    } else {
+      audio.pause();
+    }
+  }).observe(document.body, { attributes: true, attributeFilter: ["data-runstate"] });
   [shortInput, longInput].forEach((input) => {
     if (!input) return;
     input.addEventListener("input", () => {

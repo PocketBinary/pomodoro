@@ -566,9 +566,7 @@
        FIGURES — tabular everywhere so digits never shift while counting
        ============================================================ */
     #timeDisplay,
-    #focusLabel,
-    #shortLabel,
-    #longLabel,
+    #cycleValue,
     #completedCount,
     #totalFocus,
     .stepper__input {
@@ -577,11 +575,71 @@
       font-feature-settings: "tnum" 1;
     }
 
+    /* The dial is the hero: 68px digits, sized so 120:00 still fits the face.
+       The face sits inside the 312px ring so the track and the arc stay visible. */
+    #timer-display {
+      width: 20rem;
+      height: 20rem;
+    }
+
+    #timerFace {
+      width: 17.25rem;
+      height: 17.25rem;
+    }
+
     #timeDisplay {
-      font-size: 3rem;
+      font-size: 4.25rem;
       font-weight: 600;
       line-height: 1;
-      letter-spacing: -0.01em;
+      letter-spacing: -0.02em;
+    }
+
+    /* Position in the session cycle: one marker per configured focus session */
+    .cycle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .cycle__dots {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .cycle__dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      border: 1.5px solid var(--app-progress-track);
+      border-radius: 999px;
+      background: transparent;
+    }
+
+    .cycle__dot.is-done {
+      border-color: var(--app-text);
+      background: var(--app-text);
+    }
+
+    .cycle__dot.is-current {
+      border-color: var(--app-text);
+    }
+
+    .cycle__value {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      color: var(--app-muted);
+    }
+
+    /* Break phases invert the card and dial surfaces — no colour is added */
+    body[data-mode="short"] #timerCard,
+    body[data-mode="long"] #timerCard {
+      background-color: var(--app-panel-soft) !important;
+    }
+
+    body[data-mode="short"] #timerFace,
+    body[data-mode="long"] #timerFace {
+      background-color: var(--app-panel) !important;
     }
 
     .recap-note {
@@ -622,6 +680,11 @@
 
     .settings-row--switch {
       cursor: pointer;
+    }
+
+    /* Label cell: the deferred hint sits under its own setting, not in a recap card */
+    .settings-row__text {
+      min-width: 0;
     }
 
     .settings-row__label {
@@ -1028,23 +1091,19 @@
         -webkit-line-clamp: 2;
       }
 
-      /* The theme word is the first thing to go when space runs out */
-      #themeLabel {
-        display: none;
-      }
-
       #timer-display {
-        width: 15rem;
-        height: 15rem;
+        width: 18rem;
+        height: 18rem;
       }
 
-      #timer-display>.relative {
-        width: 12rem;
-        height: 12rem;
+      #timerFace {
+        width: 15.25rem;
+        height: 15.25rem;
       }
 
+      /* 60px still renders 120:00 inside the face without shrinking further */
       #timeDisplay {
-        font-size: 2.5rem;
+        font-size: 3.75rem;
       }
 
       /* The three modes stay on one line: a wrapped pill loses its shape */

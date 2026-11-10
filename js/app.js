@@ -48,7 +48,7 @@ const NOTIFICATION_PROMPT_KEY = "pomodoro-notification-prompted-v1";
 const TITLE_BASE = "Pomodoro";
 
 /** Rayon du cercle SVG de progression (en pixels) */
-const RING_RADIUS = 104;
+const RING_RADIUS = 150;
 
 /** Circonférence totale du cercle SVG pour le calcul de l'attribut stroke-dashoffset */
 const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
@@ -94,11 +94,6 @@ const copy = {
       short: "Take a short break",
       long: "Take a longer break",
     },
-    status: {
-      ready: "Ready",
-      running: "Running",
-      paused: "Paused",
-    },
     theme: {
       light: "Light",
       dark: "Dark",
@@ -131,13 +126,10 @@ const copy = {
       resetAria: "Reset settings to default",
     },
     summary: {
-      focusLength: "Focus Length",
-      shortBreak: "Short Break",
-      longBreak: "Long Break",
       today: "Today",
       completedFocusSessions: "Completed focus sessions",
       totalFocusTime: "Total focus time",
-      session: (number) => `Session ${number}`,
+      cyclePosition: (position, total) => `Focus ${position} of ${total} in this cycle`,
       minutes: (number) => `${number} min`,
       reset: "Reset stats",
       resetAria: "Reset today's statistics",
@@ -145,7 +137,7 @@ const copy = {
     tabletHint: "For an optimal tablet experience, please switch to landscape mode.",
     footer: {
       credits: "© 2026 Pomodoro · Created by PocketBinary",
-      quote: "One tomato at a time, return to calm focus.",
+      quote: "Works offline. No account needed.",
       github: "GitHub",
       githubAria: "View the Pomodoro repository on GitHub",
     },
@@ -225,11 +217,6 @@ const copy = {
       short: "Prends une courte pause",
       long: "Prends une pause plus longue",
     },
-    status: {
-      ready: "Prêt",
-      running: "En cours",
-      paused: "En pause",
-    },
     theme: {
       light: "Clair",
       dark: "Sombre",
@@ -262,13 +249,10 @@ const copy = {
       resetAria: "Réinitialiser les réglages par défaut",
     },
     summary: {
-      focusLength: "Durée de focus",
-      shortBreak: "Pause courte",
-      longBreak: "Pause longue",
       today: "Aujourd'hui",
       completedFocusSessions: "Sessions de focus terminées",
       totalFocusTime: "Temps total de focus",
-      session: (number) => `Session ${number}`,
+      cyclePosition: (position, total) => `Focus ${position} sur ${total} dans ce cycle`,
       minutes: (number) => `${number} min`,
       reset: "Réinitialiser",
       resetAria: "Réinitialiser les statistiques d'aujourd'hui",
@@ -276,7 +260,7 @@ const copy = {
     tabletHint: "Pour un confort optimal sur tablette, basculez en mode paysage.",
     footer: {
       credits: "© 2026 Pomodoro · Créé par PocketBinary",
-      quote: "Une tomate à la fois, retrouve le calme et la concentration.",
+      quote: "Fonctionne hors ligne. Sans compte.",
       github: "GitHub",
       githubAria: "Voir le dépôt Pomodoro sur GitHub",
     },
@@ -421,21 +405,18 @@ const dom = {
   srAnnouncement: document.getElementById("srAnnouncement"),
   progressRing: document.getElementById("progressRing"),
   timerDisplay: document.getElementById("timer-display"),
-  sessionCount: document.getElementById("sessionCount"),
-  statusBadge: document.getElementById("statusBadge"),
+  cyclePosition: document.getElementById("cyclePosition"),
+  cycleDots: document.getElementById("cycleDots"),
+  cycleValue: document.getElementById("cycleValue"),
   startPauseBtn: document.getElementById("startPauseBtn"),
   resetBtn: document.getElementById("resetBtn"),
   themeToggleBtn: document.getElementById("themeToggleBtn"),
-  themeLabel: document.getElementById("themeLabel"),
   languageEnBtn: document.getElementById("languageEnBtn"),
   languageFrBtn: document.getElementById("languageFrBtn"),
   modeSwitcher: document.getElementById("modeSwitcher"),
   modeFocusBtn: document.getElementById("modeFocusBtn"),
   modeShortBtn: document.getElementById("modeShortBtn"),
   modeLongBtn: document.getElementById("modeLongBtn"),
-  focusLengthTitle: document.getElementById("focusLengthTitle"),
-  shortBreakTitle: document.getElementById("shortBreakTitle"),
-  longBreakTitle: document.getElementById("longBreakTitle"),
   settingsTitle: document.getElementById("settingsTitle"),
   settingsSubtitle: document.getElementById("settingsSubtitle"),
   focusInputLabel: document.getElementById("focusInputLabel"),
@@ -450,9 +431,6 @@ const dom = {
   soundEnabledInput: document.getElementById("soundEnabledInput"),
   resetSettingsBtn: document.getElementById("resetSettingsBtn"),
   resetSettingsLabel: document.getElementById("resetSettingsLabel"),
-  focusLabel: document.getElementById("focusLabel"),
-  shortLabel: document.getElementById("shortLabel"),
-  longLabel: document.getElementById("longLabel"),
   focusNote: document.getElementById("focusNote"),
   shortNote: document.getElementById("shortNote"),
   longNote: document.getElementById("longNote"),
@@ -653,17 +631,10 @@ const initPomodoro = () => {
   /**
    * Met à jour le badge visuel d'état ("Prêt", "En cours", "En pause").
    */
-  const updateStatusBadge = (statusKey = "ready") => {
-    const text = getText();
-    dom.statusBadge.textContent = text.status[statusKey] || text.status.ready;
-    dom.statusBadge.className = "rounded-full px-3 py-1 text-sm font-medium";
-    if (statusKey === "running") {
-      dom.statusBadge.classList.add("bg-emerald-50", "text-emerald-700");
-    } else if (statusKey === "paused") {
-      dom.statusBadge.classList.add("bg-amber-50", "text-amber-700");
-    } else {
-      dom.statusBadge.classList.add("bg-slate-100", "text-slate-700");
-    }
+  const publishRunState = (statusKey = "ready") => {
+    // The primary button already says Start / Pause: the state lives on the body
+    // so the break-media module can read it without a second visible badge.
+    document.body.dataset.runstate = statusKey;
   };
 
   /**
@@ -675,7 +646,6 @@ const initPomodoro = () => {
     document.body.dataset.theme = safeTheme;
     document.documentElement.dataset.theme = safeTheme;
     document.documentElement.style.colorScheme = safeTheme;
-    dom.themeLabel.textContent = safeTheme === "dark" ? text.theme.dark : text.theme.light;
     dom.themeToggleBtn.setAttribute("aria-checked", safeTheme === "dark" ? "true" : "false");
     dom.themeToggleBtn.setAttribute(
       "aria-label",
@@ -705,9 +675,6 @@ const initPomodoro = () => {
     dom.modeFocusBtn.textContent = text.modes.focus;
     dom.modeShortBtn.textContent = text.modes.short;
     dom.modeLongBtn.textContent = text.modes.long;
-    dom.focusLengthTitle.textContent = text.summary.focusLength;
-    dom.shortBreakTitle.textContent = text.summary.shortBreak;
-    dom.longBreakTitle.textContent = text.summary.longBreak;
     dom.focusNote.textContent = text.deferred;
     dom.shortNote.textContent = text.deferred;
     dom.longNote.textContent = text.deferred;
@@ -766,6 +733,9 @@ const initPomodoro = () => {
       el.setAttribute("aria-selected", active ? "true" : "false");
       el.setAttribute("tabindex", active ? "0" : "-1");
     });
+
+    // Drives the focus / break register of the whole card, in CSS only
+    document.body.dataset.mode = mode;
   };
 
   /**
@@ -799,15 +769,37 @@ const initPomodoro = () => {
   /**
    * Rafraîchit les synthèses chiffrées (durées et compteurs statistiques).
    */
+  const renderCycle = () => {
+    const text = getText();
+    const { sessions } = readDurations();
+    const total = Math.max(1, sessions);
+    // Derived from the day counter, so the markers can never disagree with "Today"
+    const done = ((completedSessions % total) + total) % total;
+    const inBreak = mode !== "focus";
+    // A break sits on the session it just finished; focus sits on the next one
+    const position = inBreak
+      ? done === 0 && completedSessions > 0 ? total : Math.max(1, done)
+      : Math.min(done + 1, total);
+    const filled = inBreak ? position : done;
+
+    dom.cycleDots.replaceChildren();
+    for (let i = 0; i < total; i += 1) {
+      const dot = document.createElement("span");
+      dot.className = "cycle__dot";
+      if (i < filled) dot.classList.add("is-done");
+      else if (!inBreak && i === position - 1) dot.classList.add("is-current");
+      dom.cycleDots.append(dot);
+    }
+    dom.cycleValue.textContent = `${position} / ${total}`;
+    dom.cyclePosition.setAttribute("aria-label", text.summary.cyclePosition(position, total));
+  };
+
   const updateLabels = () => {
     const text = getText();
     const { focus, shortBreak, longBreak } = readDurations();
-    dom.focusLabel.textContent = text.summary.minutes(focus);
-    dom.shortLabel.textContent = text.summary.minutes(shortBreak);
-    dom.longLabel.textContent = text.summary.minutes(longBreak);
-    dom.sessionCount.textContent = text.summary.session(sessionNumber);
     dom.completedCount.textContent = String(completedSessions);
     dom.totalFocus.textContent = text.summary.minutes(totalFocusMinutes);
+    renderCycle();
     updateDeferredMarkers({ focus, shortBreak, longBreak });
     updateStepperBounds();
   };
@@ -822,6 +814,8 @@ const initPomodoro = () => {
     dom.progressRing.style.strokeDasharray = `${RING_CIRCUMFERENCE}`;
     dom.progressRing.style.strokeDashoffset = `${offset}`;
     const percent = Math.round(progress * 100);
+    // Round caps paint a stray dot at 0 %: keep the arc hidden until it is real
+    dom.progressRing.style.opacity = percent > 0 ? "1" : "0";
     dom.progressRing.setAttribute("aria-valuenow", String(percent));
   };
 
@@ -830,7 +824,8 @@ const initPomodoro = () => {
    */
   const updateTimeDisplay = () => {
     dom.timeDisplay.textContent = formatTime(remainingSeconds);
-    dom.modeText.textContent = getModeText(mode, getLanguage());
+    // The dial names its phase literally: no motivational second label
+    dom.modeText.textContent = getModeLabel(mode, getLanguage());
     updateTitle();
     updateProgressRing();
   };
@@ -851,7 +846,7 @@ const initPomodoro = () => {
       "aria-label",
       isRunning ? getText().controls.pauseTimer : getText().controls.startTimer,
     );
-    updateStatusBadge(isRunning ? "running" : "ready");
+    publishRunState(isRunning ? "running" : "ready");
   };
 
   /**
@@ -1024,7 +1019,7 @@ const initPomodoro = () => {
     lastTickAt = null;
     dom.startPauseBtn.textContent = getText().controls.start;
     dom.startPauseBtn.setAttribute("aria-label", getText().controls.startTimer);
-    updateStatusBadge(statusKey);
+    publishRunState(statusKey);
     saveState(snapshot());
   };
 
@@ -1052,7 +1047,8 @@ const initPomodoro = () => {
       completedSessions += 1;
       totalFocusMinutes += focus;
     } else {
-      sessionNumber += 1;
+      // After the long break the cycle starts over, so the position resets with it
+      sessionNumber = completedMode === "long" ? 1 : sessionNumber + 1;
     }
 
     const nextMode = getNextModeAfterCurrent({
@@ -1095,7 +1091,7 @@ const initPomodoro = () => {
 
     isRunning = true;
     lastTickAt = Date.now();
-    updateStatusBadge("running");
+    publishRunState("running");
     dom.startPauseBtn.textContent = getText().controls.pause;
     dom.startPauseBtn.setAttribute("aria-label", getText().controls.pauseTimer);
     updateTimeDisplay();
@@ -1200,7 +1196,7 @@ const initPomodoro = () => {
     options = { ...options, theme: nextTheme };
     applyTheme(nextTheme);
     applyModeSelection();
-    updateStatusBadge(isRunning ? "running" : "ready");
+    publishRunState(isRunning ? "running" : "ready");
     saveState(snapshot());
     announce(getText().theme.selected(nextTheme === "dark" ? getText().theme.dark : getText().theme.light));
   };
@@ -1282,7 +1278,7 @@ const initPomodoro = () => {
       timerId = setInterval(tick, 1000);
     } else {
       isRunning = false;
-      updateStatusBadge("ready");
+      publishRunState("ready");
     }
   };
 
@@ -1355,7 +1351,7 @@ const initPomodoro = () => {
     applyModeSelection();
     updateLabels();
     updateTimeDisplay();
-    updateStatusBadge("ready");
+    publishRunState("ready");
     saveState(snapshot());
     announce(
       resumable

@@ -218,7 +218,6 @@
         </div>
 
         <!-- Bascule du thème clair / sombre -->
-        <span id="themeLabel" class="text-sm font-medium text-slate-500">Light</span>
         <button id="themeToggleBtn" type="button" class="theme-toggle" role="switch" aria-checked="false"
           aria-label="Switch to dark theme">
           <span class="theme-toggle__thumb" aria-hidden="true">
@@ -250,55 +249,52 @@
       aria-label="Minuteur et Réglages Pomodoro">
 
       <!-- COLONNE GAUCHE : MINUTEUR, CONTRÔLES ET AMBIANCE DE PAUSE -->
-      <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+      <div id="timerCard" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
 
         <!-- Barre d'onglets de sélection de mode (Focus, Pause courte, Pause longue) -->
-        <div class="flex flex-wrap items-center justify-between gap-4">
-          <div class="space-y-2">
-            <div id="modeSwitcher"
-              class="inline-flex max-w-full flex-wrap overflow-hidden rounded-full border border-slate-200 bg-slate-50 p-1"
-              role="tablist" aria-label="Timer modes">
-              <button id="modeFocusBtn" type="button" data-mode="focus"
-                class="rounded-full px-4 py-1 text-sm font-semibold" role="tab" aria-selected="true"
-                aria-controls="timer-display">Focus</button>
-              <button id="modeShortBtn" type="button" data-mode="short"
-                class="rounded-full px-4 py-1 text-sm font-semibold" role="tab" aria-selected="false"
-                aria-controls="timer-display">Short Break</button>
-              <button id="modeLongBtn" type="button" data-mode="long"
-                class="rounded-full px-4 py-1 text-sm font-semibold" role="tab" aria-selected="false"
-                aria-controls="timer-display">Long Break</button>
-            </div>
-          </div>
-          <!-- Badges du numéro de session et du statut d'exécution -->
-          <div class="flex items-center gap-2">
-            <span id="sessionCount"
-              class="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">Session 1</span>
-            <span id="statusBadge" class="rounded-full bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700"
-              aria-live="polite">Ready</span>
+        <div class="flex flex-wrap items-center gap-4">
+          <div id="modeSwitcher"
+            class="inline-flex max-w-full flex-wrap overflow-hidden rounded-full border border-slate-200 bg-slate-50 p-1"
+            role="tablist" aria-label="Timer modes">
+            <button id="modeFocusBtn" type="button" data-mode="focus"
+              class="rounded-full px-4 py-1 text-sm font-semibold" role="tab" aria-selected="true"
+              aria-controls="timer-display">Focus</button>
+            <button id="modeShortBtn" type="button" data-mode="short"
+              class="rounded-full px-4 py-1 text-sm font-semibold" role="tab" aria-selected="false"
+              aria-controls="timer-display">Short Break</button>
+            <button id="modeLongBtn" type="button" data-mode="long"
+              class="rounded-full px-4 py-1 text-sm font-semibold" role="tab" aria-selected="false"
+              aria-controls="timer-display">Long Break</button>
           </div>
         </div>
 
         <!-- ZONE DU COMPTE À REBOURS AVEC ANNEAU CIRCULAIRE SVG (Rôle timer & progressbar) -->
         <div class="mt-8 flex flex-col items-center gap-6">
-          <div class="relative flex h-64 w-64 items-center justify-center" id="timer-display" role="tabpanel"
+          <div class="relative flex items-center justify-center" id="timer-display" role="tabpanel"
             aria-labelledby="modeSwitcher">
-            <svg class="absolute inset-0 h-full w-full -rotate-90 overflow-visible" viewBox="0 0 260 260"
+            <svg class="absolute inset-0 h-full w-full -rotate-90 overflow-visible" viewBox="0 0 320 320"
               aria-hidden="true" focusable="false">
-              <circle cx="130" cy="130" r="104" fill="none" stroke="#8792A1" stroke-width="10"></circle>
-              <circle id="progressRing" cx="130" cy="130" r="104" fill="none" stroke="#0F172A" stroke-width="10"
-                stroke-linecap="round" stroke-dasharray="653.45" stroke-dashoffset="653.45" role="progressbar"
+              <circle cx="160" cy="160" r="150" fill="none" stroke="#8792A1" stroke-width="9"></circle>
+              <circle id="progressRing" cx="160" cy="160" r="150" fill="none" stroke="#0F172A" stroke-width="9"
+                stroke-linecap="round" stroke-dasharray="942.48" stroke-dashoffset="942.48" role="progressbar"
                 aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Session progress"></circle>
             </svg>
-            <div
-              class="relative flex h-52 w-52 items-center justify-center rounded-full bg-slate-50 ring-1 ring-slate-200">
+            <div id="timerFace"
+              class="relative flex items-center justify-center rounded-full bg-slate-50 ring-1 ring-slate-200">
               <div class="absolute inset-3 rounded-full bg-white shadow-inner"></div>
-              <div class="relative text-center p-6">
-                <p id="timeDisplay" class="text-4xl font-semibold tabular-nums" role="timer" aria-live="off" aria-atomic="true">25:00</p>
-                <p id="modeText" class="mt-2 text-sm text-slate-500">Stay focused</p>
+              <div class="relative text-center p-3">
+                <p id="timeDisplay" class="font-semibold tabular-nums" role="timer" aria-live="off" aria-atomic="true">25:00</p>
+                <p id="modeText" class="mt-1 text-sm text-slate-500">Focus</p>
                 <!-- Annonces vocales pour les technologies d'assistance (lecteurs d'écran) -->
                 <p id="srAnnouncement" class="sr-only" aria-live="polite" aria-atomic="true"></p>
               </div>
             </div>
+          </div>
+
+          <!-- Position dans le cycle de sessions : repères + valeur calculée -->
+          <div id="cyclePosition" class="cycle" role="img" aria-label="Session 1 of 4">
+            <span id="cycleDots" class="cycle__dots" aria-hidden="true"></span>
+            <span id="cycleValue" class="cycle__value" aria-hidden="true">1 / 4</span>
           </div>
 
           <!-- BOUTONS D'ACTION PRINCIPAUX (Démarrer / Mettre en pause, Réinitialiser) -->
@@ -373,24 +369,6 @@
             </div>
           </div>
 
-          <!-- CARTES RÉCAPITULATIVES DES DURÉES CONFIGURÉES -->
-          <div class="mt-2 grid w-full gap-4 sm:grid-cols-3">
-            <div class="rounded-xl border border-slate-100 bg-slate-50 p-4">
-              <p id="focusLengthTitle" class="text-xs font-medium uppercase tracking-wide text-slate-500">Focus Length</p>
-              <p id="focusLabel" class="mt-2 text-lg font-semibold">25 min</p>
-              <p id="focusNote" class="recap-note" hidden>From the next session</p>
-            </div>
-            <div class="rounded-xl border border-slate-100 bg-slate-50 p-4">
-              <p id="shortBreakTitle" class="text-xs font-medium uppercase tracking-wide text-slate-500">Short Break</p>
-              <p id="shortLabel" class="mt-2 text-lg font-semibold">5 min</p>
-              <p id="shortNote" class="recap-note" hidden>From the next session</p>
-            </div>
-            <div class="rounded-xl border border-slate-100 bg-slate-50 p-4">
-              <p id="longBreakTitle" class="text-xs font-medium uppercase tracking-wide text-slate-500">Long Break</p>
-              <p id="longLabel" class="mt-2 text-lg font-semibold">15 min</p>
-              <p id="longNote" class="recap-note" hidden>From the next session</p>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -402,13 +380,16 @@
         <!-- Liste des réglages avec steppers interactifs (− / +) -->
         <div class="settings-list">
           <div class="settings-row">
-            <label id="focusInputLabel" for="focusInput" class="settings-row__label">Focus minutes</label>
+            <div class="settings-row__text">
+              <label id="focusInputLabel" for="focusInput" class="settings-row__label">Focus minutes</label>
+              <p id="focusNote" class="recap-note" hidden>From the next session</p>
+            </div>
             <div class="stepper" role="group" aria-labelledby="focusInputLabel">
               <button type="button" class="stepper__button" data-stepper="focusInput" data-step="-1"
                 aria-label="Decrease focus minutes" aria-controls="focusInput"><span aria-hidden="true">−</span></button>
               <span class="stepper__value">
                 <input id="focusInput" type="number" min="1" max="120" step="1" value="25" inputmode="numeric"
-                  class="stepper__input" aria-describedby="focusLabel" aria-valuemin="1" aria-valuemax="120" aria-valuenow="25">
+                  class="stepper__input" aria-describedby="focusNote" aria-valuemin="1" aria-valuemax="120" aria-valuenow="25">
                 <span class="stepper__unit" aria-hidden="true">min</span>
               </span>
               <button type="button" class="stepper__button" data-stepper="focusInput" data-step="1"
@@ -417,13 +398,16 @@
           </div>
 
           <div class="settings-row">
-            <label id="shortInputLabel" for="shortInput" class="settings-row__label">Short break minutes</label>
+            <div class="settings-row__text">
+              <label id="shortInputLabel" for="shortInput" class="settings-row__label">Short break minutes</label>
+              <p id="shortNote" class="recap-note" hidden>From the next session</p>
+            </div>
             <div class="stepper" role="group" aria-labelledby="shortInputLabel">
               <button type="button" class="stepper__button" data-stepper="shortInput" data-step="-1"
                 aria-label="Decrease short break minutes" aria-controls="shortInput"><span aria-hidden="true">−</span></button>
               <span class="stepper__value">
                 <input id="shortInput" type="number" min="1" max="60" step="1" value="5" inputmode="numeric"
-                  class="stepper__input" aria-describedby="shortLabel" aria-valuemin="1" aria-valuemax="60" aria-valuenow="5">
+                  class="stepper__input" aria-describedby="shortNote" aria-valuemin="1" aria-valuemax="60" aria-valuenow="5">
                 <span class="stepper__unit" aria-hidden="true">min</span>
               </span>
               <button type="button" class="stepper__button" data-stepper="shortInput" data-step="1"
@@ -432,13 +416,16 @@
           </div>
 
           <div class="settings-row">
-            <label id="longInputLabel" for="longInput" class="settings-row__label">Long break minutes</label>
+            <div class="settings-row__text">
+              <label id="longInputLabel" for="longInput" class="settings-row__label">Long break minutes</label>
+              <p id="longNote" class="recap-note" hidden>From the next session</p>
+            </div>
             <div class="stepper" role="group" aria-labelledby="longInputLabel">
               <button type="button" class="stepper__button" data-stepper="longInput" data-step="-1"
                 aria-label="Decrease long break minutes" aria-controls="longInput"><span aria-hidden="true">−</span></button>
               <span class="stepper__value">
                 <input id="longInput" type="number" min="1" max="60" step="1" value="15" inputmode="numeric"
-                  class="stepper__input" aria-describedby="longLabel" aria-valuemin="1" aria-valuemax="60" aria-valuenow="15">
+                  class="stepper__input" aria-describedby="longNote" aria-valuemin="1" aria-valuemax="60" aria-valuenow="15">
                 <span class="stepper__unit" aria-hidden="true">min</span>
               </span>
               <button type="button" class="stepper__button" data-stepper="longInput" data-step="1"
@@ -523,7 +510,7 @@
     class="mx-auto flex max-w-5xl flex-col items-center gap-3 px-6 pb-8 text-center text-sm text-slate-500 md:grid md:grid-cols-3 md:text-left"
     role="contentinfo">
     <p id="footerCredits">© 2026 Pomodoro · Created by PocketBinary</p>
-    <p id="footerQuote" class="italic text-slate-400 md:text-center">One tomato at a time, return to calm focus.</p>
+    <p id="footerQuote" class="text-slate-400 md:text-center">Works offline. No account needed.</p>
     <a id="githubLink" href="https://github.com/PocketBinary/pomodoro" target="_blank" rel="noopener noreferrer"
       class="inline-flex items-center gap-2 font-medium text-slate-600 transition hover:text-slate-900 md:justify-self-end"
       aria-label="View the Pomodoro repository on GitHub">

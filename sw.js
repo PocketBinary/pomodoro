@@ -18,7 +18,7 @@
  */
 
 // Nom et version du cache (à incrémenter lors de chaque mise à jour majeure)
-const CACHE_NAME = "pomodoro-cache-v10";
+const CACHE_NAME = "pomodoro-cache-v11";
 
 // Liste des ressources essentielles pré-chargées dès l'installation du Service Worker
 const PRECACHE_ASSETS = [
